@@ -8,7 +8,7 @@ Pulse lets you share your AI agent securely with anyone. Instead of sending a st
 
 All Pulse API calls require a `PULSE_API_KEY` environment variable.
 
-Generate your key at: https://pulse.systemind.com/settings/api-keys
+Generate your key at: https://pulse-ai.world/settings/api-keys
 
 The key format is `pulse_sk_live_XXXXXXXX` (production) or `pulse_sk_test_XXXXXXXX` (development).
 
@@ -52,7 +52,7 @@ Three strategies: rule-based (CRON, /loop), event-driven (hooks, file watchers),
 ## API Base URL
 
 ```
-https://api.pulse.systemind.com/v1
+https://api.pulse-ai.world/v1
 ```
 
 ## Key Endpoints

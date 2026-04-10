@@ -12,7 +12,7 @@ echo "${PULSE_API_KEY:+Key is set}" || echo "No key found"
 # Output: No key found
 ```
 
-"You'll need an API key first. Go to https://pulse.systemind.com/settings/api-keys and generate one."
+"You'll need an API key first. Go to https://pulse-ai.world/settings/api-keys and generate one."
 
 ### Step 2: User sets key
 ```bash
@@ -21,7 +21,7 @@ export PULSE_API_KEY=pulse_sk_live_abc123...
 
 ### Step 3: Initialize
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/init" \
+curl -s -X POST "https://api.pulse-ai.world/v1/init" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 
@@ -39,7 +39,7 @@ find . -maxdepth 2 -name "*.md" | head -10
 ### Step 6: Build knowledge base
 ```bash
 # Upload about-me
-curl -s -X POST "https://api.pulse.systemind.com/v1/tools" \
+curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -52,7 +52,7 @@ curl -s -X POST "https://api.pulse.systemind.com/v1/tools" \
   }' | jq .
 
 # Bulk sync docs
-curl -s -X POST "https://api.pulse.systemind.com/v1/accumulate" \
+curl -s -X POST "https://api.pulse-ai.world/v1/accumulate" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -65,7 +65,7 @@ curl -s -X POST "https://api.pulse.systemind.com/v1/accumulate" \
 
 ### Step 7: Create investor share link
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/share/create" \
+curl -s -X POST "https://api.pulse-ai.world/v1/share/create" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{

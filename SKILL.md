@@ -18,10 +18,10 @@ You have **two layers** of API access:
 
 **Required:** `PULSE_API_KEY` environment variable.
 
-Generate at: https://pulse.systemind.com/settings/api-keys
+Generate at: https://pulse-ai.world/settings/api-keys
 Format: `pulse_sk_live_xxxxxxxx` (production) or `pulse_sk_test_xxxxxxxx` (development)
 
-**Base URL:** `https://api.pulse.systemind.com/v1`
+**Base URL:** `https://api.pulse-ai.world/v1`
 **Auth header:** `Authorization: Bearer $PULSE_API_KEY`
 
 If this is your first time, use the **onboarding** skill for a guided setup.

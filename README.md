@@ -16,7 +16,7 @@ git clone https://github.com/Pulse-AI-Team/pulse-skills.git \
 
 ### 2. Get your API key
 
-1. Go to [pulse.systemind.com/settings/api-keys](https://pulse.systemind.com/settings/api-keys)
+1. Go to [pulse-ai.world/settings/api-keys](https://pulse-ai.world/settings/api-keys)
 2. Click "Generate Token"
 3. Copy the `pulse_sk_live_...` key
 
@@ -157,7 +157,7 @@ openclaw hooks enable pulse-sync
 ## API Base URL
 
 ```
-https://api.pulse.systemind.com/v1
+https://api.pulse-ai.world/v1
 ```
 
 All requests require `Authorization: Bearer <PULSE_API_KEY>`.

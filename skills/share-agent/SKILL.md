@@ -13,7 +13,7 @@ You help users create secure, shareable links to their Pulse AI agent. Recipient
 ## Prerequisites
 
 - `PULSE_API_KEY` environment variable must be set
-- Base URL: `https://api.pulse.systemind.com/v1`
+- Base URL: `https://api.pulse-ai.world/v1`
 - User should have synced context first (use `context-sync` skill if no context exists)
 
 ## Core Workflow
@@ -22,7 +22,7 @@ You help users create secure, shareable links to their Pulse AI agent. Recipient
 
 ```bash
 curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
-  "https://api.pulse.systemind.com/v1/context/status" | jq .
+  "https://api.pulse-ai.world/v1/context/status" | jq .
 ```
 
 If `contextCount` is 0, tell the user to sync context first.
@@ -32,7 +32,7 @@ If `contextCount` is 0, tell the user to sync context first.
 Ask the user what they want to share and with whom. Then configure:
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/share/create" \
+curl -s -X POST "https://api.pulse-ai.world/v1/share/create" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -95,7 +95,7 @@ The `notesAccess` parameter controls what guests can do with notes:
 ### Example: Write access for a collaborator
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/share/create" \
+curl -s -X POST "https://api.pulse-ai.world/v1/share/create" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -112,7 +112,7 @@ Guests with this link can read all notes in the selected folders AND create new 
 ### Example: Full edit access with calendar
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/share/create" \
+curl -s -X POST "https://api.pulse-ai.world/v1/share/create" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -131,7 +131,7 @@ curl -s -X POST "https://api.pulse.systemind.com/v1/share/create" \
 
 ```bash
 curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
-  "https://api.pulse.systemind.com/v1/share/list" | jq .
+  "https://api.pulse-ai.world/v1/share/list" | jq .
 ```
 
 Returns active and revoked links with: unique visitors, conversations, messages, and `notesAccess` level.
@@ -139,7 +139,7 @@ Returns active and revoked links with: unique visitors, conversations, messages,
 ### Update link settings
 
 ```bash
-curl -s -X PATCH "https://api.pulse.systemind.com/v1/share/{linkId}" \
+curl -s -X PATCH "https://api.pulse-ai.world/v1/share/{linkId}" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -154,7 +154,7 @@ You can update `scope`, `access`, `notesAccess`, `label`, `expiresIn`, and `fold
 ### Revoke a link
 
 ```bash
-curl -s -X DELETE "https://api.pulse.systemind.com/v1/share/{linkId}" \
+curl -s -X DELETE "https://api.pulse-ai.world/v1/share/{linkId}" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 
@@ -212,7 +212,7 @@ Then create with folder IDs:
 You can also create share links via the tools API (useful for agent-initiated sharing):
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/tools" \
+curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{

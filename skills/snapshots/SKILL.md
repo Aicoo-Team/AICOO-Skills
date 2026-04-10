@@ -13,7 +13,7 @@ Save, list, and restore note versions. Use snapshots before major edits, to trac
 ## Prerequisites
 
 - `PULSE_API_KEY` environment variable must be set
-- Base URL: `https://api.pulse.systemind.com/v1`
+- Base URL: `https://api.pulse-ai.world/v1`
 
 ---
 
@@ -34,7 +34,7 @@ Save, list, and restore note versions. Use snapshots before major edits, to trac
 ### Save a Snapshot
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/tools" \
+curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -62,7 +62,7 @@ curl -s -X POST "https://api.pulse.systemind.com/v1/tools" \
 ### List Snapshots
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/tools" \
+curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -77,7 +77,7 @@ curl -s -X POST "https://api.pulse.systemind.com/v1/tools" \
 ### Restore a Snapshot
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/tools" \
+curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -100,7 +100,7 @@ For programmatic access without the tools wrapper:
 ### Save
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/notes/42/snapshots" \
+curl -s -X POST "https://api.pulse-ai.world/v1/notes/42/snapshots" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"label": "Before Q2 update"}' | jq .
@@ -109,21 +109,21 @@ curl -s -X POST "https://api.pulse.systemind.com/v1/notes/42/snapshots" \
 ### List
 
 ```bash
-curl -s "https://api.pulse.systemind.com/v1/notes/42/snapshots?limit=10" \
+curl -s "https://api.pulse-ai.world/v1/notes/42/snapshots?limit=10" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 
 ### Get a Single Snapshot (with full content)
 
 ```bash
-curl -s "https://api.pulse.systemind.com/v1/notes/42/snapshots/7" \
+curl -s "https://api.pulse-ai.world/v1/notes/42/snapshots/7" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 
 ### Restore
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/notes/42/snapshots/7/restore" \
+curl -s -X POST "https://api.pulse-ai.world/v1/notes/42/snapshots/7/restore" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 

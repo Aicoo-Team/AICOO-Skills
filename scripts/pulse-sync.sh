@@ -8,7 +8,7 @@
 
 set -e
 
-PULSE_BASE="https://api.pulse.systemind.com/v1"
+PULSE_BASE="https://api.pulse-ai.world/v1"
 PROJECT_DIR="${1:-.}"
 
 if [ -z "$PULSE_API_KEY" ]; then

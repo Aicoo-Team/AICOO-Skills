@@ -1,6 +1,6 @@
 # Share Agent API Reference
 
-Base URL: `https://api.pulse.systemind.com/v1`
+Base URL: `https://api.pulse-ai.world/v1`
 
 All endpoints require `Authorization: Bearer <PULSE_API_KEY>` header.
 

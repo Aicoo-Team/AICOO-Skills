@@ -12,7 +12,7 @@ You guide users through setting up Pulse from scratch: getting an API key, initi
 
 ## Prerequisites
 
-- Internet access (to register at pulse.systemind.com)
+- Internet access (to register at pulse-ai.world)
 - A shell environment (Claude Code, Codex, OpenClaw, terminal)
 
 ---
@@ -33,7 +33,7 @@ Tell the user:
 
 > To use Pulse, you need an API key. Here's how:
 >
-> 1. Go to **https://pulse.systemind.com/settings/api-keys**
+> 1. Go to **https://pulse-ai.world/settings/api-keys**
 > 2. Click **"Generate Token"**
 > 3. Copy the key (starts with `pulse_sk_live_...`)
 > 4. Set it in your environment:
@@ -46,7 +46,7 @@ Tell the user:
 ### Verify the key works
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/init" \
+curl -s -X POST "https://api.pulse-ai.world/v1/init" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 
@@ -59,7 +59,7 @@ Expected: `{"success": true, ...}` with folder tree and file counts.
 ### Run /init
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/init" \
+curl -s -X POST "https://api.pulse-ai.world/v1/init" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 
@@ -68,7 +68,7 @@ This creates a `/General` folder if it's the first time, and returns the current
 ### Check existing context
 
 ```bash
-curl -s "https://api.pulse.systemind.com/v1/context/status" \
+curl -s "https://api.pulse-ai.world/v1/context/status" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 
@@ -121,7 +121,7 @@ find . -maxdepth 3 -name "*.md" -not -path "*/node_modules/*" -not -path "*/.git
 From the exploration, create a comprehensive "About Me" note:
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/tools" \
+curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -143,7 +143,7 @@ For each relevant file or directory discovered:
 CONTENT=$(cat path/to/file.md)
 
 # Upload to Pulse
-curl -s -X POST "https://api.pulse.systemind.com/v1/accumulate" \
+curl -s -X POST "https://api.pulse-ai.world/v1/accumulate" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d "$(jq -n --arg path "Technical/architecture.md" --arg content "$CONTENT" \
@@ -159,7 +159,7 @@ Create folders that match the user's mental model:
 ```bash
 # Create folders based on discovered categories
 for folder in "General" "Technical" "Research" "Public"; do
-  curl -s -X POST "https://api.pulse.systemind.com/v1/context/folders" \
+  curl -s -X POST "https://api.pulse-ai.world/v1/context/folders" \
     -H "Authorization: Bearer $PULSE_API_KEY" \
     -H "Content-Type: application/json" \
     -d "{\"name\": \"$folder\"}" | jq .status
@@ -199,14 +199,14 @@ Teaching/      → Course materials, student resources
 ### Check what's been synced
 
 ```bash
-curl -s "https://api.pulse.systemind.com/v1/context/status" \
+curl -s "https://api.pulse-ai.world/v1/context/status" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 
 ### Create a test share link
 
 ```bash
-curl -s -X POST "https://api.pulse.systemind.com/v1/share/create" \
+curl -s -X POST "https://api.pulse-ai.world/v1/share/create" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
