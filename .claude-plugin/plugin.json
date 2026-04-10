@@ -1,0 +1,20 @@
+{
+  "name": "Pulse Agent Skills",
+  "description": "Share your AI agent securely with anyone. Generate shareable agent links with per-relationship access control, sync context from your files and memory, manage note versions, and keep your agent updated automatically.",
+  "version": "1.0.0",
+  "author": "Pulse AI Team",
+  "license": "MIT",
+  "keywords": [
+    "pulse",
+    "agent-sharing",
+    "ai-agent",
+    "access-control",
+    "context-sync",
+    "sandbox",
+    "collaboration",
+    "snapshots",
+    "autonomous-sync"
+  ],
+  "repository": "https://github.com/Pulse-AI-Team/pulse-skills",
+  "homepage": "https://pulse-ai.world"
+}

@@ -1,0 +1,408 @@
+---
+name: pulse
+description: "Use this skill when the user wants to share their AI agent with others, sync files/context to Pulse, search/read/create/edit notes, create shareable agent links, manage shared links, keep their agent's knowledge up to date, set up auto-sync, manage note versions, or get started with Pulse. Triggers on: 'share my agent', 'share link', 'sync to Pulse', 'upload to Pulse', 'add context', 'search my notes', 'update my agent', 'what does my agent know', 'set up Pulse', 'API key', 'snapshot', 'version', 'auto sync', 'schedule sync', 'keep updated', or any mention of letting others talk to their AI agent."
+metadata:
+  author: systemind
+  version: "1.0.0"
+---
+
+# Pulse — Share Your AI Agent
+
+Pulse lets you share your AI agent securely with anyone. Instead of sending a static document, you send a link where recipients talk to your AI — with per-relationship access control for notes, calendar, and write permissions.
+
+You have **two layers** of API access:
+1. **Tools API** — The same 12 tools that power Pulse's internal agent: semantic search, read, create, edit notes, browse folders, manage snapshots, share links.
+2. **REST API** — Workspace management, bulk context sync, share link management, snapshot endpoints.
+
+## Setup
+
+**Required:** `PULSE_API_KEY` environment variable.
+
+Generate at: https://pulse.systemind.com/settings/api-keys
+Format: `pulse_sk_live_xxxxxxxx` (production) or `pulse_sk_test_xxxxxxxx` (development)
+
+**Base URL:** `https://api.pulse.systemind.com/v1`
+**Auth header:** `Authorization: Bearer $PULSE_API_KEY`
+
+If this is your first time, use the **onboarding** skill for a guided setup.
+
+---
+
+## Getting Started
+
+### 1. Initialize workspace
+
+```bash
+curl -s -X POST "$PULSE_BASE/init" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
+Creates a `/General` folder if first time, returns folder tree and file counts.
+
+### 2. Check what exists
+
+```bash
+curl -s "$PULSE_BASE/context/status" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
+Returns: folder tree, file counts, total size, last synced time.
+
+**Important:** Before adding new context, always check what already exists. Look at your recent conversation history too — you may have discussed topics worth syncing.
+
+---
+
+## Capability 1: Tools API (Intelligent Access)
+
+The Tools API gives you the **exact same capabilities** as Pulse's internal AI agent. Discover available tools, then call them.
+
+### Discover tools
+
+```bash
+curl -s "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
+### Execute a tool
+
+```bash
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tool": "search_notes",
+    "params": { "query": "meeting notes", "folderName": "Work" }
+  }' | jq .
+```
+
+### Available Tools
+
+| Tool | Description | Type |
+|------|-------------|------|
+| `search_notes` | AI-powered semantic search across all notes | read |
+| `get_note_content` | Read full content of a note by ID | read |
+| `create_note` | Create a new note (auto-converts markdown/HTML) | write |
+| `edit_note` | Edit a note by ID or search (auto-backup before edit) | write |
+| `pin_note` | Pin/unpin a note for easy access | write |
+| `memory_search` | Search episodic memories and past decisions | read |
+| `list_folders` | List folders with file counts (like `ls`) | read |
+| `list_notes` | List notes in a folder with metadata (like `ls -la`) | read |
+| `share_agent` | Create a shareable agent link (like `chmod`) | write |
+| `save_snapshot` | Save a versioned snapshot of a note | write |
+| `list_snapshots` | List all snapshots for a note | read |
+| `restore_snapshot` | Restore a note from a snapshot (auto-backup first) | write |
+
+### Example: Browse workspace (ls → ls -la → cat)
+
+```bash
+# ls — list folders
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "list_folders", "params": {}}' | jq .
+
+# ls -la — list notes in a folder
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "list_notes", "params": {"folderId": 5}}' | jq .
+
+# cat — read a specific note
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "get_note_content", "params": {"noteId": 42}}' | jq .
+```
+
+### Example: Search then read
+
+```bash
+# Search
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "search_notes", "params": {"query": "investor pitch"}}' | jq .
+
+# Read full content
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "get_note_content", "params": {"noteId": 42}}' | jq .
+```
+
+### Example: Snapshot before editing
+
+```bash
+# Save version
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "save_snapshot", "params": {"noteId": 42, "label": "Before Q2 update"}}' | jq .
+
+# Now safe to edit
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "edit_note", "params": {"id": 42, "content": "# Updated content..."}}' | jq .
+```
+
+### Example: Agent shares itself (chmod)
+
+```bash
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tool": "share_agent",
+    "params": {
+      "scope": "folders",
+      "folderIds": [5, 12],
+      "access": "read_calendar",
+      "notesAccess": "write",
+      "label": "For team",
+      "expiresIn": "7d"
+    }
+  }' | jq .
+```
+
+---
+
+## Capability 2: Context Sync (Bulk Upload)
+
+For syncing multiple files at once, use the accumulate endpoint.
+
+### Upload files
+
+```bash
+curl -s -X POST "$PULSE_BASE/accumulate" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "files": [
+      {"path": "Technical/architecture.md", "content": "# System Architecture\n\n..."},
+      {"path": "General/about-me.md", "content": "# About Me\n\nI am..."}
+    ]
+  }' | jq .
+```
+
+**Path format:** `FolderName/filename.md` — folders auto-created if missing. Nested paths like `Parent/Child/file.md` work too. Re-uploading same path updates the file (with automatic versioning).
+
+### Quick text injection
+
+```bash
+curl -s -X POST "$PULSE_BASE/accumulate" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "texts": [
+      {"title": "About My Startup", "content": "We are building...", "folder": "General"}
+    ]
+  }' | jq .
+```
+
+### Manage folders
+
+```bash
+# List folders with file counts
+curl -s "$PULSE_BASE/context/folders" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+
+# Create folder
+curl -s -X POST "$PULSE_BASE/context/folders" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Investor Materials"}' | jq .
+```
+
+### Delete files
+
+```bash
+curl -s -X POST "$PULSE_BASE/accumulate" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"delete": [{"path": "Technical/old-doc.md"}]}' | jq .
+```
+
+**Limits:** Max 50 files per request. Max 10 MB per file.
+
+---
+
+## Capability 3: Share Agent
+
+Create, manage, and revoke shareable agent links with fine-grained access control.
+
+### Create a share link
+
+```bash
+curl -s -X POST "$PULSE_BASE/share/create" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "scope": "all",
+    "access": "read",
+    "notesAccess": "read",
+    "label": "For investors",
+    "expiresIn": "7d"
+  }' | jq .
+```
+
+**Parameters:**
+
+| Parameter | Values | Description |
+|-----------|--------|-------------|
+| `scope` | `"all"`, `"folders"` | Content scope (`"folders"` requires `folderIds`) |
+| `access` | `"read"`, `"read_calendar"`, `"read_calendar_write"` | Calendar access level |
+| `notesAccess` | `"read"`, `"write"`, `"edit"` | Notes permission (default: `"read"`) |
+| `label` | string | Friendly name |
+| `expiresIn` | `"1h"`, `"24h"`, `"7d"`, `"30d"`, `null` | Expiration |
+| `folderIds` | int array | Required when scope is `"folders"` |
+
+**Notes access levels:**
+- `read` — search and view notes (default, safe)
+- `write` — also create new notes in the workspace
+- `edit` — also modify existing notes and manage snapshots
+
+**Response:** Returns `shareLink.url` — present this prominently. Recipients can chat immediately, no sign-up required.
+
+### List links
+
+```bash
+curl -s "$PULSE_BASE/share/list" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
+Returns all links with analytics (unique visitors, conversations, messages).
+
+### Update link
+
+```bash
+curl -s -X PATCH "$PULSE_BASE/share/{linkId}" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"access": "read_calendar", "notesAccess": "write", "expiresIn": "30d"}' | jq .
+```
+
+### Revoke link
+
+```bash
+curl -s -X DELETE "$PULSE_BASE/share/{linkId}" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
+---
+
+## Capability 4: Snapshots (Note Versioning)
+
+Save, list, and restore note versions via Tools API or REST endpoints.
+
+### Via Tools API
+
+```bash
+# Save snapshot
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "save_snapshot", "params": {"noteId": 42, "label": "Before update"}}' | jq .
+
+# List snapshots
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "list_snapshots", "params": {"noteId": 42}}' | jq .
+
+# Restore (auto-backs up current state)
+curl -s -X POST "$PULSE_BASE/tools" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "restore_snapshot", "params": {"noteId": 42, "versionId": 7}}' | jq .
+```
+
+### Via REST Endpoints
+
+```bash
+# Save: POST /notes/{id}/snapshots
+# List: GET /notes/{id}/snapshots
+# Get one: GET /notes/{id}/snapshots/{versionId}
+# Restore: POST /notes/{id}/snapshots/{versionId}/restore
+```
+
+---
+
+## Autonomous Update Patterns
+
+Keep your agent's knowledge current automatically.
+
+### Pattern 1: Post-conversation sync
+
+After any substantive conversation, extract key information and sync it:
+
+1. Review what was discussed
+2. Search existing notes: `POST /tools {"tool": "search_notes", ...}`
+3. Snapshot before editing: `POST /tools {"tool": "save_snapshot", ...}`
+4. Update or create notes via tools API
+
+**What to sync:** decisions, preferences, project updates, meeting outcomes, technical choices, deadlines.
+
+### Pattern 2: Scheduled sync (Claude Code)
+
+```
+/loop 30m sync any new knowledge to Pulse — review our recent conversation, search existing notes first, snapshot before edits, create or update as needed.
+```
+
+### Pattern 3: Scheduled sync (OpenClaw / cron)
+
+```bash
+# crontab -e
+0 9 * * * /path/to/pulse-skills/scripts/pulse-sync.sh /path/to/project
+```
+
+### Pattern 4: Hook-driven sync (Claude Code)
+
+Add to `.claude/settings.json`:
+```json
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Write|Edit",
+      "hooks": [{"type": "command", "command": "./pulse-skills/scripts/sync-detector.sh"}]
+    }]
+  }
+}
+```
+
+See the **autonomous-sync** skill for full details on all trigger strategies.
+
+---
+
+## Security Rules
+
+- Never expose `PULSE_API_KEY` in outputs or share links
+- Each share link has an isolated sandbox — guests cannot see data outside their scope
+- The agent refuses questions outside its sandbox boundary
+- All guest conversations are logged in analytics
+- Revoked/expired links immediately cut off access
+- Short tokens (10 chars, base62) have ~59 bits of entropy
+- `notesAccess: "write"` only allows creating new notes, not modifying existing ones
+- Always check context status before first share to ensure relevant data is synced
+
+---
+
+## Quick Reference
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/init` | POST | Initialize workspace |
+| `/context/status` | GET | Workspace overview |
+| `/context/folders` | GET/POST | List/create folders |
+| `/tools` | GET | Discover available tools (12 tools) |
+| `/tools` | POST | Execute a tool |
+| `/accumulate` | POST | Bulk file sync (create/update/delete) |
+| `/share/create` | POST | Create share link |
+| `/share/list` | GET | List all links with analytics |
+| `/share/{linkId}` | PATCH | Update link settings |
+| `/share/{linkId}` | DELETE | Revoke link |
+| `/notes/{id}/snapshots` | GET/POST | List/save snapshots |
+| `/notes/{id}/snapshots/{vid}` | GET | Get single snapshot |
+| `/notes/{id}/snapshots/{vid}/restore` | POST | Restore from snapshot |
+| `/heartbeat` | POST | Health check |
+| `/briefing` | GET | Daily briefing |

@@ -1,0 +1,46 @@
+{
+  "name": "pulse-agent-skills",
+  "description": "Share your AI agent securely with anyone. Let others talk to your agent via a link — you control exactly what it can share, create, and edit.",
+  "version": "1.0.0",
+  "owner": {
+    "name": "Pulse AI Team",
+    "url": "https://pulse-ai.world",
+    "email": "team@systemind.com"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/Pulse-AI-Team/pulse-skills",
+  "homepage": "https://pulse-ai.world",
+  "plugins": [
+    {
+      "name": "pulse-skills",
+      "description": "Share your AI agent with per-relationship access control. Sync context, generate shareable links, manage versions, and keep your agent updated automatically.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Pulse AI Team",
+        "email": "team@systemind.com",
+        "url": "https://pulse-ai.world"
+      },
+      "license": "MIT",
+      "keywords": [
+        "pulse",
+        "agent-sharing",
+        "access-control",
+        "context-sync",
+        "sandbox",
+        "snapshots",
+        "autonomous-sync"
+      ],
+      "repository": "https://github.com/Pulse-AI-Team/pulse-skills",
+      "homepage": "https://pulse-ai.world",
+      "source": "./",
+      "skills": [
+        "onboarding",
+        "context-sync",
+        "share-agent",
+        "examine-sandbox",
+        "snapshots",
+        "autonomous-sync"
+      ]
+    }
+  ]
+}
