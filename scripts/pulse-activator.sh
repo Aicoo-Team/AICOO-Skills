@@ -10,7 +10,7 @@ if [ -z "$PULSE_API_KEY" ]; then
   cat << 'EOF'
 <pulse-reminder>
 PULSE_API_KEY is not set. If the user wants to share their agent or sync knowledge:
-→ Guide them through onboarding: https://pulse-ai.world/settings/api-keys
+→ Guide them through onboarding: https://www.aicoo.io/settings/api-keys
 </pulse-reminder>
 EOF
   exit 0

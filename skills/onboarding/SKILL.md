@@ -12,7 +12,7 @@ You guide users through setting up Pulse from scratch: getting an API key, initi
 
 ## Prerequisites
 
-- Internet access (to register at pulse-ai.world)
+- Internet access (to register at www.aicoo.io)
 - A shell environment (Claude Code, Codex, OpenClaw, terminal)
 
 ---
@@ -33,7 +33,7 @@ Tell the user:
 
 > To use Pulse, you need an API key. Here's how:
 >
-> 1. Go to **https://pulse-ai.world/settings/api-keys**
+> 1. Go to **https://www.aicoo.io/settings/api-keys**
 > 2. Click **"Generate Token"**
 > 3. Copy the key (starts with `pulse_sk_live_...`)
 > 4. Set it in your environment:

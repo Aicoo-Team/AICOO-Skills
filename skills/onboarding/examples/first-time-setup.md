@@ -12,7 +12,7 @@ echo "${PULSE_API_KEY:+Key is set}" || echo "No key found"
 # Output: No key found
 ```
 
-"You'll need an API key first. Go to https://pulse-ai.world/settings/api-keys and generate one."
+"You'll need an API key first. Go to https://www.aicoo.io/settings/api-keys and generate one."
 
 ### Step 2: User sets key
 ```bash

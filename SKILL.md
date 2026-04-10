@@ -18,7 +18,8 @@ You have **two layers** of API access:
 
 **Required:** `PULSE_API_KEY` environment variable.
 
-Generate at: https://pulse-ai.world/settings/api-keys
+Generate at: https://www.aicoo.io/settings/api-keys
+API docs: https://www.aicoo.io/docs/api
 Format: `pulse_sk_live_xxxxxxxx` (production) or `pulse_sk_test_xxxxxxxx` (development)
 
 **Base URL:** `https://api.pulse-ai.world/v1`

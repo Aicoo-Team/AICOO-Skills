@@ -8,7 +8,8 @@ Pulse lets you share your AI agent securely with anyone. Instead of sending a st
 
 All Pulse API calls require a `PULSE_API_KEY` environment variable.
 
-Generate your key at: https://pulse-ai.world/settings/api-keys
+Generate your key at: https://www.aicoo.io/settings/api-keys
+API docs: https://www.aicoo.io/docs/api
 
 The key format is `pulse_sk_live_XXXXXXXX` (production) or `pulse_sk_test_XXXXXXXX` (development).
 

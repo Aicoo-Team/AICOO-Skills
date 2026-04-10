@@ -16,9 +16,10 @@ git clone https://github.com/Pulse-AI-Team/pulse-skills.git \
 
 ### 2. Get your API key
 
-1. Go to [pulse-ai.world/settings/api-keys](https://pulse-ai.world/settings/api-keys)
+1. Go to [aicoo.io/settings/api-keys](https://www.aicoo.io/settings/api-keys)
 2. Click "Generate Token"
 3. Copy the `pulse_sk_live_...` key
+4. See [API docs](https://www.aicoo.io/docs/api) for full reference
 
 ### 3. Set your token
 
