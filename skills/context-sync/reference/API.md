@@ -1,6 +1,6 @@
 # Context Sync API Reference
 
-Base URL: `https://api.pulse-ai.world/v1`
+Base URL: `https://www.aicoo.io/api/v1`
 
 All endpoints require `Authorization: Bearer <PULSE_API_KEY>` header.
 

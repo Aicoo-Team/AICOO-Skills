@@ -13,7 +13,7 @@ You help users sync local files, notes, and context into Pulse so their shared a
 ## Prerequisites
 
 - `PULSE_API_KEY` environment variable must be set
-- Base URL: `https://api.pulse-ai.world/v1`
+- Base URL: `https://www.aicoo.io/api/v1`
 
 ## Core Workflow
 
@@ -23,7 +23,7 @@ Before syncing, always check what already exists:
 
 ```bash
 curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
-  "https://api.pulse-ai.world/v1/context/status" | jq .
+  "https://www.aicoo.io/api/v1/context/status" | jq .
 ```
 
 Returns: `contextCount`, `totalSizeBytes`, `folders` (with file counts), `lastSyncedAt`.
@@ -36,19 +36,19 @@ Use OS-like primitives to explore what exists:
 
 ```bash
 # ls — list folders
-curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
+curl -s -X POST "https://www.aicoo.io/api/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"tool": "list_folders", "params": {}}' | jq .
 
 # ls -la — list notes in a folder
-curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
+curl -s -X POST "https://www.aicoo.io/api/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"tool": "list_notes", "params": {"folderId": 5}}' | jq .
 
 # cat — read a note
-curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
+curl -s -X POST "https://www.aicoo.io/api/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"tool": "get_note_content", "params": {"noteId": 42}}' | jq .
@@ -59,7 +59,7 @@ curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
 Before creating new content, search to avoid duplicates:
 
 ```bash
-curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
+curl -s -X POST "https://www.aicoo.io/api/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"tool": "search_notes", "params": {"query": "project roadmap"}}' | jq .
@@ -72,7 +72,7 @@ Uses AI-powered semantic search — generates query variations and ranks by rele
 **Create a new note:**
 
 ```bash
-curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
+curl -s -X POST "https://www.aicoo.io/api/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -89,13 +89,13 @@ curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
 
 ```bash
 # Save current state
-curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
+curl -s -X POST "https://www.aicoo.io/api/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"tool": "save_snapshot", "params": {"noteId": 42, "label": "Pre-edit"}}' | jq .
 
 # Now safe to edit
-curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
+curl -s -X POST "https://www.aicoo.io/api/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"tool": "edit_note", "params": {"id": 42, "content": "# Updated Roadmap\n\n..."}}' | jq .
@@ -106,7 +106,7 @@ curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
 When syncing directories or multiple files, use accumulate:
 
 ```bash
-curl -s -X POST "https://api.pulse-ai.world/v1/accumulate" \
+curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -126,10 +126,10 @@ curl -s -X POST "https://api.pulse-ai.world/v1/accumulate" \
 ```bash
 # List folders with file counts
 curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
-  "https://api.pulse-ai.world/v1/context/folders" | jq .
+  "https://www.aicoo.io/api/v1/context/folders" | jq .
 
 # Create folder
-curl -s -X POST "https://api.pulse-ai.world/v1/context/folders" \
+curl -s -X POST "https://www.aicoo.io/api/v1/context/folders" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"name": "Investor Materials"}' | jq .
@@ -138,7 +138,7 @@ curl -s -X POST "https://api.pulse-ai.world/v1/context/folders" \
 ### Step 7: Delete files
 
 ```bash
-curl -s -X POST "https://api.pulse-ai.world/v1/accumulate" \
+curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"delete": [{"path": "Technical/old-doc.md"}]}' | jq .

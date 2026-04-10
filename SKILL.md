@@ -22,7 +22,7 @@ Generate at: https://www.aicoo.io/settings/api-keys
 API docs: https://www.aicoo.io/docs/api
 Format: `pulse_sk_live_xxxxxxxx` (production) or `pulse_sk_test_xxxxxxxx` (development)
 
-**Base URL:** `https://api.pulse-ai.world/v1`
+**Base URL:** `https://www.aicoo.io/api/v1`
 **Auth header:** `Authorization: Bearer $PULSE_API_KEY`
 
 If this is your first time, use the **onboarding** skill for a guided setup.

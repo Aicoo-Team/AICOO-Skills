@@ -158,7 +158,7 @@ openclaw hooks enable pulse-sync
 ## API Base URL
 
 ```
-https://api.pulse-ai.world/v1
+https://www.aicoo.io/api/v1
 ```
 
 All requests require `Authorization: Bearer <PULSE_API_KEY>`.

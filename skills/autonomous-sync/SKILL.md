@@ -13,7 +13,7 @@ Set up automatic triggers to keep your Pulse agent's knowledge current. Choose f
 ## Prerequisites
 
 - `PULSE_API_KEY` environment variable must be set
-- Base URL: `https://api.pulse-ai.world/v1`
+- Base URL: `https://www.aicoo.io/api/v1`
 - Initial context already synced (use `onboarding` skill first)
 
 ---
@@ -59,7 +59,7 @@ Create a daily CRON job that triggers a Pulse sync session:
 #!/bin/bash
 set -e
 
-PULSE_BASE="https://api.pulse-ai.world/v1"
+PULSE_BASE="https://www.aicoo.io/api/v1"
 AUTH="Authorization: Bearer $PULSE_API_KEY"
 
 # Check staleness
@@ -175,7 +175,7 @@ COMMIT_HASH=$(git log -1 --pretty=format:"%h")
 
 # Only sync meaningful commits (skip WIP, fixup, etc.)
 if [[ "$COMMIT_MSG" =~ ^(feat|fix|docs|refactor) ]]; then
-  curl -s -X POST "https://api.pulse-ai.world/v1/accumulate" \
+  curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
     -H "Authorization: Bearer $PULSE_API_KEY" \
     -H "Content-Type: application/json" \
     -d "$(jq -n \
@@ -200,7 +200,7 @@ fswatch -o docs/ notes/ README.md | while read; do
   done
 
   if [ ${#FILES[@]} -gt 0 ]; then
-    curl -s -X POST "https://api.pulse-ai.world/v1/accumulate" \
+    curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
       -H "Authorization: Bearer $PULSE_API_KEY" \
       -H "Content-Type: application/json" \
       -d "{\"files\": [$(IFS=,; echo "${FILES[*]}")]}"
@@ -259,7 +259,7 @@ curl -s -X POST "$PULSE_BASE/tools" \
 Check how fresh your agent's knowledge is:
 
 ```bash
-curl -s "https://api.pulse-ai.world/v1/context/status" \
+curl -s "https://www.aicoo.io/api/v1/context/status" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq '{lastSyncedAt, contextCount}'
 ```
 

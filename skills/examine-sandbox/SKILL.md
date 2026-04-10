@@ -13,7 +13,7 @@ You help users inspect exactly what data and capabilities are included in their 
 ## Prerequisites
 
 - `PULSE_API_KEY` environment variable must be set
-- Base URL: `https://api.pulse-ai.world/v1`
+- Base URL: `https://www.aicoo.io/api/v1`
 
 ## Core Workflow
 
@@ -21,7 +21,7 @@ You help users inspect exactly what data and capabilities are included in their 
 
 ```bash
 curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
-  "https://api.pulse-ai.world/v1/share/list" | jq .
+  "https://www.aicoo.io/api/v1/share/list" | jq .
 ```
 
 Shows all links with: scope, calendar access, notes access (`notesAccess`), analytics (visitors, conversations, messages), expiry.
@@ -30,7 +30,7 @@ Shows all links with: scope, calendar access, notes access (`notesAccess`), anal
 
 ```bash
 curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
-  "https://api.pulse-ai.world/v1/context/status" | jq .
+  "https://www.aicoo.io/api/v1/context/status" | jq .
 ```
 
 Returns folder tree with file counts. Cross-reference with each link's scope:
@@ -43,13 +43,13 @@ Use the tools API to search for potentially sensitive content:
 
 ```bash
 # Search for financial data
-curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
+curl -s -X POST "https://www.aicoo.io/api/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"tool": "search_notes", "params": {"query": "revenue pricing confidential"}}' | jq .
 
 # Search for personal info
-curl -s -X POST "https://api.pulse-ai.world/v1/tools" \
+curl -s -X POST "https://www.aicoo.io/api/v1/tools" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"tool": "search_notes", "params": {"query": "password API key credentials"}}' | jq .
@@ -72,7 +72,7 @@ If the user wants to restrict access:
 
 **Narrow scope to specific folders:**
 ```bash
-curl -s -X PATCH "https://api.pulse-ai.world/v1/share/{linkId}" \
+curl -s -X PATCH "https://www.aicoo.io/api/v1/share/{linkId}" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"scope": "folders", "folderIds": [5, 12]}' | jq .
@@ -80,7 +80,7 @@ curl -s -X PATCH "https://api.pulse-ai.world/v1/share/{linkId}" \
 
 **Downgrade notes access:**
 ```bash
-curl -s -X PATCH "https://api.pulse-ai.world/v1/share/{linkId}" \
+curl -s -X PATCH "https://www.aicoo.io/api/v1/share/{linkId}" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"notesAccess": "read"}' | jq .
@@ -88,7 +88,7 @@ curl -s -X PATCH "https://api.pulse-ai.world/v1/share/{linkId}" \
 
 **Revoke a link entirely:**
 ```bash
-curl -s -X DELETE "https://api.pulse-ai.world/v1/share/{linkId}" \
+curl -s -X DELETE "https://www.aicoo.io/api/v1/share/{linkId}" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 

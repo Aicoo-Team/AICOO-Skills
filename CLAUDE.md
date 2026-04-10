@@ -53,7 +53,7 @@ Three strategies: rule-based (CRON, /loop), event-driven (hooks, file watchers),
 ## API Base URL
 
 ```
-https://api.pulse-ai.world/v1
+https://www.aicoo.io/api/v1
 ```
 
 ## Key Endpoints

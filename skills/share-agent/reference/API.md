@@ -1,6 +1,6 @@
 # Share Agent API Reference
 
-Base URL: `https://api.pulse-ai.world/v1`
+Base URL: `https://www.aicoo.io/api/v1`
 
 All endpoints require `Authorization: Bearer <PULSE_API_KEY>` header.
 
@@ -36,8 +36,8 @@ Create a new shareable agent link. Returns a short 10-character token URL.
   "shareLink": {
     "id": "uuid",
     "token": "xK9mPq2RvT",
-    "url": "https://pulse-ai.world/shared/xK9mPq2RvT",
-    "agentUrl": "https://pulse-ai.world/a/xK9mPq2RvT",
+    "url": "https://www.aicoo.io/shared/xK9mPq2RvT",
+    "agentUrl": "https://www.aicoo.io/a/xK9mPq2RvT",
     "scope": "all",
     "access": "read",
     "notesAccess": "read",
@@ -65,8 +65,8 @@ List all share links for the authenticated user.
   "links": [
     {
       "id": "uuid",
-      "url": "https://pulse-ai.world/shared/xK9mPq2RvT",
-      "agentUrl": "https://pulse-ai.world/a/xK9mPq2RvT",
+      "url": "https://www.aicoo.io/shared/xK9mPq2RvT",
+      "agentUrl": "https://www.aicoo.io/a/xK9mPq2RvT",
       "label": "string",
       "scope": "all",
       "access": "read",

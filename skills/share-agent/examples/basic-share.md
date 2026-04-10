@@ -30,7 +30,7 @@ The agent calls `POST /share/create` with:
 The agent returns:
 ```
 Your shareable agent link:
-https://pulse-ai.world/s/a1b2c3d4...
+https://www.aicoo.io/s/a1b2c3d4...
 
 Anyone with this link can talk to your agent about your investor materials.
 - Scope: Investor Materials folder only
