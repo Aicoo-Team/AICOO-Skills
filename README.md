@@ -27,8 +27,13 @@ Generate at: https://www.aicoo.io/settings/api-keys
 export PULSE_API_KEY="pulse_sk_live_xxxxxxxx"
 ```
 
+Add to your shell profile (`~/.zshrc`, `~/.bashrc`) or `.env` for persistence.
+
 ### 2) Install umbrella skill (`pulse`)
 
+Choose your agent runtime:
+
+**Codex:**
 ```bash
 python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
   --repo Pulse-AI-Team/pulse-skills \
@@ -36,19 +41,38 @@ python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-githu
   --name pulse
 ```
 
-### 3) Restart Codex
+**Claude Code:**
+```bash
+git clone https://github.com/Pulse-AI-Team/pulse-skills.git \
+  ~/.claude/plugins/pulse-skills
+```
 
-Codex loads new skills on startup.
+**OpenClaw:**
+```bash
+git clone https://github.com/Pulse-AI-Team/pulse-skills.git \
+  ~/.openclaw/skills/pulse
+```
+
+**Other agents (manual):**
+Clone the repo anywhere, then point your agent's skill/plugin config at the directory containing `SKILL.md`.
+
+### 3) Restart your agent
+
+Skills are loaded at session start. Start a new session for the skill to take effect.
 
 ## Install modular skills (optional)
 
 If you want smaller building blocks instead of one umbrella skill:
 
+**Codex:**
 ```bash
 python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
   --repo Pulse-AI-Team/pulse-skills \
   --path skills/onboarding skills/context-sync skills/share-agent skills/examine-sandbox skills/snapshots skills/autonomous-sync
 ```
+
+**Claude Code / OpenClaw / Other:**
+Each `skills/*/` folder is a self-contained skill with its own `SKILL.md`. Copy the ones you need into your agent's skill directory.
 
 Recommended modular stack:
 
@@ -66,6 +90,28 @@ Recommended modular stack:
 - Integration reference: `CLAUDE.md`
 - Hook templates: `hooks/claude-code/`
 
+**Hooks (optional):**
+```json
+// .claude/settings.json
+{
+  "hooks": {
+    "UserPromptSubmit": [{
+      "matcher": "",
+      "hooks": [{"type": "command", "command": "./pulse-skills/scripts/pulse-activator.sh"}]
+    }],
+    "PostToolUse": [{
+      "matcher": "Write|Edit",
+      "hooks": [{"type": "command", "command": "./pulse-skills/scripts/sync-detector.sh"}]
+    }]
+  }
+}
+```
+
+**Loop (optional):**
+```
+/loop 30m sync any new knowledge to Pulse
+```
+
 ### Codex
 
 - Install root skill:
@@ -81,6 +127,18 @@ python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-githu
 
 - Hook reference: `hooks/openclaw/HOOK.md`
 - Handler source: `hooks/openclaw/handler.ts`
+
+```bash
+cp -r pulse-skills/hooks/openclaw ~/.openclaw/hooks/pulse-sync
+openclaw hooks enable pulse-sync
+```
+
+### Standalone (cron)
+
+```bash
+# crontab -e
+0 9 * * * /path/to/pulse-skills/scripts/pulse-sync.sh /path/to/project
+```
 
 ## Skill Map (Umbrella + Modules)
 
