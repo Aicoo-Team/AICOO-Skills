@@ -52,7 +52,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/share/create" \
 | `access` | `"read"`, `"read_calendar"`, `"read_calendar_write"` | Calendar access level |
 | `notesAccess` | `"read"`, `"write"`, `"edit"` | Notes permission level (default: `"read"`) |
 | `label` | any string | Friendly name (e.g., "For investors") |
-| `expiresIn` | `"1h"`, `"24h"`, `"7d"`, `"30d"`, `null` | Expiration (null = no expiry) |
+| `expiresIn` | `"1h"`, `"24h"`, `"7d"`, `"30d"`, `"90d"`, `"never"` | Expiration (default: `"30d"`, `"never"` = no expiry) |
 | `folderIds` | array of ints | Required when `scope` is `"folders"` |
 
 **Response:** Returns `shareLink.url` (e.g., `https://www.aicoo.io/a/xK9mPq2RvT`) and `shareLink.agentUrl`. Present this prominently.
@@ -258,7 +258,8 @@ Set up identity files with the **onboarding** skill (`memory/self/COO.md`, `USER
 - The agent refuses questions outside its sandbox boundary
 - All guest conversations are logged in analytics
 - Revoked/expired links immediately cut off access
-- Links with `expiresIn` are enforced server-side
+- Links expire after 30 days by default; use `"expiresIn": "never"` to opt out
+- Expiration is enforced server-side — expired links return 404 immediately
 - Short tokens (10 chars, base62) have ~59 bits of entropy — unguessable
 - `notesAccess: "write"` only allows creating new notes, not modifying existing ones
 - `notesAccess: "edit"` is the most permissive — use carefully
