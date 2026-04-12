@@ -1,5 +1,17 @@
 # Pulse Skills
 
+## Program Introduction
+
+Pulse Skills provides an **Agent Coordination Layer** for Pulse and external agent runtimes.
+
+It is built around three core capabilities:
+
+- **Enterprise-grade unified context**: a consistent way to sync, search, and operate on shared knowledge.
+- **Agent-native sandboxing**: controlled execution boundaries so agents can act safely in scoped environments.
+- **Granular-access agent links**: permissioned links that let others interact with your agent under explicit policy.
+
+Our long-term goal is to become a platform where you can add, coordinate, and share your agent with other people's agents in a secure, composable way.
+
 > A skill suite for sharing and maintaining Pulse AI agents.
 
 This repository is intentionally designed as **one big umbrella skill** plus **modular sub-skills**:
