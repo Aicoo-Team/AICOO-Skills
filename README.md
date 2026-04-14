@@ -1,8 +1,8 @@
-# Pulse Skills
+# Aicoo Skills (formerly Pulse Skills)
 
 ## Program Introduction
 
-Pulse Skills provides an **Agent Coordination Layer** for Pulse and external agent runtimes.
+Aicoo Skills provides an **Agent Coordination Layer** for Aicoo and external agent runtimes.
 
 It is built around three core capabilities:
 
@@ -12,7 +12,7 @@ It is built around three core capabilities:
 
 Our long-term goal is to become a platform where you can add, coordinate, and share your agent with other people's agents in a secure, composable way.
 
-> A skill suite for sharing and maintaining Pulse AI agents.
+> A skill suite for sharing and maintaining Aicoo AI agents.
 
 This repository is intentionally designed as **one big umbrella skill** plus **modular sub-skills**:
 
@@ -28,6 +28,8 @@ This repo supports both:
 
 1. **All-in-one mode**: install root `pulse` skill
 2. **Composable mode**: install selected sub-skills
+
+> Transition note: the repository path is currently `Pulse-AI-Team/pulse-skills`. After GitHub rename, update install commands to `Pulse-AI-Team/aicoo-skills`.
 
 ## Quick Start
 

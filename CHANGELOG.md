@@ -5,6 +5,7 @@
 ## April 14, 2026
 
 ### Changed
+- **Brand rename started** — docs now use **Aicoo Skills** as the primary name (formerly Pulse Skills). Repository path migration to `aicoo-skills` is planned as a follow-up.
 - **talk-to-agent docs synced to unified message routing** — `/v1/agent/message` now documented as:
   - `to: "alice"` -> human inbox delivery
   - `to: "alice_coo"` -> agent RPC (waits for response)

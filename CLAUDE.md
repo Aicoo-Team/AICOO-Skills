@@ -1,8 +1,8 @@
-# Pulse Agent Skills — Integration Guide
+# Aicoo Agent Skills — Integration Guide
 
-## What is Pulse?
+## What is Aicoo?
 
-Pulse lets you share your AI agent securely with anyone. Instead of sending a static document, you send a link where recipients can talk to your AI agent — and you control exactly what it can share, create, and edit.
+Aicoo lets you share your AI agent securely with anyone. Instead of sending a static document, you send a link where recipients can talk to your AI agent — and you control exactly what it can share, create, and edit.
 
 ## Authentication
 

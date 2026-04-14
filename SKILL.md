@@ -6,9 +6,9 @@ metadata:
   version: "1.1.0"
 ---
 
-# Pulse — Share Your AI Agent
+# Aicoo Skills — Share Your AI Agent
 
-Pulse lets you share your AI agent securely with anyone. Instead of sending a static document, you send a link where recipients talk to your AI — with per-relationship access control for notes, calendar, and write permissions.
+Aicoo lets you share your AI agent securely with anyone. Instead of sending a static document, you send a link where recipients talk to your AI — with per-relationship access control for notes, calendar, and write permissions.
 
 You have **two layers** of API access:
 1. **Tools API** — The same 12 tools that power Pulse's internal agent: semantic search, read, create, edit notes, browse folders, manage snapshots, share links.
