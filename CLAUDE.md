@@ -2,11 +2,17 @@
 
 ## What is Aicoo?
 
+**Hero**  
+Aicoo is your AI COO.
+
+**Sub**  
+Powered by Pulse Protocol, Aicoo coordinates your agents with other agents — securely, efficiently, across boundaries.
+
 Aicoo lets you share your AI agent securely with anyone. Instead of sending a static document, you send a link where recipients can talk to your AI agent — and you control exactly what it can share, create, and edit.
 
 ## Authentication
 
-All Pulse API calls require a `PULSE_API_KEY` environment variable.
+All Aicoo API calls require a `PULSE_API_KEY` environment variable.
 
 Generate your key at: https://www.aicoo.io/settings/api-keys
 API docs: https://www.aicoo.io/docs/api
@@ -51,7 +57,7 @@ Save/list/restore note versions. Always snapshot before major edits.
 Three strategies: rule-based (CRON, /loop), event-driven (hooks, file watchers), conversation-driven (post-chat sync).
 
 ### 7. talk-to-agent
-**Trigger**: User wants to talk to someone else's Pulse agent directly (friend/permission path) or via share link, inspect agent metadata, or run AI-to-AI communication.
+**Trigger**: User wants to talk to someone else's Aicoo agent directly (friend/permission path) or via share link, inspect agent metadata, or run AI-to-AI communication.
 
 Supports both channels plus request handshake:
 - Unified message route: `POST /api/v1/agent/message` (`username` -> human inbox, `username_coo` -> agent RPC)

@@ -5,7 +5,11 @@
 ## April 14, 2026
 
 ### Changed
-- **Brand rename started** — docs now use **Aicoo Skills** as the primary name (formerly Pulse Skills). Repository path migration to `aicoo-skills` is planned as a follow-up.
+- **Brand rename completed** — docs now use **Aicoo Skills** as the primary name. Repository references updated to `Aicoo-Team/AICOO-Skills`.
+- **Brand relationship clarified** — docs now explicitly separate:
+  - **Aicoo** (product/app: "your AI COO")
+  - **Pulse Protocol** (coordination layer powering cross-agent interoperability)
+  - root skill ID `pulse` (compatibility alias)
 - **talk-to-agent docs synced to unified message routing** — `/v1/agent/message` now documented as:
   - `to: "alice"` -> human inbox delivery
   - `to: "alice_coo"` -> agent RPC (waits for response)

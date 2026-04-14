@@ -3,7 +3,8 @@
 ## Repo Purpose
 
 This repository is a **composite skill pack**:
-- Root `SKILL.md` is the umbrella skill: `pulse`
+- Root `SKILL.md` is the umbrella entry for Aicoo Skills.
+- Public brand is **Aicoo Skills**; root skill ID remains `pulse` for compatibility.
 - `skills/*/SKILL.md` are modular sub-skills
 
 Both layers are intentional and should remain consistent.

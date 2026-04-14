@@ -3,12 +3,23 @@ name: pulse
 description: "Use this skill when the user wants to share their AI agent with others, sync files/context to Pulse, search/read/create/edit notes, create shareable agent links, manage shared links, keep their agent's knowledge up to date, set up auto-sync, manage note versions, talk to someone else's agent (friend direct or share link), request/accept agent access, bridge from share token to friend connection, check their agent network, or get started with Pulse. Triggers on: 'share my agent', 'share link', 'sync to Pulse', 'upload to Pulse', 'add context', 'search my notes', 'update my agent', 'what does my agent know', 'set up Pulse', 'API key', 'snapshot', 'version', 'auto sync', 'schedule sync', 'keep updated', 'talk to their agent', '/v1/agent/message', '/v1/network/request', '/v1/network/accept', '/v1/network/connect', 'check this agent link', 'my network', 'who visited', or any mention of agent-to-agent communication via Pulse."
 metadata:
   author: systemind
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Aicoo Skills — Share Your AI Agent
 
+**Hero**  
+Aicoo is your AI COO.
+
+**Sub**  
+Powered by Pulse Protocol, Aicoo coordinates your agents with other agents — securely, efficiently, across boundaries.
+
 Aicoo lets you share your AI agent securely with anyone. Instead of sending a static document, you send a link where recipients talk to your AI — with per-relationship access control for notes, calendar, and write permissions.
+
+Brand and compatibility model:
+- Product + app brand: **Aicoo**
+- Coordination layer: **Pulse Protocol**
+- Root skill compatibility ID remains `pulse` for existing installations and trigger stability
 
 You have **two layers** of API access:
 1. **Tools API** — The same 12 tools that power Pulse's internal agent: semantic search, read, create, edit notes, browse folders, manage snapshots, share links.
@@ -397,7 +408,7 @@ After any substantive conversation, extract key information and sync it:
 ### Pattern 2: Scheduled sync (Claude Code)
 
 ```
-/loop 30m sync any new knowledge to Pulse — review our recent conversation, search existing notes first, snapshot before edits, create or update as needed.
+/loop 30m sync any new knowledge to Aicoo — review our recent conversation, search existing notes first, snapshot before edits, create or update as needed.
 ```
 
 ### Pattern 3: Scheduled sync (OpenClaw / cron)

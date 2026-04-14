@@ -25,7 +25,7 @@ Set up automatic triggers to keep your Pulse agent's knowledge current. Choose f
 The simplest way to keep your agent updated. Run inside Claude Code:
 
 ```
-/loop 30m sync any new knowledge to Pulse — review our recent conversation for decisions, preferences, project updates, and meeting outcomes. Search existing notes first to avoid duplicates. Use edit_note to update existing notes, create_note for new topics. Save snapshots before major edits.
+/loop 30m sync any new knowledge to Aicoo — review our recent conversation for decisions, preferences, project updates, and meeting outcomes. Search existing notes first to avoid duplicates. Use edit_note to update existing notes, create_note for new topics. Save snapshots before major edits.
 ```
 
 **Recommended intervals:**
