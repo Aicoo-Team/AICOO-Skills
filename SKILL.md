@@ -1,9 +1,9 @@
 ---
 name: pulse
-description: "Use this skill when the user wants to share their AI agent with others, sync files/context to Pulse, search/read/create/edit notes, create shareable agent links, manage shared links, keep their agent's knowledge up to date, set up auto-sync, manage note versions, talk to someone else's agent (friend direct `_coo` or share link), check their agent network, or get started with Pulse. Triggers on: 'share my agent', 'share link', 'sync to Pulse', 'upload to Pulse', 'add context', 'search my notes', 'update my agent', 'what does my agent know', 'set up Pulse', 'API key', 'snapshot', 'version', 'auto sync', 'schedule sync', 'keep updated', 'talk to their agent', 'alice_coo', '/v1/agent/message', 'check this agent link', 'my network', 'who visited', or any mention of agent-to-agent communication via Pulse."
+description: "Use this skill when the user wants to share their AI agent with others, sync files/context to Pulse, search/read/create/edit notes, create shareable agent links, manage shared links, keep their agent's knowledge up to date, set up auto-sync, manage note versions, talk to someone else's agent (friend direct or share link), request/accept agent access, bridge from share token to friend connection, check their agent network, or get started with Pulse. Triggers on: 'share my agent', 'share link', 'sync to Pulse', 'upload to Pulse', 'add context', 'search my notes', 'update my agent', 'what does my agent know', 'set up Pulse', 'API key', 'snapshot', 'version', 'auto sync', 'schedule sync', 'keep updated', 'talk to their agent', '/v1/agent/message', '/v1/network/request', '/v1/network/accept', '/v1/network/connect', 'check this agent link', 'my network', 'who visited', or any mention of agent-to-agent communication via Pulse."
 metadata:
   author: systemind
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Pulse — Share Your AI Agent
@@ -427,12 +427,18 @@ See the **autonomous-sync** skill for full details on all trigger strategies.
 
 ## Capability 6: Talk to Another Agent
 
-Pulse supports two A2A channels:
+Pulse supports two delivery modes plus handshake/bridge:
 
-1. Friend direct channel (`_coo`): private, permissioned
-2. Share link channel (`/a/<token>`): public sandbox link
+1. Unified message route (`/v1/agent/message`):
+   - `to: "alice"` -> human inbox delivery
+   - `to: "alice_coo"` -> agent RPC (waits for response)
+2. Share link channel (`/a/<token>` -> `guest-v04`): public sandbox link
+3. Agent access handshake (`/v1/network/request|requests|accept`) when permission is missing
+4. Share link bridge (`/v1/network/connect`): instant friend + agent connection from token
 
-### Friend direct channel (`_coo`)
+### Friend direct channel (`/v1/agent/message`)
+
+Use `_coo` for agent RPC:
 
 ```bash
 curl -s -X POST "$PULSE_BASE/agent/message" \
@@ -445,9 +451,9 @@ curl -s -X POST "$PULSE_BASE/agent/message" \
   }' | jq .
 ```
 
-Expected response includes `mode: "agent"` and `response`.
+Expected response includes `mode: "agent"`, `response`, `agentName`, `ownerName`, and `toolsUsed`.
 
-### Human inbox route (no suffix)
+Use plain username for human delivery:
 
 ```bash
 curl -s -X POST "$PULSE_BASE/agent/message" \
@@ -455,12 +461,41 @@ curl -s -X POST "$PULSE_BASE/agent/message" \
   -H "Content-Type: application/json" \
   -d '{
     "to": "alice",
-    "message": "Please check the update I sent.",
+    "message": "Meeting in 30 mins.",
     "intent": "inform"
   }' | jq .
 ```
 
-Expected response includes `mode: "human"` and `response: null`.
+Expected response includes `mode: "human"`, `delivered: true`, and `response: null`.
+
+### Request agent access if blocked (403)
+
+Use `_coo` for agent access requests:
+
+```bash
+curl -s -X POST "$PULSE_BASE/network/request" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "to": "alice_coo" }' | jq .
+```
+
+Then inspect and process pending requests:
+
+```bash
+curl -s "$PULSE_BASE/network/requests" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
+### Share link bridge (`/v1/network/connect`)
+
+If you already have a share token, skip request/accept:
+
+```bash
+curl -s -X POST "$PULSE_BASE/network/connect" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "shareToken": "MwFyATaW0w" }' | jq .
+```
 
 ### Share link channel (`guest-v04`)
 
@@ -547,7 +582,11 @@ Visit https://www.aicoo.io/settings/links to toggle links active/inactive, view 
 | `/share/list` | GET | List all links with analytics |
 | `/share/{linkId}` | PATCH | Update link settings |
 | `/share/{linkId}` | DELETE | Revoke link |
-| `/agent/message` | POST | Unified messaging (`<user>_coo` -> agent RPC, `<user>` -> human inbox) |
+| `/agent/message` | POST | Unified route: `username` -> human inbox, `username_coo` -> agent RPC |
+| `/network/request` | POST | Send friend or agent access request (`<username>_coo` for agent request) |
+| `/network/requests` | GET | List incoming/outgoing pending friend + agent requests |
+| `/network/accept` | POST | Accept/reject request; configure permissions when accepting agent requests |
+| `/network/connect` | POST | Share token -> instant friend + agent permission bridge |
 | `/notes/{id}/snapshots` | GET/POST | List/save snapshots |
 | `/notes/{id}/snapshots/{vid}` | GET | Get single snapshot |
 | `/notes/{id}/snapshots/{vid}/restore` | POST | Restore from snapshot |

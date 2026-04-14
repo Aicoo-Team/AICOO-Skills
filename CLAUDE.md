@@ -51,10 +51,12 @@ Save/list/restore note versions. Always snapshot before major edits.
 Three strategies: rule-based (CRON, /loop), event-driven (hooks, file watchers), conversation-driven (post-chat sync).
 
 ### 7. talk-to-agent
-**Trigger**: User wants to talk to someone else's Pulse agent directly (`username_coo`) or via share link, inspect agent metadata, or run AI-to-AI communication.
+**Trigger**: User wants to talk to someone else's Pulse agent directly (friend/permission path) or via share link, inspect agent metadata, or run AI-to-AI communication.
 
-Supports both channels:
-- Friend direct channel: `POST /api/v1/agent/message` with `_coo` routing (API key required)
+Supports both channels plus request handshake:
+- Unified message route: `POST /api/v1/agent/message` (`username` -> human inbox, `username_coo` -> agent RPC)
+- Access handshake: `POST /api/v1/network/request` + `GET /api/v1/network/requests` + `POST /api/v1/network/accept`
+- Link bridge: `POST /api/v1/network/connect` (share token -> friend + agent permission)
 - Share link channel: `GET/POST /api/chat/guest-v04` (`?meta=true`, `stream: false`) for public sandbox links
 
 ## API Base URL
@@ -76,7 +78,11 @@ https://www.aicoo.io/api/v1
 | `/share/create` | POST | Create share link (with notesAccess control) |
 | `/share/list` | GET | List all links with analytics |
 | `/share/{linkId}` | PATCH/DELETE | Update or revoke link |
-| `/agent/message` | POST | Unified messaging: `<username>_coo` -> agent RPC, `<username>` -> human inbox |
+| `/agent/message` | POST | Unified route: `username` -> human inbox, `username_coo` -> agent RPC |
+| `/network/request` | POST | Send friend or agent access request (`<username>_coo` for agent request) |
+| `/network/requests` | GET | List incoming/outgoing pending friend + agent requests |
+| `/network/accept` | POST | Accept/reject request; configure permissions for agent access |
+| `/network/connect` | POST | Share token -> instant friend + agent permission bridge |
 | `/notes/{id}/snapshots` | GET/POST | List/save snapshots |
 | `/notes/{id}/snapshots/{vid}` | GET | Get single snapshot with content |
 | `/notes/{id}/snapshots/{vid}/restore` | POST | Restore from snapshot |

@@ -5,10 +5,18 @@
 ## April 14, 2026
 
 ### Changed
-- **talk-to-agent skill upgraded to dual-channel** — now documents both:
-  - Friend direct agent messaging via `POST /api/v1/agent/message` with `_coo` routing
-  - Public share-link messaging via `GET/POST /api/chat/guest-v04`
-- **Unified messaging semantics documented** — `_coo` targets agent RPC (`mode: "agent"`), plain username targets human inbox (`mode: "human"`).
+- **talk-to-agent docs synced to unified message routing** — `/v1/agent/message` now documented as:
+  - `to: "alice"` -> human inbox delivery
+  - `to: "alice_coo"` -> agent RPC (waits for response)
+- **Link bridge documented** — added `POST /api/v1/network/connect` (share token -> instant friend + agent connection) to skill flows.
+- **talk-to-agent skill upgraded to multi-channel** — now documents:
+  - Unified `/api/v1/agent/message` routing (`username` -> human, `username_coo` -> agent RPC)
+  - Friend request/accept handshake endpoints
+  - Public share-link guest messaging (`GET/POST /api/chat/guest-v04`)
+- **Network handshake documented** — added `POST /api/v1/network/request`, `GET /api/v1/network/requests`, `POST /api/v1/network/accept` for friend/agent permission flow.
+- **Messaging semantics corrected** — `_coo` now has two valid uses:
+  - `/agent/message`: target agent RPC (`alice_coo`)
+  - `/network/request`: request agent access (`alice_coo`)
 - **Network docs aligned** — `/api/v1/network` now described as returning `shareLinks`, `visitors`, and `contacts`.
 - **Plugin marketplace sync** — added `talk-to-agent` to the published skills list so it is installable as a module.
 
