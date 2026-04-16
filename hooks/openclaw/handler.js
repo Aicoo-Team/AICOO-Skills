@@ -13,9 +13,9 @@ Your Pulse agent shares knowledge with guests. Keep it current:
 - Meeting outcomes? → Create meeting notes
 
 **Workflow:**
-1. Search first: POST /tools {"tool": "search_notes", "params": {"query": "<topic>"}}
+1. Search first: POST /os/notes/search {"query": "<topic>"}
 2. If found: snapshot then edit — don't create duplicates
-3. If new: create_note with clear title and folder
+3. If new: POST /os/notes with clear title and content
 4. For bulk changes: use POST /accumulate with file array
 
 **Check staleness:** GET /context/status — if lastSyncedAt > 24h, do a sync pass.`;

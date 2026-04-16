@@ -12,6 +12,6 @@ A file was just modified. If this represents important knowledge:
 - Updated docs or specs? → accumulate to Pulse
 - User preference or project context? → update existing Pulse note
 
-Steps: search_notes first → edit_note or create_note → save_snapshot before major edits.
+Steps: POST /os/notes/search first → PATCH /os/notes/{id} or POST /os/notes → POST /os/snapshots/{noteId} before major edits.
 </pulse-sync-reminder>
 EOF

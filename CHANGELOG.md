@@ -2,6 +2,28 @@
 
 ---
 
+## April 16, 2026
+
+### Breaking Changes
+- **API split is now official** — OS-native operations moved to `/api/v1/os/*`; `/api/v1/tools` is now only for non-OS skills (calendar, email, web, messaging, quality, MCP).
+- **Tool catalog field renamed** — `tool.category` -> `tool.namespace`. Consumers must update parsing logic for `GET /api/v1/tools`.
+- **Legacy OS tool calls deprecated in docs** — references like `list_notes`, `search_notes`, `save_snapshot`, `share_agent`, `list_network` via `/tools` are replaced with REST calls under `/os/*`.
+
+### Added
+- **Refactor documentation alignment** across umbrella skill and sub-skills:
+  - root `SKILL.md`
+  - `CLAUDE.md`
+  - `skills/context-sync`
+  - `skills/snapshots`
+  - `skills/share-agent`
+  - `skills/examine-sandbox`
+  - `skills/autonomous-sync`
+  - `skills/onboarding`
+
+### Changed
+- **Quick references updated** to include `GET /api/v1/os` as the OS endpoint index.
+- **All examples now use `/os/*` for notes/folders/snapshots/network/share/todos** and reserve `/tools` for non-OS integrations.
+
 ## April 14, 2026
 
 ### Changed

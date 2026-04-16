@@ -19,9 +19,9 @@ fi
 cat << 'EOF'
 <pulse-reminder>
 Pulse is connected. After completing this task, consider:
-- Did the conversation produce knowledge worth syncing? → search_notes, then create/edit
-- Should the shared agent know about this? → accumulate or tools API
-- Major changes coming? → save_snapshot first
-- Need to share with someone? → share/create with scope + access control
+- Did the conversation produce knowledge worth syncing? → POST /os/notes/search, then create/edit note
+- Should the shared agent know about this? → POST /accumulate or /os/notes
+- Major changes coming? → POST /os/snapshots/{noteId} first
+- Need to share with someone? → POST /os/share with scope + access control
 </pulse-reminder>
 EOF

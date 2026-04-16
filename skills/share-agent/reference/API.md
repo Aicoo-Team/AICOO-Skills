@@ -2,45 +2,38 @@
 
 Base URL: `https://www.aicoo.io/api/v1`
 
-All endpoints require `Authorization: Bearer <PULSE_API_KEY>` header.
+All endpoints require `Authorization: Bearer <PULSE_API_KEY>`.
 
 ---
 
-## POST /share/create
+## POST /os/share
 
-Create a new shareable agent link. Returns a short 10-character token URL.
+Create a new shareable agent link.
 
 **Request Body:**
+
 ```json
 {
   "scope": "all" | "folders",
   "access": "read" | "read_calendar" | "read_calendar_write",
   "notesAccess": "read" | "write" | "edit",
-  "label": "string (optional, max 100 chars)",
-  "expiresIn": "1h" | "24h" | "7d" | "30d" | null,
+  "label": "string (optional)",
+  "expiresIn": "1h" | "24h" | "7d" | "30d" | "90d" | "never",
   "folderIds": [1, 2, 3]
 }
 ```
 
-**Required fields:** none (defaults: `scope: "all"`, `access: "read"`, `notesAccess: "read"`)
-
-**Notes access levels:**
-- `read` — guests can search and view notes
-- `write` — guests can also create new notes
-- `edit` — guests can also modify existing notes and manage snapshots
-
 **Response (201):**
+
 ```json
 {
   "success": true,
   "shareLink": {
-    "id": "uuid",
+    "id": 123,
     "token": "xK9mPq2RvT",
-    "url": "https://www.aicoo.io/shared/xK9mPq2RvT",
-    "agentUrl": "https://www.aicoo.io/a/xK9mPq2RvT",
+    "url": "https://www.aicoo.io/a/xK9mPq2RvT",
     "scope": "all",
     "access": "read",
-    "notesAccess": "read",
     "label": "For investors",
     "expiresAt": "ISO8601 or null",
     "createdAt": "ISO8601"
@@ -50,92 +43,35 @@ Create a new shareable agent link. Returns a short 10-character token URL.
 
 ---
 
-## GET /share/list
+## GET /os/network
+
+List network state for current user.
+
+Includes:
+
+- `shareLinks`
+- `visitors`
+- `contacts`
+
+---
+
+## Legacy link-management endpoints (still available)
+
+### GET /share/list
 
 List all share links for the authenticated user.
 
-**Query Params:**
-- `status`: `active` | `revoked` | `all` (default: `active`)
-- `limit`: 1-50 (default: 20)
+### PATCH /share/{linkId}
 
-**Response (200):**
-```json
-{
-  "success": true,
-  "links": [
-    {
-      "id": "uuid",
-      "url": "https://www.aicoo.io/shared/xK9mPq2RvT",
-      "agentUrl": "https://www.aicoo.io/a/xK9mPq2RvT",
-      "label": "string",
-      "scope": "all",
-      "access": "read",
-      "notesAccess": "read",
-      "isActive": true,
-      "expiresAt": "ISO8601 or null",
-      "createdAt": "ISO8601",
-      "analytics": {
-        "uniqueVisitors": 5,
-        "totalConversations": 12,
-        "totalMessages": 48
-      }
-    }
-  ]
-}
-```
+Update link settings (`scope`, `folderIds`, `access`, `notesAccess`, `label`, `expiresIn`).
+
+### DELETE /share/{linkId}
+
+Revoke a share link.
 
 ---
 
-## PATCH /share/{linkId}
+## Notes
 
-Update share link settings.
-
-**Request Body (all fields optional):**
-```json
-{
-  "scope": "folders",
-  "access": "read_calendar",
-  "notesAccess": "write",
-  "label": "Updated label",
-  "expiresIn": "30d",
-  "folderIds": [1, 2]
-}
-```
-
-**Response (200):** Updated link object.
-
----
-
-## DELETE /share/{linkId}
-
-Revoke a share link. Immediately cuts off all guest access.
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "message": "Share link revoked"
-}
-```
-
----
-
-## POST /tools — share_agent
-
-Create a share link via the tools execution layer:
-
-```json
-{
-  "tool": "share_agent",
-  "params": {
-    "scope": "folders",
-    "folderIds": [5, 12],
-    "access": "read_calendar",
-    "notesAccess": "write",
-    "label": "For team",
-    "expiresIn": "7d"
-  }
-}
-```
-
-Equivalent to `POST /share/create` but runs through the tools wrapper.
+- This is part of the OS split: sharing and network are OS-native (`/os/*`).
+- `/tools` is reserved for non-OS skills and integrations.
