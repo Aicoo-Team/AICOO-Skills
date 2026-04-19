@@ -33,7 +33,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/init" \
 curl -s -X POST "https://www.aicoo.io/api/v1/init" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 
-curl -s "https://www.aicoo.io/api/v1/context/status" \
+curl -s "https://www.aicoo.io/api/v1/os/status" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 

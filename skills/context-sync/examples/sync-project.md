@@ -9,7 +9,7 @@ You're working on a project and want your shared agent to know about the project
 User: "Sync my docs folder to Pulse"
 
 Agent: Let me check your current context status first.
-[Calls GET /context/status]
+[Calls GET /os/status]
 
 You currently have 12 files synced. Let me scan ./docs for files to upload.
 [Reads directory, finds 8 markdown files]
@@ -25,7 +25,7 @@ Found 8 files in ./docs:
 - roadmap.md (1.6 KB)
 
 Uploading to Pulse folder "docs"...
-[Calls POST /context/accumulate with all 8 files]
+[Calls POST /accumulate with all 8 files]
 
 Done! 8 files synced to your "docs" folder on Pulse.
 You now have 20 total context items.

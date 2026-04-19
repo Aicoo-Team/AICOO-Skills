@@ -23,55 +23,40 @@ Create a new shareable agent link.
 }
 ```
 
-**Response (201):**
+---
 
-```json
-{
-  "success": true,
-  "shareLink": {
-    "id": 123,
-    "token": "xK9mPq2RvT",
-    "url": "https://www.aicoo.io/a/xK9mPq2RvT",
-    "scope": "all",
-    "access": "read",
-    "label": "For investors",
-    "expiresAt": "ISO8601 or null",
-    "createdAt": "ISO8601"
-  }
-}
-```
+## GET /os/share/list
+
+List links with analytics and effective capabilities.
+
+**Query Params:**
+- `status`: `active` | `revoked` | `all`
+- `limit`: 1..50
+
+---
+
+## PATCH /os/share/{linkId}
+
+Update link settings (`scope`, `folderIds`, `access`, `notesAccess`, `label`, `expiresIn`, `identity`, `email`, `todos`, `tools`).
+
+---
+
+## DELETE /os/share/{linkId}
+
+Revoke a share link.
 
 ---
 
 ## GET /os/network
 
-List network state for current user.
-
-Includes:
-
+High-level network state:
 - `shareLinks`
 - `visitors`
 - `contacts`
 
 ---
 
-## Legacy link-management endpoints (still available)
-
-### GET /share/list
-
-List all share links for the authenticated user.
-
-### PATCH /share/{linkId}
-
-Update link settings (`scope`, `folderIds`, `access`, `notesAccess`, `label`, `expiresIn`).
-
-### DELETE /share/{linkId}
-
-Revoke a share link.
-
----
-
 ## Notes
 
-- This is part of the OS split: sharing and network are OS-native (`/os/*`).
-- `/tools` is reserved for non-OS skills and integrations.
+- Sharing/network are OS-native (`/os/*`).
+- `/tools` is reserved for non-OS integrations/tools execution.

@@ -2,6 +2,31 @@
 
 ---
 
+## April 19, 2026
+
+### Breaking Changes
+- **Canonical v1 endpoints enforced in skills docs** — all examples now teach canonical paths first:
+  - `GET /os/status` (instead of `/context/status`)
+  - `GET/POST /os/folders` (instead of `/context/folders`)
+  - `GET /os/share/list` + `PATCH/DELETE /os/share/{linkId}` (instead of `/share/*`)
+- **Legacy/fantasy endpoints removed from references** — replaced non-canonical or non-existent link-audit endpoints with real `/os/*` + `/accumulate` flows.
+
+### Added
+- **Tools integration management docs**:
+  - `GET /tools/integrations`
+  - `DELETE /tools/integrations/{id}`
+  - `POST /tools/mcp/{id}/disconnect`
+  - `GET/PUT /tools/namespaces`
+- **Updated reference guides**:
+  - `skills/context-sync/reference/API.md`
+  - `skills/examine-sandbox/reference/API.md`
+  - `skills/share-agent/reference/API.md`
+
+### Changed
+- Root `SKILL.md` and `CLAUDE.md` endpoint tables now align to current v1 routing split (`/os/*` data plane, `/tools/*` capability plane).
+- OpenClaw hooks + sync scripts now check staleness through `GET /os/status`.
+- Example conversations updated to call canonical endpoints (`/accumulate`, `/os/share/list`, `/os/share/{linkId}`).
+
 ## April 16, 2026
 
 ### Breaking Changes

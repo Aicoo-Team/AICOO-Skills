@@ -6,9 +6,9 @@ All endpoints require `Authorization: Bearer <PULSE_API_KEY>` header.
 
 ---
 
-## GET /context/status
+## GET /os/status
 
-Get current context status and usage.
+Workspace summary (files/folders/size/last sync).
 
 **Response (200):**
 ```json
@@ -17,144 +17,144 @@ Get current context status and usage.
   "contextCount": 42,
   "totalSizeBytes": 1048576,
   "folders": [
-    { "id": "uuid", "name": "General", "fileCount": 27 },
-    { "id": "uuid", "name": "Project Alpha", "fileCount": 15 }
+    { "id": 5, "name": "General", "fileCount": 27 }
   ],
-  "lastSyncedAt": "ISO8601",
-  "limits": {
-    "maxFiles": 100,
-    "maxFileSizeBytes": 5242880,
-    "maxTotalSizeBytes": 52428800,
-    "remaining": 58
-  }
+  "lastSyncedAt": "ISO8601"
 }
 ```
 
 ---
 
-## POST /context/accumulate
+## GET /os/folders
 
-Upload files or text context to Pulse.
+List folders.
 
-**Request Body:**
+**Query Params:**
+- `parentId` (optional)
+
+---
+
+## POST /os/folders
+
+Create folder(s).
+
+**Body (single segment):**
+```json
+{ "name": "Investor Materials", "parentId": 5 }
+```
+
+**Body (nested path):**
+```json
+{ "path": "Technical/Architecture" }
+```
+
+---
+
+## GET /os/notes
+
+List notes in a folder or root.
+
+**Query Params:**
+- `folderId` (optional)
+- `folderName` (optional)
+- `limit` (optional, max 200)
+
+---
+
+## GET /os/notes/{id}
+
+Read full note content.
+
+---
+
+## POST /os/notes
+
+Create note.
+
+**Body:**
+```json
+{ "title": "Roadmap", "content": "# Q2 Plan", "folderId": 5 }
+```
+
+---
+
+## PATCH /os/notes/{id}
+
+Edit note.
+
+**Body:**
+```json
+{ "title": "Roadmap (Updated)", "content": "# Updated" }
+```
+
+Notes are auto-snapshotted before edits.
+
+---
+
+## POST /os/notes/search
+
+Semantic note search.
+
+**Body:**
+```json
+{ "query": "pricing strategy" }
+```
+
+---
+
+## GET/POST /os/snapshots/{noteId}
+
+- `GET`: list snapshots
+- `POST`: save snapshot
+
+---
+
+## POST /os/snapshots/{noteId}/restore
+
+Restore a snapshot.
+
+**Body:**
+```json
+{ "versionId": 123 }
+```
+
+---
+
+## GET /os/snapshots/{noteId}/{versionId}
+
+Get a specific snapshot payload (title/content).
+
+---
+
+## POST /accumulate
+
+Bulk file sync (recommended for multi-file updates).
+
+**Body:**
 ```json
 {
   "files": [
-    {
-      "name": "README.md",
-      "content": "# My Project\n...",
-      "folder": "General"
-    }
-  ],
-  "texts": [
-    {
-      "title": "About My Company",
-      "content": "We are building...",
-      "folder": "General"
-    }
+    { "path": "Technical/architecture.md", "content": "# Architecture\n..." }
   ]
 }
 ```
 
-At least one of `files` or `texts` must be provided.
-
-**Response (200):**
+Also supports delete:
 ```json
 {
-  "success": true,
-  "uploaded": 12,
-  "skipped": 3,
-  "updated": 2,
-  "errors": [],
-  "skippedReasons": [
-    { "name": "image.png", "reason": "unsupported_type" }
-  ],
-  "contextCount": 54,
-  "folder": { "id": "uuid", "name": "General" }
-}
-```
-
-**Behavior:**
-- Files with the same name in the same folder are **updated** (not duplicated)
-- Unsupported file types are skipped with a reason
-- Max 50 files per request
-- Each file max 5 MB
-
----
-
-## GET /context/folders
-
-List all context folders.
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "folders": [
-    { "id": "uuid", "name": "General", "fileCount": 27, "createdAt": "ISO8601" },
-    { "id": "uuid", "name": "Project Alpha", "fileCount": 15, "createdAt": "ISO8601" }
+  "delete": [
+    { "path": "Technical/old-doc.md" }
   ]
 }
 ```
 
 ---
 
-## POST /context/folders
+## POST /os/memory/search
 
-Create a new folder.
+Search episodic memory.
 
-**Request Body:**
+**Body:**
 ```json
-{
-  "name": "Investor Materials"
-}
-```
-
-**Response (201):**
-```json
-{
-  "success": true,
-  "folder": { "id": "uuid", "name": "Investor Materials", "fileCount": 0 }
-}
-```
-
----
-
-## DELETE /context/{contextId}
-
-Delete a specific context item.
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "message": "Context item deleted"
-}
-```
-
----
-
-## GET /context/search
-
-Search across all context.
-
-**Query Params:**
-- `q`: Search query (required)
-- `folder`: Filter by folder name (optional)
-- `limit`: 1-50 (default: 10)
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "results": [
-    {
-      "id": "uuid",
-      "name": "pitch-deck.md",
-      "folder": "Investor Materials",
-      "snippet": "...relevant excerpt with search terms highlighted...",
-      "score": 0.95
-    }
-  ]
-}
+{ "query": "meeting decisions" }
 ```

@@ -26,7 +26,7 @@ You help users sync local files, notes, and context into Pulse so their shared a
 
 ```bash
 curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
-  "https://www.aicoo.io/api/v1/context/status" | jq .
+  "https://www.aicoo.io/api/v1/os/status" | jq .
 ```
 
 ### Step 2: Browse workspace
@@ -95,10 +95,10 @@ curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
 ```bash
 # list
 curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
-  "https://www.aicoo.io/api/v1/context/folders" | jq .
+  "https://www.aicoo.io/api/v1/os/folders" | jq .
 
 # create
-curl -s -X POST "https://www.aicoo.io/api/v1/context/folders" \
+curl -s -X POST "https://www.aicoo.io/api/v1/os/folders" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"name":"Investor Materials"}' | jq .

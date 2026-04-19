@@ -19,7 +19,7 @@ fi
 AUTH="Authorization: Bearer $PULSE_API_KEY"
 
 # Check staleness
-STATUS=$(curl -s "$PULSE_BASE/context/status" -H "$AUTH")
+STATUS=$(curl -s "$PULSE_BASE/os/status" -H "$AUTH")
 LAST_SYNC=$(echo "$STATUS" | jq -r '.lastSyncedAt // "never"')
 echo "[$(date)] Last sync: $LAST_SYNC"
 

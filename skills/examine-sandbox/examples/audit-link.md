@@ -8,50 +8,39 @@ You created a share link for a potential partner and want to make sure nothing s
 ```
 User: "Check what my partner link is sharing"
 
-Agent: Let me check your share links.
-[Calls GET /share/list]
+Agent: Let me list your links first.
+[Calls GET /os/share/list?status=active]
 
 You have 2 active links:
 1. "For investors" — 5 visitors, read-only
 2. "Partner - Acme Corp" — 0 visitors, read + calendar
 
-I'll examine the "Partner - Acme Corp" link.
-[Calls GET /share/{linkId}/examine]
+I'll inspect activity and capabilities for "Partner - Acme Corp".
+[Calls GET /os/network]
 
-Sandbox contents (18 files across 2 folders):
-- General (12 files): company-overview.md, product-roadmap.md, team-bios.md, ...
-- Technical Docs (6 files): api-reference.md, architecture.md, ...
-
-Capabilities:
-  ✅ Can read notes and search
-  ✅ Can read your calendar availability
-  ❌ Cannot book meetings
-  ❌ Cannot access email
-  ❌ Cannot access todos
-
-Now let me run a sensitivity scan...
-[Calls POST /share/{linkId}/scan]
+Now I'll run a sensitivity scan over your notes by query.
+[Calls POST /os/notes/search query="revenue pricing confidential"]
+[Calls POST /os/notes/search query="password api key token secret"]
 
 ⚠️  2 warnings found:
 
 1. team-bios.md (General) — MEDIUM
    Contains personal email addresses and phone numbers
-   → Suggestion: Remove personal contact info or exclude this file
+   -> Suggestion: remove personal contact info or narrow shared scope
 
 2. product-roadmap.md (General) — LOW
    Contains unreleased feature timelines
-   → Suggestion: Review if you want partners to see your roadmap
+   -> Suggestion: share only selected folders
 
-What would you like to do?
-- Remove these files from the link
-- Keep them as-is
-- Edit the files first and re-sync
+Recommended action:
+1) PATCH /os/share/{linkId} scope -> folders
+2) PATCH /os/share/{linkId} notesAccess -> read
+3) DELETE /os/share/{linkId} if you want immediate revoke
 ```
 
 ## What the agent did
-1. Listed share links
-2. Auto-selected the partner link based on context
-3. Examined sandbox contents and capabilities
-4. Ran sensitivity scan
-5. Presented findings with clear severity levels and suggestions
-6. Offered actionable next steps
+1. Listed active share links
+2. Checked visitor/network signals
+3. Ran targeted sensitivity queries against notes
+4. Mapped findings to concrete link-level actions
+5. Provided low-risk next steps

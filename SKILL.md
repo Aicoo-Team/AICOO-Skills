@@ -180,6 +180,22 @@ Catalog fields:
 
 MCP servers appear in catalog with `source: "mcp"` and namespace set to server name (`github`, `notion`, etc.).
 
+### Integrations health + auth actions
+
+```bash
+# unified OAuth + MCP health surface
+curl -s "$PULSE_BASE/tools/integrations" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+
+# disconnect OAuth integration by id
+curl -s -X DELETE "$PULSE_BASE/tools/integrations/{id}" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+
+# disconnect MCP OAuth binding by server id
+curl -s -X POST "$PULSE_BASE/tools/mcp/{id}/disconnect" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
 ---
 
 ## Capability 3: Context Sync (bulk)
@@ -310,10 +326,9 @@ Monitor incoming activity via:
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
 | `/init` | POST | Initialize workspace |
-| `/context/status` | GET | Workspace summary |
-| `/context/folders` | GET/POST | List/create folders |
+| `/os/status` | GET | Workspace summary |
+| `/os/folders` | GET/POST | List/create folders |
 | `/os` | GET | Discover OS endpoints |
-| `/os/folders` | GET | List folders |
 | `/os/notes` | GET/POST | List/create notes |
 | `/os/notes/{id}` | GET/PATCH | Read/edit note |
 | `/os/notes/search` | POST | Semantic search notes |
@@ -322,11 +337,15 @@ Monitor incoming activity via:
 | `/os/memory/search` | POST | Search memory |
 | `/os/network` | GET | Links + visitors + contacts |
 | `/os/share` | POST | Create share link |
+| `/accumulate` | POST | Bulk sync |
+| `/os/share/list` | GET | List links |
+| `/os/share/{linkId}` | PATCH/DELETE | Update/revoke link |
 | `/os/todos` | GET/POST | List/create todos |
 | `/tools` | GET/POST | Discover/execute non-OS tools |
-| `/accumulate` | POST | Bulk sync |
-| `/share/list` | GET | List links |
-| `/share/{linkId}` | PATCH/DELETE | Update/revoke link |
+| `/tools/namespaces` | GET/PUT | List/toggle enabled namespaces |
+| `/tools/integrations` | GET | Unified OAuth + MCP health |
+| `/tools/integrations/{id}` | DELETE | Disconnect OAuth integration |
+| `/tools/mcp/{id}/disconnect` | POST | Disconnect MCP OAuth binding |
 | `/agent/message` | POST | human or agent routing |
 | `/network/request` | POST | Request friend/agent access |
 | `/network/requests` | GET | List pending requests |

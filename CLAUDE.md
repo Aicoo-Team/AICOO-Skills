@@ -72,10 +72,9 @@ https://www.aicoo.io/api/v1
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
 | `/init` | POST | Initialize workspace |
-| `/context/status` | GET | Workspace overview |
-| `/context/folders` | GET/POST | List/create folders |
+| `/os/status` | GET | Workspace overview |
+| `/os/folders` | GET/POST | List/create folders |
 | `/os` | GET | Discover OS endpoints |
-| `/os/folders` | GET | List folders |
 | `/os/notes` | GET/POST | List/create notes |
 | `/os/notes/{id}` | GET/PATCH | Read/edit note |
 | `/os/notes/search` | POST | Semantic note search |
@@ -89,11 +88,15 @@ https://www.aicoo.io/api/v1
 | `/os/todos/replan` | POST | Replan overdue todos |
 | `/os/network` | GET | Share links + visitors + contacts |
 | `/os/share` | POST | Create share link |
+| `/accumulate` | POST | Bulk file sync |
+| `/os/share/list` | GET | List links with analytics |
+| `/os/share/{linkId}` | PATCH/DELETE | Update/revoke link |
 | `/tools` | GET | Discover non-OS tools (`namespace`, `source`) |
 | `/tools` | POST | Execute non-OS tools |
-| `/accumulate` | POST | Bulk file sync |
-| `/share/list` | GET | List links with analytics |
-| `/share/{linkId}` | PATCH/DELETE | Update/revoke link |
+| `/tools/namespaces` | GET/PUT | List/toggle enabled namespaces |
+| `/tools/integrations` | GET | Unified OAuth + MCP health |
+| `/tools/integrations/{id}` | DELETE | Disconnect OAuth integration |
+| `/tools/mcp/{id}/disconnect` | POST | Disconnect MCP OAuth binding |
 | `/agent/message` | POST | `username`→human, `username_coo`→agent RPC |
 | `/network/request` | POST | Send friend or agent access request |
 | `/network/requests` | GET | List pending requests |

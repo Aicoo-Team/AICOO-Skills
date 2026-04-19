@@ -6,112 +6,79 @@ All endpoints require `Authorization: Bearer <PULSE_API_KEY>` header.
 
 ---
 
-## GET /share/{linkId}/examine
+## GET /os/network
 
-Deep inspection of a share link's sandbox contents and capabilities.
+Network overview for the current user.
 
-**Response (200):**
+Includes:
+- `shareLinks`
+- `visitors`
+- `contacts`
+
+Use this for a quick risk/audience summary.
+
+---
+
+## GET /os/share/list
+
+List all share links (with analytics + capabilities).
+
+**Query Params:**
+- `status`: `active` | `revoked` | `all`
+- `limit`: 1..50
+
+Use this endpoint to pick a `linkId` for updates/revoke.
+
+---
+
+## PATCH /os/share/{linkId}
+
+Update link scope/capabilities.
+
+**Body examples:**
 ```json
-{
-  "success": true,
-  "link": {
-    "id": "uuid",
-    "label": "For investors",
-    "scope": "all",
-    "access": "read",
-    "isActive": true,
-    "expiresAt": "ISO8601 or null"
-  },
-  "sandbox": {
-    "contextItems": [
-      {
-        "id": "ctx-uuid",
-        "name": "pitch-deck-notes.md",
-        "folder": "Investor Materials",
-        "sizeBytes": 4200,
-        "type": "markdown",
-        "lastUpdated": "ISO8601"
-      }
-    ],
-    "totalItems": 42,
-    "totalSizeBytes": 156000,
-    "folders": ["Investor Materials", "General"],
-    "capabilities": {
-      "canReadNotes": true,
-      "canSearchNotes": true,
-      "canReadCalendar": false,
-      "canBookMeetings": false,
-      "canAccessEmail": false,
-      "canAccessTodos": false
-    }
-  },
-  "sensitivityScan": {
-    "status": "clean" | "warnings" | "not_scanned",
-    "warnings": [],
-    "scannedAt": "ISO8601 or null"
-  }
-}
+{ "scope": "folders", "folderIds": [5, 12] }
+```
+
+```json
+{ "notesAccess": "read", "access": "read" }
+```
+
+```json
+{ "expiresIn": "7d" }
 ```
 
 ---
 
-## POST /share/{linkId}/scan
+## DELETE /os/share/{linkId}
 
-Run an AI-powered sensitivity scan on the sandbox contents.
+Revoke a share link immediately.
 
-Checks for:
-- Financial data (revenue, burn rate, pricing)
-- Personal information (emails, phones, addresses)
-- Credentials (API keys, passwords, tokens)
-- Internal communications (private messages)
-- Legal documents (contracts, NDAs)
+---
 
-**Response (200):**
+## POST /os/notes/search
+
+Use term-based scans to detect sensitive content before sharing.
+
+**Body examples:**
 ```json
-{
-  "success": true,
-  "sensitivityScan": {
-    "status": "warnings",
-    "warnings": [
-      {
-        "contextId": "ctx-uuid",
-        "name": "internal-finances.md",
-        "folder": "General",
-        "issues": [
-          {
-            "type": "financial_data" | "personal_info" | "credentials" | "internal_comms" | "legal_docs",
-            "description": "Contains revenue figures and burn rate",
-            "severity": "low" | "medium" | "high" | "critical",
-            "suggestion": "Consider moving to a restricted folder"
-          }
-        ]
-      }
-    ],
-    "scannedAt": "ISO8601"
-  }
-}
+{ "query": "revenue pricing confidential" }
+```
+
+```json
+{ "query": "password api key token secret" }
+```
+
+```json
+{ "query": "contract nda legal" }
 ```
 
 ---
 
-## POST /share/{linkId}/exclude
+## Recommended Audit Flow
 
-Exclude specific context items from the link's accessible scope.
-
-**Request Body:**
-```json
-{
-  "contextIds": ["ctx-uuid-1", "ctx-uuid-2"]
-}
-```
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "excluded": 2,
-  "remainingContextCount": 40
-}
-```
-
-Items are not deleted — just excluded from this specific share link's sandbox. They remain available in other links and in the user's own context.
+1. `GET /os/share/list` -> enumerate active links and capabilities
+2. `GET /os/network` -> inspect visitor activity
+3. `POST /os/notes/search` -> run sensitive-term scans
+4. `PATCH /os/share/{linkId}` -> downgrade scope/access when needed
+5. `DELETE /os/share/{linkId}` -> revoke high-risk links

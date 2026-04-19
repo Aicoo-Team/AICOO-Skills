@@ -34,7 +34,7 @@ Review:
 
 ```bash
 curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
-  "https://www.aicoo.io/api/v1/context/status" | jq .
+  "https://www.aicoo.io/api/v1/os/status" | jq .
 ```
 
 ### Step 3: Search for sensitive content
@@ -67,19 +67,19 @@ Summarize:
 
 ```bash
 # narrow scope
-curl -s -X PATCH "https://www.aicoo.io/api/v1/share/{linkId}" \
+curl -s -X PATCH "https://www.aicoo.io/api/v1/os/share/{linkId}" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"scope":"folders","folderIds":[5,12]}' | jq .
 
 # downgrade notes access
-curl -s -X PATCH "https://www.aicoo.io/api/v1/share/{linkId}" \
+curl -s -X PATCH "https://www.aicoo.io/api/v1/os/share/{linkId}" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"notesAccess":"read"}' | jq .
 
 # revoke
-curl -s -X DELETE "https://www.aicoo.io/api/v1/share/{linkId}" \
+curl -s -X DELETE "https://www.aicoo.io/api/v1/os/share/{linkId}" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 

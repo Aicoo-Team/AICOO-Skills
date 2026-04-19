@@ -18,7 +18,7 @@ Your Pulse agent shares knowledge with guests. Keep it current:
 3. If new: POST /os/notes with clear title and content
 4. For bulk changes: use POST /accumulate with file array
 
-**Check staleness:** GET /context/status — if lastSyncedAt > 24h, do a sync pass.`;
+**Check staleness:** GET /os/status — if lastSyncedAt > 24h, do a sync pass.`;
 
 module.exports = async function handler(event) {
   if (!event || typeof event !== 'object') return;

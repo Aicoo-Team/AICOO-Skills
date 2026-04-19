@@ -22,7 +22,7 @@ Create and manage secure, shareable links to a user's agent.
 
 ```bash
 curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
-  "https://www.aicoo.io/api/v1/context/status" | jq .
+  "https://www.aicoo.io/api/v1/os/status" | jq .
 ```
 
 If `contextCount` is 0, run `context-sync` first.
@@ -81,18 +81,25 @@ curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
   "https://www.aicoo.io/api/v1/os/network" | jq .
 ```
 
-### Update/revoke link (legacy share endpoints)
+### Update/revoke link (canonical OS endpoints)
 
 ```bash
 # update
-curl -s -X PATCH "https://www.aicoo.io/api/v1/share/{linkId}" \
+curl -s -X PATCH "https://www.aicoo.io/api/v1/os/share/{linkId}" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"notesAccess":"write","expiresIn":"30d"}' | jq .
 
 # revoke
-curl -s -X DELETE "https://www.aicoo.io/api/v1/share/{linkId}" \
+curl -s -X DELETE "https://www.aicoo.io/api/v1/os/share/{linkId}" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
+### List links with analytics
+
+```bash
+curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+  "https://www.aicoo.io/api/v1/os/share/list?status=active&limit=20" | jq .
 ```
 
 ## Folder-Scoped Share Example
