@@ -52,6 +52,12 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/search" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"project roadmap"}' | jq .
+
+# deterministic grep (regex/literal + context lines)
+curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/grep" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"pattern":"roadmap|timeline","mode":"regex","caseSensitive":false,"contextBefore":3,"contextAfter":3}' | jq .
 ```
 
 ### Step 4: Create or update notes
@@ -74,6 +80,18 @@ curl -s -X PATCH "https://www.aicoo.io/api/v1/os/notes/42" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"content":"# Updated Roadmap\n\n..."}' | jq .
+
+# move (mv)
+curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/42/move" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"folderName":"Technical"}' | jq .
+
+# copy (cp)
+curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/42/copy" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"folderName":"Archive"}' | jq .
 ```
 
 ### Step 5: Bulk file sync
@@ -142,9 +160,12 @@ Then patch that note via `PATCH /api/v1/os/notes/{id}`.
 | Browse folders | `GET /os/folders` |
 | List notes in folder | `GET /os/notes?folderId=...` |
 | Search notes | `POST /os/notes/search` |
+| Grep notes (exact/regex + context) | `POST /os/notes/grep` |
 | Read note | `GET /os/notes/{id}` |
 | Create note | `POST /os/notes` |
 | Edit note | `PATCH /os/notes/{id}` |
+| Move note | `POST /os/notes/{id}/move` |
+| Copy note | `POST /os/notes/{id}/copy` |
 | Snapshot save/list/restore | `/os/snapshots/{noteId}` + `/restore` |
 | Bulk upload/delete | `POST /accumulate` |
 

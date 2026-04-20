@@ -73,7 +73,7 @@ curl -s "$PULSE_BASE/os/notes/42" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 
-### Search, create, edit notes
+### Search, grep, create, edit, move, copy notes
 
 ```bash
 # semantic search
@@ -81,6 +81,12 @@ curl -s -X POST "$PULSE_BASE/os/notes/search" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"investor pitch"}' | jq .
+
+# deterministic grep-style search (regex/literal + line context)
+curl -s -X POST "$PULSE_BASE/os/notes/grep" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"pattern":"titleKey|title_key","mode":"regex","caseSensitive":false,"contextBefore":5,"contextAfter":5}' | jq .
 
 # create
 curl -s -X POST "$PULSE_BASE/os/notes" \
@@ -93,6 +99,18 @@ curl -s -X PATCH "$PULSE_BASE/os/notes/42" \
   -H "Authorization: Bearer $PULSE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"title":"Project Roadmap (Updated)","content":"# Updated\n\n..."}' | jq .
+
+# move (mv)
+curl -s -X POST "$PULSE_BASE/os/notes/42/move" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"folderName":"Technical"}' | jq .
+
+# copy (cp)
+curl -s -X POST "$PULSE_BASE/os/notes/42/copy" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"folderName":"Archive","title":"Roadmap Snapshot Copy"}' | jq .
 ```
 
 ### Snapshots
@@ -233,9 +251,11 @@ Upload via `/accumulate` and keep them versioned like any other knowledge file.
 After substantive conversations:
 
 1. Search: `POST /os/notes/search`
-2. Snapshot: `POST /os/snapshots/{noteId}`
-3. Edit/create: `PATCH /os/notes/{id}` or `POST /os/notes`
-4. Bulk sync docs with `POST /accumulate`
+2. Precise grep (regex/literal + context): `POST /os/notes/grep`
+3. Snapshot: `POST /os/snapshots/{noteId}`
+4. Edit/create: `PATCH /os/notes/{id}` or `POST /os/notes`
+5. Reorganize by move/copy: `POST /os/notes/{id}/move`, `POST /os/notes/{id}/copy`
+6. Bulk sync docs with `POST /accumulate`
 
 ### Claude Code loop example
 
@@ -332,6 +352,9 @@ Monitor incoming activity via:
 | `/os/notes` | GET/POST | List/create notes |
 | `/os/notes/{id}` | GET/PATCH | Read/edit note |
 | `/os/notes/search` | POST | Semantic search notes |
+| `/os/notes/grep` | POST | Deterministic grep search with line context |
+| `/os/notes/{id}/move` | POST | Move note to another folder (mv) |
+| `/os/notes/{id}/copy` | POST | Copy note to folder/title (cp) |
 | `/os/snapshots/{noteId}` | GET/POST | List/save snapshots |
 | `/os/snapshots/{noteId}/restore` | POST | Restore snapshot |
 | `/os/memory/search` | POST | Search memory |

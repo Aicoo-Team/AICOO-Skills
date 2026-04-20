@@ -20,10 +20,12 @@ Set up automatic triggers to keep Pulse knowledge current.
 Use these endpoints in automation:
 
 1. Search overlap: `POST /api/v1/os/notes/search`
-2. Snapshot before edits: `POST /api/v1/os/snapshots/{noteId}`
-3. Edit existing note: `PATCH /api/v1/os/notes/{noteId}`
-4. Create new note: `POST /api/v1/os/notes`
-5. Bulk updates: `POST /api/v1/accumulate`
+2. Deterministic grep (exact/regex + context): `POST /api/v1/os/notes/grep`
+3. Snapshot before edits: `POST /api/v1/os/snapshots/{noteId}`
+4. Edit existing note: `PATCH /api/v1/os/notes/{noteId}`
+5. Create new note: `POST /api/v1/os/notes`
+6. Reorganize with move/copy: `POST /api/v1/os/notes/{id}/move`, `POST /api/v1/os/notes/{id}/copy`
+7. Bulk updates: `POST /api/v1/accumulate`
 
 ## Strategy 1: Rule-Based (/loop or cron)
 

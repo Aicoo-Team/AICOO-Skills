@@ -102,6 +102,51 @@ Semantic note search.
 
 ---
 
+## POST /os/notes/grep
+
+Deterministic grep-style search (literal/regex + line context).
+
+**Body:**
+```json
+{
+  "pattern": "titleKey|title_key",
+  "mode": "regex",
+  "caseSensitive": false,
+  "contextBefore": 5,
+  "contextAfter": 5,
+  "folderId": 5
+}
+```
+
+---
+
+## POST /os/notes/{id}/move
+
+Move a note to another folder.
+
+**Body:**
+```json
+{ "folderId": 12 }
+```
+
+Or:
+```json
+{ "folderName": "Archive" }
+```
+
+---
+
+## POST /os/notes/{id}/copy
+
+Copy a note (content + metadata) to target folder/title.
+
+**Body:**
+```json
+{ "folderName": "Archive", "title": "Copy of Roadmap" }
+```
+
+---
+
 ## GET/POST /os/snapshots/{noteId}
 
 - `GET`: list snapshots

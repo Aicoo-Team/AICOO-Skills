@@ -78,7 +78,10 @@ https://www.aicoo.io/api/v1
 | `/os/notes` | GET/POST | List/create notes |
 | `/os/notes/{id}` | GET/PATCH | Read/edit note |
 | `/os/notes/search` | POST | Semantic note search |
+| `/os/notes/grep` | POST | Deterministic grep search with line context |
 | `/os/notes/{id}/pin` | POST | Pin/unpin note |
+| `/os/notes/{id}/move` | POST | Move note to another folder (mv) |
+| `/os/notes/{id}/copy` | POST | Copy note to folder/title (cp) |
 | `/os/snapshots/{noteId}` | GET/POST | List/save snapshots |
 | `/os/snapshots/{noteId}/restore` | POST | Restore snapshot |
 | `/os/memory/search` | POST | Search memory |
@@ -113,9 +116,11 @@ https://www.aicoo.io/api/v1
 After meaningful conversations:
 
 1. Search existing notes: `POST /os/notes/search`
-2. Save snapshot before risky edits: `POST /os/snapshots/{noteId}`
-3. Update/create notes via `PATCH /os/notes/{id}` or `POST /os/notes`
-4. Use `/accumulate` for bulk sync
+2. Use deterministic grep when precision matters: `POST /os/notes/grep`
+3. Save snapshot before risky edits: `POST /os/snapshots/{noteId}`
+4. Update/create notes via `PATCH /os/notes/{id}` or `POST /os/notes`
+5. Reorganize by move/copy when needed: `POST /os/notes/{id}/move`, `POST /os/notes/{id}/copy`
+6. Use `/accumulate` for bulk sync
 
 ## Daily Brief + Inbox Monitoring Automation
 

@@ -2,6 +2,25 @@
 
 ---
 
+## April 20, 2026
+
+### Added
+- **OS note file-ops endpoints documented**:
+  - `POST /os/notes/{id}/move` (mv)
+  - `POST /os/notes/{id}/copy` (cp)
+- **OS deterministic note grep documented**:
+  - `POST /os/notes/grep` with `contextBefore` / `contextAfter`
+
+### Changed
+- Root docs (`SKILL.md`, `CLAUDE.md`) now include `grep/move/copy` in endpoint tables and workflows.
+- `context-sync` skill now teaches:
+  - semantic search vs deterministic grep
+  - note move/copy operations for organization workflows
+- `context-sync` API reference expanded with concrete request bodies for `grep`, `move`, and `copy`.
+- `autonomous-sync` contract updated to include precise grep and note file operations.
+
+---
+
 ## April 19, 2026
 
 ### Breaking Changes
