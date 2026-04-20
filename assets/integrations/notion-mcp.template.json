@@ -1,0 +1,5 @@
+{
+  "name": "Notion MCP",
+  "serverUrl": "https://<YOUR_NOTION_MCP_SERVER_URL>",
+  "config": {}
+}

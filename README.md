@@ -53,6 +53,15 @@ Add to your shell profile (`~/.zshrc`, `~/.bashrc`) or `.env` for persistence.
 
 Choose your agent runtime:
 
+**Universal (any agent runtime with Skills CLI):**
+```bash
+npx skills add <owner/repo>
+# Example:
+npx skills add Aicoo-Team/AICOO-Skills
+```
+
+Any agent runtime that supports `skills add` can use this installer path.
+
 **Codex:**
 ```bash
 python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
@@ -202,6 +211,8 @@ aicoo-skills/
 |-- SKILL.md                      # umbrella skill (compat ID: pulse)
 |-- CLAUDE.md                     # Claude-focused integration notes
 |-- README.md
+|-- assets/
+|   `-- integrations/            # verified MCP setup templates/runbooks
 |-- skills/
 |   |-- onboarding/
 |   |-- context-sync/
@@ -228,6 +239,51 @@ aicoo-skills/
 - Base URL: `https://www.aicoo.io/api/v1`
 - Auth header: `Authorization: Bearer $PULSE_API_KEY`
 - API docs: https://www.aicoo.io/docs/api
+
+## Integrations + MCP Runbook
+
+Use the tools control plane for OAuth and MCP lifecycle.
+
+### 1) Unified health surface
+
+```bash
+curl -s "https://www.aicoo.io/api/v1/tools/integrations" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
+`/tools/integrations` returns OAuth + MCP status with one enum:
+
+- `connected`
+- `needs_reauth`
+- `disconnected`
+- `error`
+
+No tokens are returned by this endpoint. It includes action hints (`refresh`, `authorize`, `disconnect`, `remove`).
+
+### 2) MCP lifecycle endpoints
+
+- `GET /tools/mcp` list servers
+- `POST /tools/mcp` add server
+- `GET /tools/mcp/{id}` inspect one server
+- `PATCH /tools/mcp/{id}` update name/url/config/status
+- `DELETE /tools/mcp/{id}` remove server
+- `POST /tools/mcp/{id}/authorize` start OAuth (returns `authorizeUrl`)
+- `POST /tools/mcp/{id}/refresh` run health check + discover tools
+- `POST /tools/mcp/{id}/disconnect` clear OAuth binding
+
+### 3) OAuth integration disconnect
+
+```bash
+curl -s -X DELETE "https://www.aicoo.io/api/v1/tools/integrations/{id}" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
+### 4) Verified MCP assets
+
+See reusable templates and tested setup references:
+
+- `assets/integrations/verified-mcps.md`
+- `assets/integrations/notion-mcp.template.json`
 
 ## For maintainers
 

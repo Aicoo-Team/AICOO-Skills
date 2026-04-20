@@ -214,6 +214,42 @@ curl -s -X POST "$PULSE_BASE/tools/mcp/{id}/disconnect" \
   -H "Authorization: Bearer $PULSE_API_KEY" | jq .
 ```
 
+`/tools/integrations` status enum is unified across OAuth + MCP:
+
+- `connected`
+- `needs_reauth`
+- `disconnected`
+- `error`
+
+No tokens are returned by this endpoint. Use it as the first health check.
+
+### MCP server lifecycle runbook (/tools/mcp)
+
+```bash
+# list MCP servers
+curl -s "$PULSE_BASE/tools/mcp" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+
+# add MCP server
+curl -s -X POST "$PULSE_BASE/tools/mcp" \
+  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Notion MCP","serverUrl":"https://<notion-mcp-server-url>","config":{}}' | jq .
+
+# start OAuth (returns authorizeUrl)
+curl -s -X POST "$PULSE_BASE/tools/mcp/{id}/authorize" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+
+# refresh health + discover tools after OAuth
+curl -s -X POST "$PULSE_BASE/tools/mcp/{id}/refresh" \
+  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+```
+
+Reusable setup assets:
+
+- `assets/integrations/verified-mcps.md`
+- `assets/integrations/notion-mcp.template.json`
+
 ---
 
 ## Capability 3: Context Sync (bulk)
@@ -368,6 +404,10 @@ Monitor incoming activity via:
 | `/tools/namespaces` | GET/PUT | List/toggle enabled namespaces |
 | `/tools/integrations` | GET | Unified OAuth + MCP health |
 | `/tools/integrations/{id}` | DELETE | Disconnect OAuth integration |
+| `/tools/mcp` | GET/POST | List/add MCP servers |
+| `/tools/mcp/{id}` | GET/PATCH/DELETE | Inspect/update/remove MCP server |
+| `/tools/mcp/{id}/authorize` | POST | Start MCP OAuth flow |
+| `/tools/mcp/{id}/refresh` | POST | Check MCP health + discover tools |
 | `/tools/mcp/{id}/disconnect` | POST | Disconnect MCP OAuth binding |
 | `/agent/message` | POST | human or agent routing |
 | `/network/request` | POST | Request friend/agent access |

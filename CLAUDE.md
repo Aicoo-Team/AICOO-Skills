@@ -99,6 +99,10 @@ https://www.aicoo.io/api/v1
 | `/tools/namespaces` | GET/PUT | List/toggle enabled namespaces |
 | `/tools/integrations` | GET | Unified OAuth + MCP health |
 | `/tools/integrations/{id}` | DELETE | Disconnect OAuth integration |
+| `/tools/mcp` | GET/POST | List/add MCP servers |
+| `/tools/mcp/{id}` | GET/PATCH/DELETE | Inspect/update/remove MCP server |
+| `/tools/mcp/{id}/authorize` | POST | Start MCP OAuth flow |
+| `/tools/mcp/{id}/refresh` | POST | Check MCP health + discover tools |
 | `/tools/mcp/{id}/disconnect` | POST | Disconnect MCP OAuth binding |
 | `/agent/message` | POST | `username`→human, `username_coo`→agent RPC |
 | `/network/request` | POST | Send friend or agent access request |
@@ -110,6 +114,28 @@ https://www.aicoo.io/api/v1
 | `/briefing/matrix` | POST | Generate Eisenhower matrix |
 | `/briefings` | GET | Fetch historical briefings |
 | `/conversations` | GET | Inbox/conversation monitoring |
+
+## Integrations Runbook (OAuth + MCP)
+
+Use this sequence when an agent needs to configure integrations in Aicoo:
+
+1. `GET /tools/integrations` for unified health.
+2. If MCP server missing, `POST /tools/mcp`.
+3. If status is `needs_reauth`, call `POST /tools/mcp/{id}/authorize` and open `authorizeUrl` in browser.
+4. After auth callback, run `POST /tools/mcp/{id}/refresh`.
+5. Confirm tools appear in `GET /tools` and enable namespace via `PUT /tools/namespaces`.
+
+Status enum from `/tools/integrations`:
+- `connected`
+- `needs_reauth`
+- `disconnected`
+- `error`
+
+No tokens are returned by `/tools/integrations`; treat it as a safe health surface.
+
+Verified MCP setup assets:
+- `assets/integrations/verified-mcps.md`
+- `assets/integrations/notion-mcp.template.json`
 
 ## Autonomous Update Pattern
 

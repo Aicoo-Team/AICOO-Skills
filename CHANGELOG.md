@@ -10,6 +10,11 @@
   - `POST /os/notes/{id}/copy` (cp)
 - **OS deterministic note grep documented**:
   - `POST /os/notes/grep` with `contextBefore` / `contextAfter`
+- **Universal installer command documented**:
+  - `npx skills add <owner/repo>` (cross-agent install path)
+- **Integrations assets added**:
+  - `assets/integrations/verified-mcps.md`
+  - `assets/integrations/notion-mcp.template.json`
 
 ### Changed
 - Root docs (`SKILL.md`, `CLAUDE.md`) now include `grep/move/copy` in endpoint tables and workflows.
@@ -18,6 +23,10 @@
   - note move/copy operations for organization workflows
 - `context-sync` API reference expanded with concrete request bodies for `grep`, `move`, and `copy`.
 - `autonomous-sync` contract updated to include precise grep and note file operations.
+- Root docs now include a full tools integrations runbook covering:
+  - `GET /tools/integrations` health checks
+  - MCP lifecycle under `/tools/mcp/*`
+  - OAuth + MCP status interpretation (`connected`, `needs_reauth`, `disconnected`, `error`)
 
 ---
 
