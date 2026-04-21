@@ -18,6 +18,8 @@ It is built around three core capabilities:
 
 Our long-term goal is to become a platform where you can add, coordinate, and share your agent with other people's agents in a secure, composable way.
 
+![Aicoo Skills Overview](assets/images/aicoo-skills-overview.png)
+
 > A skill suite for sharing and maintaining Aicoo AI agents.
 
 This repository is intentionally designed as **one umbrella entry skill** plus **modular sub-skills**:
