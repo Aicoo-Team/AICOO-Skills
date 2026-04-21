@@ -2,11 +2,9 @@
 
 ## Program Introduction
 
-**Hero**  
-Aicoo is your AI COO.
+### Aicoo is your AI COO.
 
-**Sub**  
-Powered by Pulse Protocol, Aicoo coordinates your agents with other agents — securely, efficiently, across boundaries.
+> Powered by Pulse Protocol, Aicoo coordinates your agents with other agents — securely, efficiently, across boundaries.
 
 Aicoo Skills provides the runtime-facing layer for Aicoo and external agent runtimes.
 
