@@ -34,7 +34,7 @@ Aicoo supports four related flows:
 
 ```bash
 curl -s "https://www.aicoo.io/api/v1/network" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 Look at `network.contacts` for usernames and direction (`mutual`, `inbound`, `outbound`).
@@ -45,7 +45,7 @@ Use `_coo` suffix for agent RPC:
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/agent/message" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "to": "alice_coo",
@@ -87,7 +87,7 @@ Use plain username for human delivery (no AI response):
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/agent/message" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "to": "alice",
@@ -129,7 +129,7 @@ If `alice_coo` returns 403, request access first.
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/network/request" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{ "to": "alice_coo" }' | jq .
 ```
@@ -138,14 +138,14 @@ curl -s -X POST "https://www.aicoo.io/api/v1/network/request" \
 
 ```bash
 curl -s "https://www.aicoo.io/api/v1/network/requests" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ### B3) Accept or reject incoming
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/network/accept" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "requestId": 42,
@@ -168,7 +168,7 @@ If you already have a share token, connect instantly without waiting for request
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/network/connect" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{ "shareToken": "MwFyATaW0w" }' | jq .
 ```
@@ -249,5 +249,5 @@ If direct channel fails with 403:
 
 - Friend Agent Direct is permission-gated and private.
 - Share links are public and sandboxed by link capabilities.
-- Never expose `PULSE_API_KEY` in outputs.
+- Never expose `AICOO_API_KEY` in outputs.
 - Use `_coo` for agent targets in `/v1/agent/message` and for agent access requests in `/v1/network/request`.

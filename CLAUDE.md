@@ -12,7 +12,7 @@ Aicoo lets you share your AI agent securely with anyone. Instead of sending a st
 
 ## Authentication
 
-All Aicoo API calls require `PULSE_API_KEY`.
+All Aicoo API calls require `AICOO_API_KEY`.
 
 Generate your key at: https://www.aicoo.io/settings/api-keys  
 API docs: https://www.aicoo.io/docs/api
@@ -20,7 +20,7 @@ API docs: https://www.aicoo.io/docs/api
 Every request must include:
 
 ```
-Authorization: Bearer $PULSE_API_KEY
+Authorization: Bearer $AICOO_API_KEY
 ```
 
 ## API Model (Breaking Change: 2026-04-16)

@@ -12,7 +12,7 @@ Create and manage secure, shareable links to a user's agent.
 
 ## Prerequisites
 
-- `PULSE_API_KEY` must be set
+- `AICOO_API_KEY` must be set
 - Base URL: `https://www.aicoo.io/api/v1`
 - User should sync context first
 
@@ -21,7 +21,7 @@ Create and manage secure, shareable links to a user's agent.
 ### 1) Check context exists
 
 ```bash
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/status" | jq .
 ```
 
@@ -31,7 +31,7 @@ If `contextCount` is 0, run `context-sync` first.
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "scope":"all",
@@ -77,7 +77,7 @@ Always report:
 ### List links + visitors + contacts
 
 ```bash
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/network" | jq .
 ```
 
@@ -86,19 +86,19 @@ curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
 ```bash
 # update
 curl -s -X PATCH "https://www.aicoo.io/api/v1/os/share/{linkId}" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"notesAccess":"write","expiresIn":"30d"}' | jq .
 
 # revoke
 curl -s -X DELETE "https://www.aicoo.io/api/v1/os/share/{linkId}" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ### List links with analytics
 
 ```bash
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/share/list?status=active&limit=20" | jq .
 ```
 
@@ -106,12 +106,12 @@ curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
 
 ```bash
 # inspect folders first
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/folders" | jq .
 
 # create folder-scoped link
 curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"scope":"folders","folderIds":[5,12],"access":"read","notesAccess":"write","label":"Team collaborator"}' | jq .
 ```
@@ -123,13 +123,13 @@ Link notes are stored in `links/` folder. Edit policy by searching notes then pa
 ```bash
 # find link policy note
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/search" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"For-Investors"}' | jq .
 
 # edit policy note content
 curl -s -X PATCH "https://www.aicoo.io/api/v1/os/notes/123" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"content":"...\n\n## Policy\n\nBe professional, concise, and do not disclose confidential numbers."}' | jq .
 ```

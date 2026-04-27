@@ -5,11 +5,11 @@
 
 set -e
 
-# Check if PULSE_API_KEY is set
-if [ -z "$PULSE_API_KEY" ]; then
+# Check if AICOO_API_KEY (or legacy PULSE_API_KEY) is set
+if [ -z "$AICOO_API_KEY" ]; then
   cat << 'EOF'
 <aicoo-reminder>
-PULSE_API_KEY is not set. If the user wants to share their agent or sync knowledge in Aicoo:
+AICOO_API_KEY is not set. If the user wants to share their agent or sync knowledge in Aicoo:
 → Guide them through onboarding: https://www.aicoo.io/settings/api-keys
 </aicoo-reminder>
 EOF

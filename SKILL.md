@@ -31,19 +31,19 @@ API model is now split:
 
 ## Setup
 
-**Required:** `PULSE_API_KEY` environment variable.
+**Required:** `AICOO_API_KEY` environment variable.
 
 Generate at: https://www.aicoo.io/settings/api-keys  
 API docs: https://www.aicoo.io/docs/api
 
-Format: `pulse_sk_live_xxxxxxxx` (prod) or `pulse_sk_test_xxxxxxxx` (dev)
+Format: `aicoo_sk_live_xxxxxxxx` (prod) or `aicoo_sk_test_xxxxxxxx` (dev)
 
 **Base URL:** `https://www.aicoo.io/api/v1`
 
 **Auth header:**
 
 ```bash
-Authorization: Bearer $PULSE_API_KEY
+Authorization: Bearer $AICOO_API_KEY
 ```
 
 ---
@@ -54,7 +54,7 @@ Authorization: Bearer $PULSE_API_KEY
 
 ```bash
 curl -s "$PULSE_BASE/os" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ### Browse workspace (ls -> ls -la -> cat)
@@ -62,15 +62,15 @@ curl -s "$PULSE_BASE/os" \
 ```bash
 # ls
 curl -s "$PULSE_BASE/os/folders" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 # ls -la
 curl -s "$PULSE_BASE/os/notes?folderId=5&limit=20" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 # cat
 curl -s "$PULSE_BASE/os/notes/42" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ### Search, grep, create, edit, move, copy notes
@@ -78,37 +78,37 @@ curl -s "$PULSE_BASE/os/notes/42" \
 ```bash
 # semantic search
 curl -s -X POST "$PULSE_BASE/os/notes/search" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"investor pitch"}' | jq .
 
 # deterministic grep-style search (regex/literal + line context)
 curl -s -X POST "$PULSE_BASE/os/notes/grep" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"pattern":"titleKey|title_key","mode":"regex","caseSensitive":false,"contextBefore":5,"contextAfter":5}' | jq .
 
 # create
 curl -s -X POST "$PULSE_BASE/os/notes" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"title":"Project Roadmap","content":"# Q2 Plan\n\n..."}' | jq .
 
 # edit
 curl -s -X PATCH "$PULSE_BASE/os/notes/42" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"title":"Project Roadmap (Updated)","content":"# Updated\n\n..."}' | jq .
 
 # move (mv)
 curl -s -X POST "$PULSE_BASE/os/notes/42/move" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"folderName":"Technical"}' | jq .
 
 # copy (cp)
 curl -s -X POST "$PULSE_BASE/os/notes/42/copy" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"folderName":"Archive","title":"Roadmap Snapshot Copy"}' | jq .
 ```
@@ -118,17 +118,17 @@ curl -s -X POST "$PULSE_BASE/os/notes/42/copy" \
 ```bash
 # save snapshot
 curl -s -X POST "$PULSE_BASE/os/snapshots/42" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"label":"Before update"}' | jq .
 
 # list snapshots
 curl -s "$PULSE_BASE/os/snapshots/42" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 # restore
 curl -s -X POST "$PULSE_BASE/os/snapshots/42/restore" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"versionId":7}' | jq .
 ```
@@ -138,11 +138,11 @@ curl -s -X POST "$PULSE_BASE/os/snapshots/42/restore" \
 ```bash
 # list links, visitors, contacts
 curl -s "$PULSE_BASE/os/network" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 # create share link
 curl -s -X POST "$PULSE_BASE/os/share" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"scope":"all","access":"read","notesAccess":"read","label":"For investors","expiresIn":"7d"}' | jq .
 ```
@@ -152,11 +152,11 @@ curl -s -X POST "$PULSE_BASE/os/share" \
 ```bash
 # search/list
 curl -s "$PULSE_BASE/os/todos?limit=20&completed=false" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 # create
 curl -s -X POST "$PULSE_BASE/os/todos" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"title":"Prepare investor packet","priority":1}' | jq .
 ```
@@ -170,11 +170,11 @@ Use `/tools` for integrations and non-OS skills.
 ```bash
 # discover tools
 curl -s "$PULSE_BASE/tools" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 # execute a tool
 curl -s -X POST "$PULSE_BASE/tools" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"tool":"search_calendar_events","params":{"query":"standup","timeRange":"today"}}' | jq .
 ```
@@ -203,15 +203,15 @@ MCP servers appear in catalog with `source: "mcp"` and namespace set to server n
 ```bash
 # unified OAuth + MCP health surface
 curl -s "$PULSE_BASE/tools/integrations" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 # disconnect OAuth integration by id
 curl -s -X DELETE "$PULSE_BASE/tools/integrations/{id}" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 # disconnect MCP OAuth binding by server id
 curl -s -X POST "$PULSE_BASE/tools/mcp/{id}/disconnect" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 `/tools/integrations` status enum is unified across OAuth + MCP:
@@ -228,21 +228,21 @@ No tokens are returned by this endpoint. Use it as the first health check.
 ```bash
 # list MCP servers
 curl -s "$PULSE_BASE/tools/mcp" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 # add MCP server
 curl -s -X POST "$PULSE_BASE/tools/mcp" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"name":"Notion MCP","serverUrl":"https://<notion-mcp-server-url>","config":{}}' | jq .
 
 # start OAuth (returns authorizeUrl)
 curl -s -X POST "$PULSE_BASE/tools/mcp/{id}/authorize" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 # refresh health + discover tools after OAuth
 curl -s -X POST "$PULSE_BASE/tools/mcp/{id}/refresh" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 Reusable setup assets:
@@ -258,7 +258,7 @@ Use `/accumulate` for multi-file sync.
 
 ```bash
 curl -s -X POST "$PULSE_BASE/accumulate" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "files": [
@@ -369,7 +369,7 @@ Monitor incoming activity via:
 
 ## Security Rules
 
-- Never expose `PULSE_API_KEY`
+- Never expose `AICOO_API_KEY`
 - Shared links are sandboxed by scope + permissions
 - Revoked or expired links lose access immediately
 - Use snapshots before destructive edits

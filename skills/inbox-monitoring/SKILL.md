@@ -12,7 +12,7 @@ Monitor incoming communication in Aicoo and surface what needs action.
 
 ## Prerequisites
 
-- `PULSE_API_KEY` must be set
+- `AICOO_API_KEY` must be set
 - Base URL: `https://www.aicoo.io/api/v1`
 
 ## Endpoints
@@ -27,7 +27,7 @@ Monitor incoming communication in Aicoo and surface what needs action.
 
 ```bash
 curl -s "https://www.aicoo.io/api/v1/conversations?view=all&limit=50" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 Views:
@@ -40,14 +40,14 @@ Views:
 
 ```bash
 curl -s "https://www.aicoo.io/api/v1/network/requests" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ### Step 3: Optional network context
 
 ```bash
 curl -s "https://www.aicoo.io/api/v1/os/network" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ### Step 4: Build action queue

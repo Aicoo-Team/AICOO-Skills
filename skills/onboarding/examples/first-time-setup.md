@@ -7,20 +7,20 @@
 ### Step 1: Check API key
 
 ```bash
-echo "${PULSE_API_KEY:+Key is set}" || echo "No key found"
+echo "${AICOO_API_KEY:-$PULSE_API_KEY:+Key is set}" || echo "No key found"
 ```
 
 ### Step 2: User exports key
 
 ```bash
-export PULSE_API_KEY=pulse_sk_live_abc123...
+export AICOO_API_KEY=aicoo_sk_live_abc123...
 ```
 
 ### Step 3: Initialize workspace
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/init" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ### Step 4: Explore and collect context
@@ -31,7 +31,7 @@ Ask startup basics (product, team, traction, boundaries), then scan local files.
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "title":"About Us - Acme Corp",
@@ -43,7 +43,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/notes" \
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "files": [
@@ -57,7 +57,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "scope":"folders",

@@ -12,7 +12,7 @@ Generate an executive daily brief from Aicoo context, then derive top strategies
 
 ## Prerequisites
 
-- `PULSE_API_KEY` must be set
+- `AICOO_API_KEY` must be set
 - Base URL: `https://www.aicoo.io/api/v1`
 
 ## Endpoints
@@ -28,7 +28,7 @@ Generate an executive daily brief from Aicoo context, then derive top strategies
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/briefing" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"timeDuration":"last 24 hours"}' | jq .
 ```
@@ -46,7 +46,7 @@ This returns:
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/briefing/strategies" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "statusQuoSummary":"...",
@@ -61,7 +61,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/briefing/strategies" \
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/briefing/matrix" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "statusQuoSummary":"...",
@@ -76,7 +76,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/briefing/matrix" \
 
 ```bash
 curl -s "https://www.aicoo.io/api/v1/briefings?limit=10" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ## Claude Code Automation

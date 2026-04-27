@@ -17,24 +17,24 @@ Guide users through API key setup, workspace init, and first knowledge sync.
 3. Export env var:
 
 ```bash
-export PULSE_API_KEY=pulse_sk_live_xxxxxxxx
+export AICOO_API_KEY=aicoo_sk_live_xxxxxxxx
 ```
 
 Verify:
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/init" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ## Phase 2: Initialize + inspect
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/init" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 
 curl -s "https://www.aicoo.io/api/v1/os/status" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ## Phase 3: Discover user context
@@ -55,7 +55,7 @@ Use OS endpoint (post-refactor):
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "title":"About Me",
@@ -69,7 +69,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/notes" \
 CONTENT=$(cat path/to/file.md)
 
 curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d "$(jq -n --arg path "Technical/architecture.md" --arg content "$CONTENT" '{files:[{path:$path,content:$content}]}')" | jq .
 ```
@@ -88,7 +88,7 @@ via `/accumulate`.
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"scope":"all","access":"read","notesAccess":"read","label":"First share link","expiresIn":"7d"}' | jq .
 ```

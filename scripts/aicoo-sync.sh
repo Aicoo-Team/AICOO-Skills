@@ -11,12 +11,12 @@ set -e
 PULSE_BASE="https://www.aicoo.io/api/v1"
 PROJECT_DIR="${1:-.}"
 
-if [ -z "$PULSE_API_KEY" ]; then
-  echo "[$(date)] ERROR: PULSE_API_KEY not set"
+if [ -z "$AICOO_API_KEY" ]; then
+  echo "[$(date)] ERROR: AICOO_API_KEY not set"
   exit 1
 fi
 
-AUTH="Authorization: Bearer $PULSE_API_KEY"
+AUTH="Authorization: Bearer $AICOO_API_KEY"
 
 # Check staleness
 STATUS=$(curl -s "$PULSE_BASE/os/status" -H "$AUTH")

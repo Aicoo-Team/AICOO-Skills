@@ -12,7 +12,7 @@ Inspect exactly what data and capabilities are included in shared links.
 
 ## Prerequisites
 
-- `PULSE_API_KEY` must be set
+- `AICOO_API_KEY` must be set
 - Base URL: `https://www.aicoo.io/api/v1`
 
 ## Core Workflow
@@ -20,7 +20,7 @@ Inspect exactly what data and capabilities are included in shared links.
 ### Step 1: List network state
 
 ```bash
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/network" | jq .
 ```
 
@@ -33,7 +33,7 @@ Review:
 ### Step 2: Check context size/scope
 
 ```bash
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/status" | jq .
 ```
 
@@ -42,13 +42,13 @@ curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
 ```bash
 # financial
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/search" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"revenue pricing confidential"}' | jq .
 
 # credentials/personal info
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/search" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"password API key credentials"}' | jq .
 ```
@@ -68,19 +68,19 @@ Summarize:
 ```bash
 # narrow scope
 curl -s -X PATCH "https://www.aicoo.io/api/v1/os/share/{linkId}" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"scope":"folders","folderIds":[5,12]}' | jq .
 
 # downgrade notes access
 curl -s -X PATCH "https://www.aicoo.io/api/v1/os/share/{linkId}" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"notesAccess":"read"}' | jq .
 
 # revoke
 curl -s -X DELETE "https://www.aicoo.io/api/v1/os/share/{linkId}" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ## Search Categories

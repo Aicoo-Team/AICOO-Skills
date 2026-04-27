@@ -18,7 +18,7 @@ This file contains MCP integrations that are validated against Aicoo's current t
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/tools/mcp" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d @assets/integrations/notion-mcp.template.json | jq .
 ```
@@ -27,7 +27,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/tools/mcp" \
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/tools/mcp/{id}/authorize" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 Open the returned `authorizeUrl` in browser, complete consent, then run refresh.
@@ -36,14 +36,14 @@ Open the returned `authorizeUrl` in browser, complete consent, then run refresh.
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/tools/mcp/{id}/refresh" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ### Verify unified health
 
 ```bash
 curl -s "https://www.aicoo.io/api/v1/tools/integrations" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ## Health status enum

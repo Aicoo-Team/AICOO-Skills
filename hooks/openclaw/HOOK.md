@@ -11,7 +11,7 @@ Reminds the agent to check Aicoo knowledge freshness at session start.
 ## What It Does
 
 - Fires on `agent:bootstrap` (before workspace files are injected)
-- Checks if `PULSE_API_KEY` is available
+- Checks if `AICOO_API_KEY` is available
 - Adds a reminder to evaluate if Aicoo context is stale
 - Suggests sync actions based on recent work
 

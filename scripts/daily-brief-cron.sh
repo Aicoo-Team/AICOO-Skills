@@ -10,12 +10,12 @@ TIME_DURATION="${PULSE_BRIEF_TIME_DURATION:-last 24 hours}"
 SAVE_NOTE="${PULSE_BRIEF_SAVE_NOTE:-0}"
 NOTE_TITLE_PREFIX="${PULSE_BRIEF_NOTE_TITLE_PREFIX:-Daily Brief}"
 
-if [ -z "${PULSE_API_KEY:-}" ]; then
-  echo "[$(date)] ERROR: PULSE_API_KEY not set"
+if [ -z "${AICOO_API_KEY:-$PULSE_API_KEY}" ]; then
+  echo "[$(date)] ERROR: AICOO_API_KEY not set"
   exit 1
 fi
 
-AUTH="Authorization: Bearer $PULSE_API_KEY"
+AUTH="Authorization: Bearer $AICOO_API_KEY"
 
 BRIEF_RESPONSE=$(curl -sS -X POST "$PULSE_BASE/briefing" \
   -H "$AUTH" \

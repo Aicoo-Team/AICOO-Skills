@@ -10,12 +10,12 @@ INBOX_VIEW="${PULSE_INBOX_VIEW:-all}"
 INBOX_LIMIT="${PULSE_INBOX_LIMIT:-50}"
 STATE_FILE="${PULSE_INBOX_STATE_FILE:-/tmp/pulse-inbox-monitor-state.json}"
 
-if [ -z "${PULSE_API_KEY:-}" ]; then
-  echo "[$(date)] ERROR: PULSE_API_KEY not set"
+if [ -z "${AICOO_API_KEY:-$PULSE_API_KEY}" ]; then
+  echo "[$(date)] ERROR: AICOO_API_KEY not set"
   exit 1
 fi
 
-AUTH="Authorization: Bearer $PULSE_API_KEY"
+AUTH="Authorization: Bearer $AICOO_API_KEY"
 NOW_UTC=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 if [ ! -f "$STATE_FILE" ]; then

@@ -12,7 +12,7 @@ Set up automatic triggers to keep Aicoo knowledge current.
 
 ## Prerequisites
 
-- `PULSE_API_KEY` must be set
+- `AICOO_API_KEY` must be set
 - Base URL: `https://www.aicoo.io/api/v1`
 
 ## Sync Contract (post-refactor)
@@ -73,19 +73,19 @@ After substantial chat sessions:
 ```bash
 # 1) search
 curl -s -X POST "$PULSE_BASE/os/notes/search" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"database migration strategy"}' | jq .
 
 # 2) snapshot before overwrite
 curl -s -X POST "$PULSE_BASE/os/snapshots/42" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"label":"Pre-update"}' | jq .
 
 # 3) patch
 curl -s -X PATCH "$PULSE_BASE/os/notes/42" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"content":"# Updated content..."}' | jq .
 ```

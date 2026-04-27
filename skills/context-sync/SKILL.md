@@ -12,7 +12,7 @@ You help users sync local files, notes, and context into Aicoo so their shared a
 
 ## Prerequisites
 
-- `PULSE_API_KEY` environment variable must be set
+- `AICOO_API_KEY` environment variable must be set
 - Base URL: `https://www.aicoo.io/api/v1`
 
 ## API Model
@@ -25,7 +25,7 @@ You help users sync local files, notes, and context into Aicoo so their shared a
 ### Step 1: Check current state
 
 ```bash
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/status" | jq .
 ```
 
@@ -33,15 +33,15 @@ curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
 
 ```bash
 # folders
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/folders" | jq .
 
 # notes in folder
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/notes?folderId=5&limit=20" | jq .
 
 # note content
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/notes/42" | jq .
 ```
 
@@ -49,13 +49,13 @@ curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/search" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"project roadmap"}' | jq .
 
 # deterministic grep (regex/literal + context lines)
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/grep" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"pattern":"roadmap|timeline","mode":"regex","caseSensitive":false,"contextBefore":3,"contextAfter":3}' | jq .
 ```
@@ -65,31 +65,31 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/grep" \
 ```bash
 # create
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"title":"Project Roadmap Q2","content":"# Q2 Roadmap\n\n## Goals\n- Launch v2 API"}' | jq .
 
 # snapshot before edit
 curl -s -X POST "https://www.aicoo.io/api/v1/os/snapshots/42" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"label":"Pre-edit"}' | jq .
 
 # edit
 curl -s -X PATCH "https://www.aicoo.io/api/v1/os/notes/42" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"content":"# Updated Roadmap\n\n..."}' | jq .
 
 # move (mv)
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/42/move" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"folderName":"Technical"}' | jq .
 
 # copy (cp)
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/42/copy" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"folderName":"Archive"}' | jq .
 ```
@@ -98,7 +98,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/42/copy" \
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "files": [
@@ -112,12 +112,12 @@ curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
 
 ```bash
 # list
-curl -s -H "Authorization: Bearer $PULSE_API_KEY" \
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/folders" | jq .
 
 # create
 curl -s -X POST "https://www.aicoo.io/api/v1/os/folders" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"name":"Investor Materials"}' | jq .
 ```
@@ -126,7 +126,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/folders" \
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"delete":[{"path":"Technical/old-doc.md"}]}' | jq .
 ```
@@ -146,7 +146,7 @@ To customize per-link behavior, edit link notes in `links/`:
 ```bash
 # find link note
 curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/search" \
-  -H "Authorization: Bearer $PULSE_API_KEY" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"For-Investors"}' | jq .
 ```

@@ -44,7 +44,7 @@ This repo supports both:
 Generate at: https://www.aicoo.io/settings/api-keys
 
 ```bash
-export PULSE_API_KEY="pulse_sk_live_xxxxxxxx"
+export AICOO_API_KEY="aicoo_sk_live_xxxxxxxx"
 ```
 
 Add to your shell profile (`~/.zshrc`, `~/.bashrc`) or `.env` for persistence.
@@ -237,7 +237,7 @@ aicoo-skills/
 ## API Basics
 
 - Base URL: `https://www.aicoo.io/api/v1`
-- Auth header: `Authorization: Bearer $PULSE_API_KEY`
+- Auth header: `Authorization: Bearer $AICOO_API_KEY`
 - API docs: https://www.aicoo.io/docs/api
 
 ## Integrations + MCP Runbook
@@ -248,7 +248,7 @@ Use the tools control plane for OAuth and MCP lifecycle.
 
 ```bash
 curl -s "https://www.aicoo.io/api/v1/tools/integrations" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 `/tools/integrations` returns OAuth + MCP status with one enum:
@@ -275,7 +275,7 @@ No tokens are returned by this endpoint. It includes action hints (`refresh`, `a
 
 ```bash
 curl -s -X DELETE "https://www.aicoo.io/api/v1/tools/integrations/{id}" \
-  -H "Authorization: Bearer $PULSE_API_KEY" | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
 ### 4) Verified MCP assets

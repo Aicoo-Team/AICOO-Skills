@@ -34,7 +34,7 @@ const handler: HookHandler = async (event) => {
   const sessionKey = event.sessionKey || '';
   if (sessionKey.includes(':subagent:')) return;
 
-  // Only inject if PULSE_API_KEY is likely available
+  // Only inject if AICOO_API_KEY is likely available
   if (Array.isArray(event.context.bootstrapFiles)) {
     event.context.bootstrapFiles.push({
       path: 'PULSE_SYNC_REMINDER.md',

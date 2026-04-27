@@ -2,7 +2,7 @@
 
 Base URL: `https://www.aicoo.io/api/v1`
 
-All endpoints require `Authorization: Bearer <PULSE_API_KEY>` header.
+All endpoints require `Authorization: Bearer <AICOO_API_KEY>` header.
 
 ---
 
