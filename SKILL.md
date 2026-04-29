@@ -1,9 +1,9 @@
 ---
 name: aicoo
-description: "Use this skill when the user wants to share their AI agent with others, sync files/context to Aicoo, search/read/create/edit notes, create shareable agent links, manage shared links, keep their agent's knowledge up to date, set up auto-sync, manage note versions, generate daily briefings, monitor inbox activity, talk to someone else's agent (friend direct or share link), request/accept agent access, bridge from share token to friend connection, check their agent network, or get started with Aicoo. Triggers on: 'share my agent', 'share link', 'sync to Aicoo', 'upload to Aicoo', 'add context', 'search my notes', 'update my agent', 'what does my agent know', 'set up Aicoo', 'API key', 'snapshot', 'version', 'auto sync', 'schedule sync', 'keep updated', 'daily brief', 'morning brief', 'inbox monitoring', '/v1/briefing', '/v1/conversations', 'talk to their agent', '/v1/agent/message', '/v1/network/request', '/v1/network/accept', '/v1/network/connect', 'check this agent link', 'my network', 'who visited', or any mention of agent-to-agent communication via Aicoo (powered by Pulse Protocol)."
+description: "Use this skill when the user wants to share their AI agent with others, sync files/context to Aicoo, search/read/create/edit notes, create shareable agent links, manage shared links, keep their agent's knowledge up to date, set up auto-sync, manage note versions, generate daily briefings, monitor inbox activity, talk to someone else's agent (friend direct or share link), request/accept agent access, bridge from share token to friend connection, check their agent network, boot/start their Aicoo agent, check messages received, or get started with Aicoo. Triggers on: 'share my agent', 'share link', 'sync to Aicoo', 'upload to Aicoo', 'add context', 'search my notes', 'update my agent', 'what does my agent know', 'set up Aicoo', 'API key', 'snapshot', 'version', 'auto sync', 'schedule sync', 'keep updated', 'daily brief', 'morning brief', 'inbox monitoring', '/v1/briefing', '/v1/conversations', 'talk to their agent', '/v1/agent/message', '/v1/network/request', '/v1/network/accept', '/v1/network/connect', 'check this agent link', 'my network', 'who visited', 'start aicoo', 'boot my agent', 'launch aicoo', 'aicoo status', 'check messages', 'what did my agent receive', 'who talked to my agent', 'agent inbox', or any mention of agent-to-agent communication via Aicoo (powered by Pulse Protocol)."
 metadata:
   author: systemind
-  version: "2.1.0"
+  version: "2.2.0"
 ---
 
 # Aicoo Skills — Share Your AI Agent
@@ -363,6 +363,50 @@ Monitor incoming activity via:
 
 ```bash
 */15 * * * * /path/to/aicoo-skills/scripts/inbox-monitor-cron.sh >> /tmp/aicoo-inbox-monitor.log 2>&1
+```
+
+---
+
+## Capability 9: Start Aicoo (Boot & Incremental Sync)
+
+One-shot command to verify identity, check workspace health, and push changed context:
+
+1. `GET /v1/identity` — verify API key and get profile
+2. `GET /v1/os/status` — workspace health (note/folder counts, last sync)
+3. Search for identity files (`COO.md`, `USER.md`, `POLICY.md`) — flag if missing
+4. Detect locally changed files since last sync
+5. Dedup via `POST /os/notes/search`, then snapshot + patch or create
+6. `POST /accumulate` for bulk sync
+7. Report summary
+
+### Claude Code
+
+```
+/start_aicoo
+```
+
+---
+
+## Capability 10: Check Messages
+
+Review all messages your Aicoo agent received:
+
+1. `GET /v1/identity` — get caller ID for filtering
+2. `GET /v1/conversations?view=all` — all conversations (direct + shared agent)
+3. `GET /v1/network/requests` — pending friend/agent requests
+4. Group by conversation, show contact + channel + timestamps + content
+5. Suggest actions (reply, accept request, save contact)
+
+### Filtering
+
+- `view=coo` for shared-agent messages only
+- `view=me` for direct human messages only
+- Filter by contact name or time range
+
+### Claude Code
+
+```
+/check_messages
 ```
 
 ---

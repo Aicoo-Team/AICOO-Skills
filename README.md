@@ -97,7 +97,7 @@ If you want smaller building blocks instead of one umbrella skill:
 ```bash
 python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
   --repo Aicoo-Team/AICOO-Skills \
-  --path skills/onboarding skills/context-sync skills/share-agent skills/examine-sandbox skills/snapshots skills/autonomous-sync skills/talk-to-agent skills/daily-brief skills/inbox-monitoring
+  --path skills/onboarding skills/context-sync skills/share-agent skills/examine-sandbox skills/snapshots skills/autonomous-sync skills/talk-to-agent skills/daily-brief skills/inbox-monitoring skills/start-aicoo skills/check-messages
 ```
 
 **Claude Code / OpenClaw / Other:**
@@ -114,6 +114,8 @@ Recommended modular stack:
 - `talk-to-agent`
 - `daily-brief`
 - `inbox-monitoring`
+- `start-aicoo`
+- `check-messages`
 
 ## Runtime Setup
 
@@ -194,6 +196,8 @@ openclaw hooks enable aicoo-sync
 | `talk-to-agent` | Talk to another person's Aicoo agent via unified `/v1/agent/message` routing (`alice` human, `alice_coo` agent), request/accept handshake, link bridge, or share link |
 | `daily-brief` | Generate daily executive briefing + strategies + matrix |
 | `inbox-monitoring` | Monitor new conversation activity and pending requests |
+| `start-aicoo` | Boot agent: verify identity, check workspace, incremental context sync |
+| `check-messages` | Review messages your agent received, grouped by contact with actions |
 
 ## Mental Model
 
@@ -222,7 +226,9 @@ aicoo-skills/
 |   |-- autonomous-sync/
 |   |-- talk-to-agent/
 |   |-- daily-brief/
-|   `-- inbox-monitoring/
+|   |-- inbox-monitoring/
+|   |-- start-aicoo/
+|   `-- check-messages/
 |-- scripts/
 |   |-- aicoo-activator.sh
 |   |-- sync-detector.sh

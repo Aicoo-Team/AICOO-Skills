@@ -61,6 +61,12 @@ Generate daily executive briefs, top strategies, and Eisenhower matrix outputs.
 ### 9. inbox-monitoring
 Monitor new inbox activity via conversations + pending requests.
 
+### 10. start-aicoo
+Boot agent: verify identity, check workspace health, detect local changes, incremental sync.
+
+### 11. check-messages
+Review messages your agent received, grouped by conversation with contact info and suggested actions.
+
 ## API Base URL
 
 ```
