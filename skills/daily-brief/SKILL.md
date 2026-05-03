@@ -1,6 +1,7 @@
 ---
 name: daily-brief
 description: "Use this skill when the user asks for a daily briefing, morning summary, executive brief, top priorities, COO strategies, or Eisenhower matrix. Triggers on: 'daily brief', 'morning brief', 'daily summary', 'executive summary', '今日简报', '优先级矩阵', '/v1/briefing', '/v1/briefings', '/v1/briefing/strategies', '/v1/briefing/matrix'."
+user-invokable: true
 metadata:
   author: systemind
   version: "1.0.0"

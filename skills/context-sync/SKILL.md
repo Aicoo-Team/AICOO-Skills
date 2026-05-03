@@ -1,6 +1,7 @@
 ---
 name: context-sync
 description: "Use this skill when the user wants to upload files to Aicoo, sync context, add knowledge to their agent, update what their agent knows, push local files to Aicoo, search or read existing notes, browse folders, or accumulate context. Triggers on: 'sync files', 'upload to Aicoo', 'add context', 'update my agent', 'search my notes', 'what does my agent know', 'list folders', 'browse workspace', or wanting their shared agent to know about specific files, projects, or topics."
+user-invokable: true
 metadata:
   author: systemind
   version: "2.0.0"

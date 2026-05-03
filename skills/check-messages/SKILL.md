@@ -1,6 +1,7 @@
 ---
 name: check-messages
 description: "Use this skill when the user wants to see messages their Aicoo agent received, check what people asked, review conversation history, or see agent inbox activity. Triggers on: 'check messages', 'check my messages', 'what did my agent receive', 'who talked to my agent', 'agent inbox', 'show conversations', 'any new messages', 'what did people ask', 'agent activity', 'conversation history'."
+user-invokable: true
 metadata:
   author: systemind
   version: "1.0.0"

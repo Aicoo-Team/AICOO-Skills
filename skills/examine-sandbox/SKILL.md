@@ -1,6 +1,7 @@
 ---
 name: examine-sandbox
 description: "Use this skill when the user wants to check what data their shared agent can access, inspect what's being shared, review privacy, or see what guests will see. Triggers on: 'what can they see', 'check my link', 'audit my agent', 'review what I'm sharing', or 'what data is shared'."
+user-invokable: true
 metadata:
   author: systemind
   version: "2.0.0"
@@ -27,7 +28,7 @@ curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
 Review:
 
 - `shareLinks`
-- `visitors`
+- `visitors` (signed-in visitors may include name, username, email, and user id)
 - `contacts`
 
 ### Step 2: Check context size/scope
@@ -59,7 +60,7 @@ Summarize:
 
 1. how many active links and their scopes
 2. notes/calendar permission levels
-3. visitor activity
+3. sign-in requirement and visitor activity
 4. sensitive hits inside shared scope
 5. risk actions (downgrade/revoke)
 
@@ -77,6 +78,12 @@ curl -s -X PATCH "https://www.aicoo.io/api/v1/os/share/{linkId}" \
   -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"notesAccess":"read"}' | jq .
+
+# require sign-in
+curl -s -X PATCH "https://www.aicoo.io/api/v1/os/share/{linkId}" \
+  -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{"requireSignIn":true}' | jq .
 
 # revoke
 curl -s -X DELETE "https://www.aicoo.io/api/v1/os/share/{linkId}" \

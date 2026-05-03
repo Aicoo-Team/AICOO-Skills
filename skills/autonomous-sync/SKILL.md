@@ -1,6 +1,7 @@
 ---
 name: autonomous-sync
 description: "Use this skill when the user wants to keep their Aicoo agent updated automatically, set up scheduled syncs, configure triggers for knowledge updates, use CRON jobs, /loop commands, file watchers, or hooks to push changes to Aicoo. Triggers on: 'auto sync', 'keep updated', 'schedule', 'CRON', 'loop', 'trigger', 'watch files', 'auto update', 'periodic sync', 'hook', 'autonomous'."
+user-invokable: true
 metadata:
   author: systemind
   version: "2.0.0"

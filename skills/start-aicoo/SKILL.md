@@ -1,6 +1,7 @@
 ---
 name: start-aicoo
 description: "Use this skill when the user wants to boot their Aicoo agent, verify identity, check workspace health, and incrementally sync new or changed context. Triggers on: 'start aicoo', 'boot my agent', 'launch aicoo', 'wake up aicoo', 'aicoo status', 'is my agent running', 'sync context', 'incremental sync', 'update my agent context', 'refresh agent knowledge'."
+user-invokable: true
 metadata:
   author: systemind
   version: "1.0.0"

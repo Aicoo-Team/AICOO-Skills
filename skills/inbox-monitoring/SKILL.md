@@ -1,6 +1,7 @@
 ---
 name: inbox-monitoring
 description: "Use this skill when the user wants to monitor Aicoo inbox activity, check new conversations/messages, track pending requests, or run periodic inbox checks. Triggers on: 'inbox monitoring', 'monitor inbox', 'new messages', 'pending requests', 'message watch', '收件箱监控', '/v1/conversations', '/v1/network/requests'."
+user-invokable: true
 metadata:
   author: systemind
   version: "1.0.0"

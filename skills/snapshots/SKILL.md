@@ -1,6 +1,7 @@
 ---
 name: snapshots
 description: "Use this skill when the user wants to save a version of a note, create a backup before editing, list previous versions, restore a note to an earlier state, or manage note history. Triggers on: 'save version', 'snapshot', 'backup note', 'restore', 'rollback', 'version history', 'undo changes', 'previous version'."
+user-invokable: true
 metadata:
   author: systemind
   version: "2.0.0"

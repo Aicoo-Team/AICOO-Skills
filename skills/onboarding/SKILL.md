@@ -1,6 +1,7 @@
 ---
 name: onboarding
 description: "Use this skill when a user wants to set up Aicoo for the first time, register for an API key, initialize their workspace, or teach their agent about themselves. Triggers on: 'set up Aicoo', 'get started with Aicoo', 'init', 'initialize', 'register', 'API key', 'teach my agent about me', 'what should my agent know', or any first-time Aicoo usage."
+user-invokable: true
 metadata:
   author: systemind
   version: "2.0.0"
@@ -88,9 +89,9 @@ via `/accumulate`.
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
-  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" \
   -H "Content-Type: application/json" \
-  -d '{"scope":"all","access":"read","notesAccess":"read","label":"First share link","expiresIn":"7d"}' | jq .
+  -d '{"scope":"all","access":"read","notesAccess":"read","label":"First share link","expiresIn":"7d","requireSignIn":true}' | jq .
 ```
 
 ## API Split Reminder
