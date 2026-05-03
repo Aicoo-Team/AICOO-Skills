@@ -2,6 +2,21 @@
 
 ---
 
+## April 30, 2026
+
+### Added
+- **Share-link sign-in requirement documented**:
+  - `requireSignIn` request/update parameter for `/os/share`
+  - default `requireSignIn:true` behavior for new links
+  - signed-in visitor identity fields in analytics (`guestUserId`, `guestName`, `guestUsername`, `guestEmail`)
+- **Legacy auth env fallback documented** for share-link examples:
+  - `Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}`
+
+### Changed
+- `share-agent`, `talk-to-agent`, `examine-sandbox`, onboarding examples, root `SKILL.md`, `CLAUDE.md`, and `README.md` now distinguish signed-in share links from explicitly anonymous public links.
+
+---
+
 ## April 20, 2026
 
 ### Added

@@ -12,7 +12,7 @@ Network overview for the current user.
 
 Includes:
 - `shareLinks`
-- `visitors`
+- `visitors` (signed-in visitors may include `guestUserId`, `guestName`, `guestUsername`, `guestEmail`)
 - `contacts`
 
 Use this for a quick risk/audience summary.
@@ -48,6 +48,10 @@ Update link scope/capabilities.
 { "expiresIn": "7d" }
 ```
 
+```json
+{ "requireSignIn": true }
+```
+
 ---
 
 ## DELETE /os/share/{linkId}
@@ -78,7 +82,7 @@ Use term-based scans to detect sensitive content before sharing.
 ## Recommended Audit Flow
 
 1. `GET /os/share/list` -> enumerate active links and capabilities
-2. `GET /os/network` -> inspect visitor activity
+2. `GET /os/network` -> inspect visitor activity and signed-in identity fields
 3. `POST /os/notes/search` -> run sensitive-term scans
 4. `PATCH /os/share/{linkId}` -> downgrade scope/access when needed
 5. `DELETE /os/share/{linkId}` -> revoke high-risk links

@@ -22,7 +22,8 @@ The agent calls `POST /share/create` with:
   "folderIds": ["<investor-materials-folder-id>"],
   "access": "read",
   "label": "For investors - Series A",
-  "expiresIn": "7d"
+  "expiresIn": "7d",
+  "requireSignIn": true
 }
 ```
 
@@ -32,15 +33,15 @@ The agent returns:
 Your shareable agent link:
 https://www.aicoo.io/s/a1b2c3d4...
 
-Anyone with this link can talk to your agent about your investor materials.
+Signed-in recipients with this link can talk to your agent about your investor materials.
 - Scope: Investor Materials folder only
 - Access: Read-only (no calendar, no email)
 - Expires: April 9, 2026
-- No sign-up required for recipients
+- Sign-in required for recipients
 ```
 
 ### 4. Share it
-Send the link via email, WhatsApp, LinkedIn, or any messaging platform. Recipients open the link and start chatting with your AI agent immediately.
+Send the link via email, WhatsApp, LinkedIn, or any messaging platform. Recipients open the link, sign in, and then chat with your AI agent. For anonymous public access, explicitly set `requireSignIn:false`.
 
 ### 5. Check how it's going
 ```

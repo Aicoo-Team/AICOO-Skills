@@ -31,7 +31,7 @@ API model is now split:
 
 ## Setup
 
-**Required:** `AICOO_API_KEY` environment variable.
+**Required:** `AICOO_API_KEY` environment variable. Legacy `PULSE_API_KEY` is accepted as fallback.
 
 Generate at: https://www.aicoo.io/settings/api-keys  
 API docs: https://www.aicoo.io/docs/api
@@ -43,7 +43,7 @@ Format: `aicoo_sk_live_xxxxxxxx` (prod) or `aicoo_sk_test_xxxxxxxx` (dev)
 **Auth header:**
 
 ```bash
-Authorization: Bearer $AICOO_API_KEY
+Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}
 ```
 
 ---
@@ -54,7 +54,7 @@ Authorization: Bearer $AICOO_API_KEY
 
 ```bash
 curl -s "$PULSE_BASE/os" \
-  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
+  -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" | jq .
 ```
 
 ### Browse workspace (ls -> ls -la -> cat)
@@ -138,13 +138,13 @@ curl -s -X POST "$PULSE_BASE/os/snapshots/42/restore" \
 ```bash
 # list links, visitors, contacts
 curl -s "$PULSE_BASE/os/network" \
-  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
+  -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" | jq .
 
 # create share link
 curl -s -X POST "$PULSE_BASE/os/share" \
-  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" \
   -H "Content-Type: application/json" \
-  -d '{"scope":"all","access":"read","notesAccess":"read","label":"For investors","expiresIn":"7d"}' | jq .
+  -d '{"scope":"all","access":"read","notesAccess":"read","label":"For investors","expiresIn":"7d","requireSignIn":true}' | jq .
 ```
 
 ### Todos (OS-native)
@@ -413,8 +413,10 @@ Review all messages your Aicoo agent received:
 
 ## Security Rules
 
-- Never expose `AICOO_API_KEY`
+- Never expose `AICOO_API_KEY` or legacy `PULSE_API_KEY`
 - Shared links are sandboxed by scope + permissions
+- Share links require sign-in by default (`requireSignIn:true`); set `requireSignIn:false` only when the user explicitly wants anonymous public access
+- Signed-in share-link visitors may appear in analytics with name, username, email, and user id
 - Revoked or expired links lose access immediately
 - Use snapshots before destructive edits
 - Validate scope before sending a link externally
@@ -438,11 +440,11 @@ Review all messages your Aicoo agent received:
 | `/os/snapshots/{noteId}` | GET/POST | List/save snapshots |
 | `/os/snapshots/{noteId}/restore` | POST | Restore snapshot |
 | `/os/memory/search` | POST | Search memory |
-| `/os/network` | GET | Links + visitors + contacts |
-| `/os/share` | POST | Create share link |
+| `/os/network` | GET | Links + visitors + contacts; signed-in visitors may include identity fields |
+| `/os/share` | POST | Create share link (`requireSignIn` defaults true) |
 | `/accumulate` | POST | Bulk sync |
 | `/os/share/list` | GET | List links |
-| `/os/share/{linkId}` | PATCH/DELETE | Update/revoke link |
+| `/os/share/{linkId}` | PATCH/DELETE | Update/revoke link, including `requireSignIn` |
 | `/os/todos` | GET/POST | List/create todos |
 | `/tools` | GET/POST | Discover/execute non-OS tools |
 | `/tools/namespaces` | GET/PUT | List/toggle enabled namespaces |

@@ -57,7 +57,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
-  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{
     "scope":"folders",
@@ -65,10 +65,11 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
     "access":"read",
     "notesAccess":"read",
     "label":"For investors",
-    "expiresIn":"30d"
+    "expiresIn":"30d",
+    "requireSignIn":true
   }' | jq .
 ```
 
 Result: `https://www.aicoo.io/a/xK9mPq2RvT`
 
-Share this URL with investors; no account required.
+Share this URL with investors; sign-in is required by default. Use `requireSignIn:false` only for an explicitly anonymous public link.

@@ -12,7 +12,7 @@ Aicoo lets you share your AI agent securely with anyone. Instead of sending a st
 
 ## Authentication
 
-All Aicoo API calls require `AICOO_API_KEY`.
+All Aicoo API calls require `AICOO_API_KEY`. Legacy `PULSE_API_KEY` is also accepted.
 
 Generate your key at: https://www.aicoo.io/settings/api-keys  
 API docs: https://www.aicoo.io/docs/api
@@ -20,7 +20,7 @@ API docs: https://www.aicoo.io/docs/api
 Every request must include:
 
 ```
-Authorization: Bearer $AICOO_API_KEY
+Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}
 ```
 
 ## API Model (Breaking Change: 2026-04-16)
@@ -41,7 +41,7 @@ First-time setup: API key, workspace init, identity files, first sync.
 Sync local knowledge into Aicoo, browse/read/search notes, create/edit notes, snapshot before edits.
 
 ### 3. share-agent
-Create/manage/revoke share links and control link-level access.
+Create/manage/revoke share links and control link-level access. New share links require sign-in by default; use `requireSignIn:false` only for explicitly anonymous public links.
 
 ### 4. examine-sandbox
 Audit what a given link can access and detect sensitive content exposure.
@@ -95,11 +95,11 @@ https://www.aicoo.io/api/v1
 | `/os/todos/{id}` | PATCH | Edit todo |
 | `/os/todos/{id}/complete` | POST | Complete todo |
 | `/os/todos/replan` | POST | Replan overdue todos |
-| `/os/network` | GET | Share links + visitors + contacts |
-| `/os/share` | POST | Create share link |
+| `/os/network` | GET | Share links + visitors + contacts; signed-in visitors may include name/email |
+| `/os/share` | POST | Create share link (`requireSignIn` defaults true) |
 | `/accumulate` | POST | Bulk file sync |
 | `/os/share/list` | GET | List links with analytics |
-| `/os/share/{linkId}` | PATCH/DELETE | Update/revoke link |
+| `/os/share/{linkId}` | PATCH/DELETE | Update/revoke link, including `requireSignIn` |
 | `/tools` | GET | Discover non-OS tools (`namespace`, `source`) |
 | `/tools` | POST | Execute non-OS tools |
 | `/tools/namespaces` | GET/PUT | List/toggle enabled namespaces |

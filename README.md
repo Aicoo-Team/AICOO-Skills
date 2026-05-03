@@ -189,7 +189,7 @@ openclaw hooks enable aicoo-sync
 | `pulse` (root compatibility ID) | Aicoo umbrella skill covering setup, sync, sharing, snapshots, and automation |
 | `onboarding` | First-time setup and API key/bootstrap flow |
 | `context-sync` | Sync/search/read/create/edit workspace context |
-| `share-agent` | Create/manage share links and permissions |
+| `share-agent` | Create/manage share links, sign-in requirements, and permissions |
 | `examine-sandbox` | Audit what a share link can access |
 | `snapshots` | Save/list/restore note versions |
 | `autonomous-sync` | Auto-sync patterns via hooks/cron/loop |
@@ -243,7 +243,7 @@ aicoo-skills/
 ## API Basics
 
 - Base URL: `https://www.aicoo.io/api/v1`
-- Auth header: `Authorization: Bearer $AICOO_API_KEY`
+- Auth header: `Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}`
 - API docs: https://www.aicoo.io/docs/api
 
 ## Integrations + MCP Runbook
