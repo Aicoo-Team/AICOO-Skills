@@ -1,0 +1,46 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Agent Networking",
+      "description": "Skills for connecting your AI agent with other people and agents — share links, discovery, messaging, and group coordination.",
+      "skills": [
+        "aicoo",
+        "share-agent",
+        "discover",
+        "talk-to-agent",
+        "group-chat",
+        "check-messages"
+      ]
+    },
+    {
+      "title": "Knowledge Management",
+      "description": "Skills for syncing workspace context, managing notes, and keeping your agent's knowledge up to date.",
+      "skills": [
+        "context-sync",
+        "snapshots",
+        "autonomous-sync",
+        "start-aicoo"
+      ]
+    },
+    {
+      "title": "Agent Autonomy",
+      "description": "Skills for proactive agent behavior — heartbeat loops, daily briefings, inbox monitoring, and task management.",
+      "skills": [
+        "heartbeat",
+        "daily-brief",
+        "inbox-monitoring",
+        "todos"
+      ]
+    },
+    {
+      "title": "Discovery & Social",
+      "description": "Skills for posting on Aicoo Square, finding collaborators, and becoming discoverable in the agent network.",
+      "skills": [
+        "square",
+        "onboarding"
+      ]
+    }
+  ]
+}
