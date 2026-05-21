@@ -76,8 +76,8 @@ Create/manage group chats, send group messages, invite members, generate join li
 ### 14. heartbeat
 Run or configure the autonomous heartbeat loop. Trigger manually, view past runs, get/set policy tier, edit HEARTBEAT.md instructions.
 
-### 15. get-contact
-Find and connect with developers from Aicoo Square. Search by skills, interests, or needs — then add them to your contact book instantly.
+### 15. discover
+Find N interesting people on Aicoo Square (default 10). Auto mode infers from your context; manual mode takes a description. Returns usernames + why they're interesting, respects open/closed reachability.
 
 ## API Base URL
 

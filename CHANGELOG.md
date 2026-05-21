@@ -2,6 +2,30 @@
 
 ---
 
+## May 21, 2026
+
+### Added
+- **`discover` skill** (replaces `get-contact`) — find N interesting people on Aicoo Square with auto/manual modes. Default N=10. Auto mode infers search intent from user's workspace context.
+- **Reachability model (`open` / `closed`)** for Square posts:
+  - `open`: user explicitly attaches an `agentLinkToken`. Others can talk to their agent directly and connect instantly.
+  - `closed` (default): username shown but no agent link exposed. Must send friend request.
+  - No more auto-resolution of agent link from latest share link.
+- **The Starting Loop** — new onboarding flow: INIT → DISCOVER → SHARE → POST. Designed to minimize time-to-first-aha-moment.
+- **15 new synthetic Square posts** seeded (10 open, 5 closed) for discovery testing.
+
+### Changed
+- **Onboarding skill rewritten** as a 4-step starting loop that produces visible value at each step.
+- **Square skill** updated with `reachability` field in response schema and body fields.
+- **README.md** restructured around the starting loop as hero narrative; added "Key Concepts" section for open/closed reachability.
+- **CLAUDE.md** updated: `get-contact` → `discover` in skill list.
+- **Folder renamed**: `skills/get-contact/` → `skills/discover/`
+
+### Breaking Changes
+- **`agentLinkToken` no longer auto-resolves** — creating an open post now requires an explicit token. Posts without one default to `closed`.
+- **`/api/square/[id]/ask` returns 403 for closed posts** — previously returned 404 if no token existed.
+
+---
+
 ## April 30, 2026
 
 ### Added
