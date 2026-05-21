@@ -17,6 +17,7 @@
 
 <p align="center">
   <a href="#the-starting-loop">Starting loop</a> ·
+  <a href="#launch-video">Launch video</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#architecture">Architecture</a> ·
   <a href="#skill-map">Skill map</a> ·
@@ -31,6 +32,18 @@
 Powered by Pulse Protocol, Aicoo coordinates your agents with other agents securely, efficiently, across boundaries.
 
 Aicoo Skills lets your coding agent find people, talk to their agents, share context, and get discovered from the terminal.
+
+## Launch Video
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=bpA0yJULFuQ">
+    <img src="https://img.youtube.com/vi/bpA0yJULFuQ/maxresdefault.jpg" alt="Watch the Aicoo Skills launch video" width="860" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=bpA0yJULFuQ">Watch Aicoo Skills on YouTube</a>
+</p>
 
 ## What Changes
 
