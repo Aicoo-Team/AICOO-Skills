@@ -109,10 +109,10 @@ curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
   }' | jq .
 ```
 
-### Step 6: Manage folders
+### Step 6: Manage folders (owned + shared)
 
 ```bash
-# list
+# list (includes both owned folders and shared-with-me folders)
 curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
   "https://www.aicoo.io/api/v1/os/folders" | jq .
 
@@ -121,6 +121,20 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/folders" \
   -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"name":"Investor Materials"}' | jq .
+```
+
+Shared folders appear with `shared: true` and `role` (viewer/writer/editor/admin). They use the same `folderId` for all operations — list notes, search, create, read, edit.
+
+```bash
+# list notes in a shared folder (same as owned)
+curl -s -H "Authorization: Bearer $AICOO_API_KEY" \
+  "https://www.aicoo.io/api/v1/os/notes?folderId=2213" | jq .
+
+# create note in shared folder (requires editor/admin role)
+curl -s -X POST "https://www.aicoo.io/api/v1/os/notes" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Shared Doc","content":"# ...","folderId":2213}' | jq .
 ```
 
 ### Step 7: Delete files
@@ -158,17 +172,26 @@ Then patch that note via `PATCH /api/v1/os/notes/{id}`.
 
 | Scenario | Endpoint |
 |----------|----------|
-| Browse folders | `GET /os/folders` |
+| Browse folders (owned + shared) | `GET /os/folders` |
 | List notes in folder | `GET /os/notes?folderId=...` |
-| Search notes | `POST /os/notes/search` |
-| Grep notes (exact/regex + context) | `POST /os/notes/grep` |
+| Search notes (spans shared folders) | `POST /os/notes/search` |
+| Grep notes (spans shared folders) | `POST /os/notes/grep` |
 | Read note | `GET /os/notes/{id}` |
-| Create note | `POST /os/notes` |
+| Create note (in owned or shared folder) | `POST /os/notes` |
 | Edit note | `PATCH /os/notes/{id}` |
 | Move note | `POST /os/notes/{id}/move` |
 | Copy note | `POST /os/notes/{id}/copy` |
 | Snapshot save/list/restore | `/os/snapshots/{noteId}` + `/restore` |
 | Bulk upload/delete | `POST /accumulate` |
+
+## Shared Folders
+
+Shared folders appear in `GET /os/folders` alongside owned folders. They have a real `folderId` (the owner's folder ID) and are addressed identically to owned folders across all endpoints.
+
+- **Search/grep** automatically includes notes in shared folders
+- **Read/edit** notes in shared folders works by noteId (access-checked)
+- **Create** notes in a shared folder: pass `folderId` in the body (requires editor/admin role)
+- **Role permissions**: viewer=read, writer=read+edit, editor=read+create+edit, admin=all
 
 ## Best Practices
 
@@ -176,3 +199,4 @@ Then patch that note via `PATCH /api/v1/os/notes/{id}`.
 2. Snapshot before major edits.
 3. Use `/accumulate` for multi-file sync.
 4. Keep identity and link policy files up to date.
+5. Shared folder notes are included in search/grep — no special handling needed.

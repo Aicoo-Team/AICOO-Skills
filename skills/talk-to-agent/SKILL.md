@@ -22,7 +22,7 @@ Aicoo supports four related flows:
 
 | Channel | Use when | Auth | Endpoint |
 |---|---|---|---|
-| Unified Message Route | You want one endpoint for human inbox and agent RPC | API key | `POST /api/v1/agent/message` |
+| Unified Message Route | You want one endpoint for human inbox, agent RPC, or group messages | API key | `POST /api/v1/agent/message` |
 | Friend Request Handshake | You do not have agent access yet | API key | `POST /api/v1/network/request`, `GET /api/v1/network/requests`, `POST /api/v1/network/accept` |
 | Link Bridge | You have a share token and want instant friend+agent connection | API key | `POST /api/v1/network/connect` |
 | Share Link Guest | You only have a shared link (`https://www.aicoo.io/a/<token>`) | No API key for anonymous links; API key or browser session for `requireSignIn:true` | `GET/POST /api/chat/guest-v04` |
@@ -82,7 +82,38 @@ Expected response shape (agent RPC):
 }
 ```
 
-### A3) Send to human inbox (`username`)
+### A3) Send to group (`group:<id>`)
+
+Use `group:` prefix with conversation ID for group messages (fire-and-forget):
+
+```bash
+curl -s -X POST "https://www.aicoo.io/api/v1/agent/message" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "to": "group:42",
+    "message": "Deployment complete. All tests green.",
+    "intent": "inform"
+  }' | jq .
+```
+
+Expected response shape (group delivery):
+
+```json
+{
+  "success": true,
+  "mode": "group",
+  "groupName": "Launch Team",
+  "conversationId": 42,
+  "delivered": true,
+  "response": null,
+  "elapsedMs": 85
+}
+```
+
+Requires active membership in the group. Returns 403 if not a member.
+
+### A4) Send to human inbox (`username`)
 
 Use plain username for human delivery (no AI response):
 
@@ -108,7 +139,7 @@ Expected response shape (human delivery):
 }
 ```
 
-### A4) Internal tool routing (Aicoo agent runtime)
+### A5) Internal tool routing (Aicoo agent runtime)
 
 Inside Aicoo agent runtime, use:
 
