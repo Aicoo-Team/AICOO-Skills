@@ -513,6 +513,48 @@ Review all messages your Aicoo agent received:
 
 ---
 
+## Capability 14: Guest Conversation Transcripts
+
+Read full transcripts of conversations that visitors had with your shared agent links (`/a/<token>` and `/shared/<token>`).
+
+### List all guest sessions
+
+```bash
+# All sessions across all links
+curl -s "$PULSE_BASE/os/network/conversations" \
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
+
+# Filter by specific share link token
+curl -s "$PULSE_BASE/os/network/conversations?shareToken=17GX0VLeq5&limit=20" \
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
+```
+
+Response includes per-session: `sessionId`, `shareToken`, `linkLabel`, `visitor` (name, username, email, userId, fingerprint), `messageCount`, `lastMessage` (role + content preview), `createdAt`, `lastActiveAt`.
+
+### Read full transcript of a session
+
+```bash
+curl -s "$PULSE_BASE/os/network/conversations/{sessionId}" \
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
+```
+
+Returns: full `session` metadata + `messages[]` array (id, role, content, createdAt) in chronological order. Default limit 200 messages, max 500.
+
+### Use cases
+
+- Review HR agent interview transcripts and candidate scores
+- Audit what your shared agent told visitors
+- Extract visitor contact info (email, username) from signed-in sessions
+- Evaluate candidate quality from agentic screening links
+
+### Claude Code
+
+```
+/check_guest_conversations
+```
+
+---
+
 ## Security Rules
 
 - Never expose `AICOO_API_KEY` or legacy `PULSE_API_KEY`
@@ -566,6 +608,8 @@ Review all messages your Aicoo agent received:
 | `/briefing/strategies` | POST | Generate top 3 COO priorities |
 | `/briefing/matrix` | POST | Generate Eisenhower matrix |
 | `/briefings` | GET | Briefing history |
+| `/os/network/conversations` | GET | List guest sessions from share/agentic links (`?shareToken=X`) |
+| `/os/network/conversations/{sessionId}` | GET | Full transcript of a guest conversation session |
 | `/conversations` | GET | Inbox/conversation list + message search (`?q=`) |
 | `/heartbeat/run` | POST | Trigger heartbeat manually |
 | `/heartbeat/policy` | GET/POST | Get/set heartbeat tier |

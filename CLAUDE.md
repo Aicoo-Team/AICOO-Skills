@@ -108,6 +108,8 @@ https://www.aicoo.io/api/v1
 | `/os/todos/{id}/complete` | POST | Complete todo |
 | `/os/todos/replan` | POST | Replan overdue todos |
 | `/os/network` | GET | Share links + visitors + contacts; signed-in visitors may include name/email |
+| `/os/network/conversations` | GET | List guest sessions from share/agentic links (`?shareToken=X`) |
+| `/os/network/conversations/{sessionId}` | GET | Full transcript of a guest conversation session |
 | `/os/share` | POST | Create share link (`requireSignIn` defaults true) |
 | `/accumulate` | POST | Bulk file sync |
 | `/os/share/list` | GET | List links with analytics |
