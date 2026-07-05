@@ -2,13 +2,6 @@
 
 ---
 
-## July 6, 2026
-
-### Changed
-- **Onboarding now uses one-click pairing** — step 1a switched from manual API-key copy to the `/api/pair` device-pairing flow: skill creates a pairing session, user opens the link and clicks Approve, skill polls for the key. Manual key creation kept as fallback. Users should sign in at aicoo.io before opening the link (sign-in redirect currently drops the pairing token).
-
----
-
 ## July 5, 2026
 
 ### Added

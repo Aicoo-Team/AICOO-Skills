@@ -33,37 +33,19 @@ Each step delivers value immediately. Users can stop at any step and still have 
 
 **Goal**: Agent has full context. User's knowledge is in the cloud.
 
-### 1a. API Key (one-click pairing)
+### 1a. API Key
 
-If `$AICOO_API_KEY` (or `$PULSE_API_KEY`) is not set, run the pairing flow — the user never has to copy a key manually:
+If `$AICOO_API_KEY` (or `$PULSE_API_KEY`) is not set:
 
-```bash
-# 1. Create a pairing session
-PAIR=$(curl -s -X POST "https://www.aicoo.io/api/pair" \
-  -H "Content-Type: application/json" \
-  -d '{"source": "aicoo-skills"}')
-TOKEN=$(echo "$PAIR" | jq -r .token)
-echo "$PAIR" | jq -r .pairUrl
 ```
+To get started, you need an Aicoo API key.
 
-Show the user the `pairUrl` and tell them: **"Make sure you're signed in at aicoo.io, then open this link and click Approve."** (Important: sign in FIRST — if they open the link while logged out, the sign-in redirect currently drops the token and they'll see "Missing pairing token". If that happens, just re-open the link after signing in.) Then poll until approved (5-minute window, poll every ~3s):
+1. Go to https://www.aicoo.io/settings/api-keys
+2. Generate a key
+3. Run: export AICOO_API_KEY=aicoo_sk_live_xxxxxxxx
 
-```bash
-# 2. Poll for approval
-while true; do
-  STATUS=$(curl -s "https://www.aicoo.io/api/pair/status?token=$TOKEN")
-  [ "$(echo "$STATUS" | jq -r .status)" = "approved" ] && break
-  [ "$(echo "$STATUS" | jq -r .status)" = "expired" ] && echo "Expired — restart pairing" && break
-  sleep 3
-done
-KEY=$(echo "$STATUS" | jq -r .apiKey)
+(Add to ~/.zshrc for persistence)
 ```
-
-Persist the key for the user (`export AICOO_API_KEY=$KEY` now, and append to `~/.zshrc`), then verify it with `GET /api/v1/identity`. The key can be revoked anytime at Settings → API Keys.
-
-Note: the approval page is currently branded "OpenClaw" (shared pairing flow) — this is expected and the key works for all v1 APIs.
-
-**Fallback** (pairing unavailable): manually create a key at https://www.aicoo.io/settings/api-keys and `export AICOO_API_KEY=aicoo_sk_live_xxxxxxxx`.
 
 ### 1b. Initialize workspace
 
