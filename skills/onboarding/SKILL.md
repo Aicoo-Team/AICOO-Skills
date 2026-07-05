@@ -4,7 +4,7 @@ description: "Use this skill when a user wants to set up Aicoo for the first tim
 user-invokable: true
 metadata:
   author: systemind
-  version: "3.0.0"
+  version: "3.1.0"
 ---
 
 # Onboarding — The Starting Loop
@@ -33,18 +33,85 @@ Each step delivers value immediately. Users can stop at any step and still have 
 
 **Goal**: Agent has full context. User's knowledge is in the cloud.
 
-### 1a. API Key
+### 1a. Connect account — "Login with Aicoo" (OAuth, default)
 
-If `$AICOO_API_KEY` (or `$PULSE_API_KEY`) is not set:
+If `$AICOO_API_KEY` / `$PULSE_API_KEY` is not set and `~/.aicoo/oauth.json` doesn't exist, run the OAuth flow. The user signs in and clicks Approve on the consent screen — no manual key handling.
+
+**Step 1 — Register a public client** (once per machine; cache the `client_id` in `~/.aicoo/oauth-client.json`):
+
+```bash
+CLIENT_ID=$(curl -s -X POST "https://www.aicoo.io/api/auth/oauth2/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_name": "Aicoo Skills",
+    "redirect_uris": ["http://localhost:8765/callback"],
+    "grant_types": ["authorization_code", "refresh_token"],
+    "response_types": ["code"],
+    "token_endpoint_auth_method": "none"
+  }' | jq -r .client_id)
+```
+
+**Step 2 — PKCE + authorize URL**, then start a one-shot localhost listener and hand the URL to the user:
+
+```bash
+VERIFIER=$(openssl rand -base64 60 | tr -d '=+/\n' | cut -c1-64)
+CHALLENGE=$(printf '%s' "$VERIFIER" | openssl dgst -sha256 -binary | openssl base64 -A | tr '+/' '-_' | tr -d '=')
+STATE=$(openssl rand -hex 8)
+
+AUTH_URL="https://www.aicoo.io/api/auth/oauth2/authorize?client_id=$CLIENT_ID&redirect_uri=http%3A%2F%2Flocalhost%3A8765%2Fcallback&response_type=code&state=$STATE&code_challenge=$CHALLENGE&code_challenge_method=S256&scope=openid%20profile%20email%20offline_access"
+```
+
+Tell the user: **"Open this link, sign in to Aicoo, and click Approve."** (The authorize → signin → consent chain carries all parameters; signing in mid-flow is fine.) Capture the callback:
+
+```bash
+CODE=$(python3 -c "
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse, parse_qs
+result = {}
+class H(BaseHTTPRequestHandler):
+    def do_GET(self):
+        result.update(parse_qs(urlparse(self.path).query))
+        self.send_response(200); self.send_header('Content-Type','text/html'); self.end_headers()
+        self.wfile.write(b'<h2>Aicoo connected — you can close this tab.</h2>')
+    def log_message(self, *a): pass
+HTTPServer(('127.0.0.1', 8765), H).handle_request()
+print(result.get('code', [''])[0])
+")
+```
+
+**Step 3 — Exchange the code for tokens** and store them:
+
+```bash
+TOKENS=$(curl -s -X POST "https://www.aicoo.io/api/auth/oauth2/token" \
+  -d grant_type=authorization_code -d "code=$CODE" \
+  -d redirect_uri=http://localhost:8765/callback \
+  -d "client_id=$CLIENT_ID" -d "code_verifier=$VERIFIER")
+
+mkdir -p ~/.aicoo && echo "$TOKENS" > ~/.aicoo/oauth.json && chmod 600 ~/.aicoo/oauth.json
+export AICOO_API_KEY=$(echo "$TOKENS" | jq -r .access_token)
+```
+
+All skills use `Authorization: Bearer $AICOO_API_KEY`, so the access token drops in everywhere. Verify with `GET /api/v1/identity`.
+
+**Token lifecycle**: access tokens last 15 minutes; the refresh token lasts 30 days. On a 401, refresh and re-export:
+
+```bash
+TOKENS=$(curl -s -X POST "https://www.aicoo.io/api/auth/oauth2/token" \
+  -d grant_type=refresh_token \
+  -d "refresh_token=$(jq -r .refresh_token ~/.aicoo/oauth.json)" \
+  -d "client_id=$(jq -r .client_id ~/.aicoo/oauth-client.json)")
+echo "$TOKENS" > ~/.aicoo/oauth.json
+export AICOO_API_KEY=$(echo "$TOKENS" | jq -r .access_token)
+```
+
+**Fallback — manual API key** (if OAuth is unavailable, or `/api/v1` rejects the OAuth token while v1 resource scopes are still rolling out):
 
 ```
-To get started, you need an Aicoo API key.
-
 1. Go to https://www.aicoo.io/settings/api-keys
 2. Generate a key
 3. Run: export AICOO_API_KEY=aicoo_sk_live_xxxxxxxx
 
-(Add to ~/.zshrc for persistence)
+(Add to ~/.zshrc for persistence — API keys don't expire like OAuth tokens do)
 ```
 
 ### 1b. Initialize workspace

@@ -2,6 +2,13 @@
 
 ---
 
+## July 6, 2026
+
+### Changed
+- **Onboarding auth defaults to "Login with Aicoo" OAuth** — step 1a now runs the OAuth 2.1 + PKCE flow: dynamic client registration, browser authorize → sign-in → /auth/consent approval, localhost callback, token exchange, and refresh-token handling. No manual API key needed. Manual API key from Settings → API Keys kept as fallback.
+
+---
+
 ## July 5, 2026
 
 ### Added

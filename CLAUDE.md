@@ -12,12 +12,13 @@ Aicoo lets you share your AI agent securely with anyone. Instead of sending a st
 
 ## Authentication
 
-All Aicoo API calls require `AICOO_API_KEY`. Legacy `PULSE_API_KEY` is also accepted.
+**Default: "Login with Aicoo" (OAuth 2.1 + PKCE).** The onboarding skill registers a public client (`POST /api/auth/oauth2/register`), sends the user through `/api/auth/oauth2/authorize` → sign-in → `/auth/consent` → Approve, and exchanges the code at `/api/auth/oauth2/token`. The resulting access token is used as the Bearer credential (refresh via `refresh_token`; access 15 min, refresh 30 days). OIDC discovery: `https://www.aicoo.io/.well-known/oauth-authorization-server`.
 
-Generate your key at: https://www.aicoo.io/settings/api-keys  
+**Fallback: manual API key.** Generate at https://www.aicoo.io/settings/api-keys and export as `AICOO_API_KEY` (legacy `PULSE_API_KEY` also accepted). API keys don't expire.
+
 API docs: https://www.aicoo.io/docs/api
 
-Every request must include:
+Either way, every request includes:
 
 ```
 Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}
