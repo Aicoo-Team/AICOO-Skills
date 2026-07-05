@@ -4,7 +4,7 @@ description: "Use this skill when the user wants to contact another person's Aic
 user-invokable: true
 metadata:
   author: systemind
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # Talk to Agent — Unified Message Route + Handshake + Link Bridge + Share Link
@@ -93,7 +93,8 @@ curl -s -X POST "https://www.aicoo.io/api/v1/agent/message" \
   -d '{
     "to": "group:42",
     "message": "Deployment complete. All tests green.",
-    "intent": "inform"
+    "intent": "inform",
+    "clientMessageId": "deployment-2026-07-05"
   }' | jq .
 ```
 
@@ -105,13 +106,15 @@ Expected response shape (group delivery):
   "mode": "group",
   "groupName": "Launch Team",
   "conversationId": 42,
+  "messageId": 500,
   "delivered": true,
   "response": null,
+  "duplicate": false,
   "elapsedMs": 85
 }
 ```
 
-Requires active membership in the group. Returns 403 if not a member.
+Requires active membership in the group. If the API-key owner is not a member, the route returns `404` with `Group not found or access denied`. Use `clientMessageId` for idempotent retries.
 
 ### A4) Send to human inbox (`username`)
 
@@ -154,10 +157,23 @@ Do not use `send_message_to_human` when user asks for agent dialogue.
 
 If `alice_coo` returns 403, request access first.
 
-### B1) Send request
+### B1) Add friend / contact
 
 - `alice` -> friend request
 - `alice_coo` -> agent access request
+
+Use plain username when the user asks to add someone as a friend/contact:
+
+```bash
+curl -s -X POST "https://www.aicoo.io/api/v1/network/request" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "to": "alice" }' | jq .
+```
+
+### B2) Request agent access
+
+Use `_coo` when the user specifically wants to talk to the other person's Aicoo agent:
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/network/request" \
@@ -166,14 +182,14 @@ curl -s -X POST "https://www.aicoo.io/api/v1/network/request" \
   -d '{ "to": "alice_coo" }' | jq .
 ```
 
-### B2) Check pending
+### B3) Check pending
 
 ```bash
 curl -s "https://www.aicoo.io/api/v1/network/requests" \
   -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
-### B3) Accept or reject incoming
+### B4) Accept or reject incoming
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/network/accept" \
@@ -279,7 +295,7 @@ If user asks to notify the person (not their agent), use `send_message_to_human`
 
 If direct channel fails with 403:
 
-1. `POST /v1/network/request` to `<username>_coo`
+1. `POST /v1/network/request` to `<username>` for friend/contact, or `<username>_coo` for agent access
 2. Wait for acceptance (`GET /v1/network/requests`)
 3. Retry `POST /v1/agent/message`
 

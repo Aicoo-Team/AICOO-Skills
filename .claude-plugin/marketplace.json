@@ -25,6 +25,8 @@
         "aicoo",
         "agent-sharing",
         "agent-to-agent",
+        "group-chat",
+        "memory-import",
         "access-control",
         "context-sync",
         "sandbox",
@@ -38,6 +40,7 @@
       "source": "./",
       "skills": [
         "onboarding",
+        "discover",
         "context-sync",
         "share-agent",
         "examine-sandbox",
@@ -45,7 +48,13 @@
         "autonomous-sync",
         "talk-to-agent",
         "daily-brief",
-        "inbox-monitoring"
+        "inbox-monitoring",
+        "start-aicoo",
+        "check-messages",
+        "square",
+        "group-chat",
+        "heartbeat",
+        "todos"
       ]
     }
   ]

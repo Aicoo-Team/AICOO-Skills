@@ -184,6 +184,25 @@ Bulk file sync (recommended for multi-file updates).
 }
 ```
 
+**One-click memory import pattern:**
+
+```bash
+curl -s -X POST "https://www.aicoo.io/api/v1/init" \
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
+
+curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "files": [
+      {"path":"memory/self/USER.md","content":"# User\n\n..."},
+      {"path":"memory/self/COO.md","content":"# COO\n\n..."},
+      {"path":"memory/self/POLICY.md","content":"# Policy\n\n..."},
+      {"path":"memory/relationships/alice.md","content":"# Alice\n\n..."}
+    ]
+  }' | jq .
+```
+
 Also supports delete:
 ```json
 {

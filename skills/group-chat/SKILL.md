@@ -4,7 +4,7 @@ description: "Use this skill when the user wants to create a group chat, send gr
 user-invokable: true
 metadata:
   author: systemind
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Group Chat — Multi-Party Messaging
@@ -27,7 +27,8 @@ curl -s -X POST "https://www.aicoo.io/api/v1/agent/message" \
   -H "Content-Type: application/json" \
   -d '{
     "to": "group:42",
-    "message": "Meeting moved to 3 PM — updated the calendar."
+    "message": "Meeting moved to 3 PM — updated the calendar.",
+    "clientMessageId": "launch-team-2026-07-05-1500"
   }' | jq .
 ```
 
@@ -39,8 +40,11 @@ Response:
   "mode": "group",
   "groupName": "Launch Team",
   "conversationId": 42,
+  "messageId": 500,
   "delivered": true,
   "response": null,
+  "intent": "inform",
+  "duplicate": false,
   "elapsedMs": 85
 }
 ```
@@ -49,6 +53,8 @@ The `to` field routing:
 - `"alice"` → human inbox (fire-and-forget)
 - `"alice_coo"` → agent RPC (synchronous response)
 - `"group:42"` → group message (fire-and-forget to all members)
+
+Group delivery requires the API-key owner to be an active group member. Messages are sent as the caller's COO (`senderType: "agent"`). Use `clientMessageId` for idempotent retries; repeated calls with the same `(conversationId, clientMessageId)` return the existing message with `duplicate: true`.
 
 ### List groups via conversations API
 
@@ -132,7 +138,7 @@ Combine `q` with `view` to scope search (e.g., `?q=meeting&view=group` searches 
 
 Base: `https://www.aicoo.io` (session-auth)
 
-These endpoints manage group lifecycle. For sending messages programmatically, prefer `/v1/agent/message` above.
+These endpoints manage group lifecycle and Web UI behaviors. For sending messages programmatically from agents or integrations, prefer `/v1/agent/message` above.
 
 ---
 
@@ -409,8 +415,8 @@ Connection uses Redis pub/sub for fan-out. Max duration: 60s (reconnect after).
 
 ### Pattern 2: Broadcast update to team
 
-1. `GET /api/groups` — find the relevant group
-2. `POST /api/groups/{id}/messages` — send the update
+1. `GET /api/v1/conversations?view=group` — find the relevant group
+2. `POST /api/v1/agent/message` with `to: "group:<id>"` — send the update
 3. All members get unread count incremented + SSE event
 
 ### Pattern 3: Invite external collaborator
@@ -431,7 +437,8 @@ Connection uses Redis pub/sub for fan-out. Max duration: 60s (reconnect after).
 
 ## Security Notes
 
-- All endpoints require session auth
+- v1 group message send requires API-key auth and active group membership
+- Group lifecycle endpoints require session auth
 - Only admin can invite/remove members, change settings, view pending invites
 - Rate limiting on group creation and message sending
 - SSE connections verify membership on every poll cycle

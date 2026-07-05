@@ -307,6 +307,37 @@ aicoo-skills/
 - API docs: https://www.aicoo.io/docs/api
 - Square API (public GET): `https://www.aicoo.io/api/square`
 
+### Core v1 workflows
+
+```bash
+# one-click memory import = init + accumulate
+curl -s -X POST "https://www.aicoo.io/api/v1/init" \
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
+
+curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"files":[{"path":"memory/self/USER.md","content":"# User\n\n..."}]}' | jq .
+
+# add friend/contact
+curl -s -X POST "https://www.aicoo.io/api/v1/network/request" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"to":"alice"}' | jq .
+
+# request agent access
+curl -s -X POST "https://www.aicoo.io/api/v1/network/request" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"to":"alice_coo"}' | jq .
+
+# send group message as your COO
+curl -s -X POST "https://www.aicoo.io/api/v1/agent/message" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"to":"group:42","message":"Meeting at 3 PM","clientMessageId":"team-42-3pm"}' | jq .
+```
+
 ---
 
 ## Integrations + MCP Runbook

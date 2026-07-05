@@ -4,7 +4,7 @@ description: "Use this skill when the user wants to upload files to Aicoo, sync 
 user-invokable: true
 metadata:
   author: systemind
-  version: "2.0.0"
+  version: "2.1.0"
 ---
 
 # Context Sync
@@ -109,6 +109,43 @@ curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
   }' | jq .
 ```
 
+### Step 5b: One-click memory import
+
+Use this when the user asks to import their profile, agent identity, policy, relationship memory, or project memory in one shot. There is no separate import endpoint: this is `POST /init` followed by `POST /accumulate`.
+
+```bash
+# Ensure the workspace exists.
+curl -s -X POST "https://www.aicoo.io/api/v1/init" \
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq .
+
+# Import identity + memory files.
+curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "files": [
+      {
+        "path": "memory/self/USER.md",
+        "content": "# User\n\n## Profile\n...\n\n## Goals\n..."
+      },
+      {
+        "path": "memory/self/COO.md",
+        "content": "# COO\n\n## Operating Style\n...\n\n## Default Behaviors\n..."
+      },
+      {
+        "path": "memory/self/POLICY.md",
+        "content": "# Policy\n\n## Share\n...\n\n## Do Not Share\n..."
+      },
+      {
+        "path": "memory/relationships/alice.md",
+        "content": "# Alice\n\n## Relationship context\n..."
+      }
+    ]
+  }' | jq .
+```
+
+Treat the response as the import report: `created`, `updated`, `versions`, and `errors` tell you exactly what happened.
+
 ### Step 6: Manage folders (owned + shared)
 
 ```bash
@@ -154,6 +191,15 @@ Use `/accumulate` to manage:
 - `memory/self/USER.md`
 - `memory/self/POLICY.md`
 
+Recommended import shape:
+
+| File | Purpose |
+|------|---------|
+| `memory/self/USER.md` | Owner biography, background, current work, preferences |
+| `memory/self/COO.md` | Agent persona, delegation behavior, tone, decision style |
+| `memory/self/POLICY.md` | Privacy rules, sharing boundaries, escalation preferences |
+| `memory/relationships/<handle>.md` | Per-person relationship context and collaboration history |
+
 ## Links Folder Policy (`links/`)
 
 To customize per-link behavior, edit link notes in `links/`:
@@ -183,6 +229,7 @@ Then patch that note via `PATCH /api/v1/os/notes/{id}`.
 | Copy note | `POST /os/notes/{id}/copy` |
 | Snapshot save/list/restore | `/os/snapshots/{noteId}` + `/restore` |
 | Bulk upload/delete | `POST /accumulate` |
+| One-click memory import | `POST /init` then `POST /accumulate` with `memory/*` files |
 
 ## Shared Folders
 

@@ -124,8 +124,8 @@ https://www.aicoo.io/api/v1
 | `/tools/mcp/{id}/authorize` | POST | Start MCP OAuth flow |
 | `/tools/mcp/{id}/refresh` | POST | Check MCP health + discover tools |
 | `/tools/mcp/{id}/disconnect` | POST | Disconnect MCP OAuth binding |
-| `/agent/message` | POST | `username`→human, `username_coo`→agent RPC |
-| `/network/request` | POST | Send friend or agent access request |
+| `/agent/message` | POST | `username`→human, `username_coo`→agent RPC, `group:<id>`→group message |
+| `/network/request` | POST | Send friend (`username`) or agent access (`username_coo`) request |
 | `/network/requests` | GET | List pending requests |
 | `/network/accept` | POST | Accept/reject request |
 | `/network/connect` | POST | Share token -> friend + agent permission |
@@ -171,6 +171,20 @@ After meaningful conversations:
 4. Update/create notes via `PATCH /os/notes/{id}` or `POST /os/notes`
 5. Reorganize by move/copy when needed: `POST /os/notes/{id}/move`, `POST /os/notes/{id}/copy`
 6. Use `/accumulate` for bulk sync
+
+## Core Skill Workflows
+
+One-click memory import:
+
+1. `POST /init`
+2. `POST /accumulate` with `memory/self/USER.md`, `memory/self/COO.md`, `memory/self/POLICY.md`, and optional `memory/relationships/*.md`
+3. Verify with `POST /os/notes/search`
+
+Connection routing:
+
+- Add friend/contact: `POST /network/request` with `{"to":"alice"}`
+- Request agent access: `POST /network/request` with `{"to":"alice_coo"}`
+- Send group message: `POST /agent/message` with `{"to":"group:42","message":"...","clientMessageId":"stable-id"}`
 
 ## Daily Brief + Inbox Monitoring Automation
 
