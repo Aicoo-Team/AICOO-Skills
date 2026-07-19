@@ -196,8 +196,11 @@ async function login() {
   const forceManual = args.has('--manual') || (!!process.env.SSH_CONNECTION && !args.has('--loopback'));
   const loopback = forceManual ? null : await listenOnLoopback();
 
+  // "localhost" (not 127.0.0.1): the Aicoo provider canonicalizes loopback
+  // redirect URIs to localhost when the flow passes through the sign-in
+  // page, and the token exchange compares redirect_uri strings exactly.
   const redirectUri = loopback
-    ? `http://127.0.0.1:${loopback.port}/oauth/callback`
+    ? `http://localhost:${loopback.port}/oauth/callback`
     : `${BASE_URL}/auth/cli`;
 
   const authorizeUrl = new URL(`${BASE_URL}/api/auth/oauth2/authorize`);
