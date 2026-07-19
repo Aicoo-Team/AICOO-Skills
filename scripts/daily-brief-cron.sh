@@ -10,12 +10,15 @@ TIME_DURATION="${PULSE_BRIEF_TIME_DURATION:-last 24 hours}"
 SAVE_NOTE="${PULSE_BRIEF_SAVE_NOTE:-0}"
 NOTE_TITLE_PREFIX="${PULSE_BRIEF_NOTE_TITLE_PREFIX:-Daily Brief}"
 
-if [ -z "${AICOO_API_KEY:-$PULSE_API_KEY}" ]; then
-  echo "[$(date)] ERROR: AICOO_API_KEY not set"
-  exit 1
-fi
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-AUTH="Authorization: Bearer $AICOO_API_KEY"
+# OAuth login (aicoo-login.mjs) preferred; falls back to AICOO_API_KEY.
+TOKEN="$("$SCRIPT_DIR/aicoo-auth.sh")" || {
+  echo "[$(date)] ERROR: no Aicoo credentials (run aicoo-login.mjs or set AICOO_API_KEY)"
+  exit 1
+}
+
+AUTH="Authorization: Bearer $TOKEN"
 
 BRIEF_RESPONSE=$(curl -sS -X POST "$PULSE_BASE/briefing" \
   -H "$AUTH" \

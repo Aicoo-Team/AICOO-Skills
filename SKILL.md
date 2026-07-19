@@ -31,20 +31,43 @@ API model is now split:
 
 ## Setup
 
-**Required:** `AICOO_API_KEY` environment variable. Legacy `PULSE_API_KEY` is accepted as fallback.
+**Preferred: Sign in with Aicoo (OAuth).** No manual API key needed:
 
-Generate at: https://www.aicoo.io/settings/api-keys  
+```bash
+node scripts/aicoo-login.mjs            # opens browser: sign in → approve → done
+node scripts/aicoo-login.mjs --manual   # headless/SSH: paste the code shown in the browser
+node scripts/aicoo-login.mjs --status   # check login state
+```
+
+Credentials land in `~/.aicoo/credentials.json` (0600) and auto-refresh. Users can
+revoke access anytime at https://www.aicoo.io/settings/connected-apps.
+
+**Fallback: API key** (CI, cron, or no browser). Generate at
+https://www.aicoo.io/settings/api-keys and `export AICOO_API_KEY=aicoo_sk_live_xxxxxxxx`
+(legacy `PULSE_API_KEY` accepted).
+
 API docs: https://www.aicoo.io/docs/api
-
-Format: `aicoo_sk_live_xxxxxxxx` (prod) or `aicoo_sk_test_xxxxxxxx` (dev)
 
 **Base URL:** `https://www.aicoo.io/api/v1`
 
-**Auth header:**
+**Auth header:** resolve the current credential (OAuth access token if signed in,
+else the API key), then send it as a Bearer token:
 
 ```bash
-Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}
+TOKEN="$(scripts/aicoo-auth.sh)"        # or: TOKEN="${AICOO_API_KEY:-$PULSE_API_KEY}"
+# → Authorization: Bearer $TOKEN
 ```
+
+**Convention:** every `$AICOO_API_KEY` in the examples below means "the resolved
+credential". When signed in via OAuth, set it once per session so all examples
+work unchanged (access tokens expire after 15 min — re-run on 401):
+
+```bash
+export AICOO_API_KEY="$(scripts/aicoo-auth.sh)"
+```
+
+OAuth tokens are scope-limited (`os.notes:*`, `os.todos:*`, `os.share:*`,
+`agent.message:send`, …). On `403 insufficient_scope`, re-run the login.
 
 ---
 

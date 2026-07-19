@@ -5,12 +5,13 @@
 
 set -e
 
-# Check if AICOO_API_KEY (or legacy PULSE_API_KEY) is set
-if [ -z "$AICOO_API_KEY" ]; then
+# Connected when OAuth credentials exist (Sign in with Aicoo) or an API key is set
+if [ ! -f "$HOME/.aicoo/credentials.json" ] && [ -z "${AICOO_API_KEY:-$PULSE_API_KEY}" ]; then
   cat << 'EOF'
 <aicoo-reminder>
-AICOO_API_KEY is not set. If the user wants to share their agent or sync knowledge in Aicoo:
-→ Guide them through onboarding: https://www.aicoo.io/settings/api-keys
+Not signed in to Aicoo. If the user wants to share their agent or sync knowledge in Aicoo:
+→ Sign in with Aicoo (OAuth): node <plugin>/scripts/aicoo-login.mjs
+→ Fallback: create an API key at https://www.aicoo.io/settings/api-keys and export AICOO_API_KEY
 </aicoo-reminder>
 EOF
   exit 0

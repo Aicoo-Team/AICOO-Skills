@@ -10,12 +10,15 @@ INBOX_VIEW="${PULSE_INBOX_VIEW:-all}"
 INBOX_LIMIT="${PULSE_INBOX_LIMIT:-50}"
 STATE_FILE="${PULSE_INBOX_STATE_FILE:-/tmp/pulse-inbox-monitor-state.json}"
 
-if [ -z "${AICOO_API_KEY:-$PULSE_API_KEY}" ]; then
-  echo "[$(date)] ERROR: AICOO_API_KEY not set"
-  exit 1
-fi
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-AUTH="Authorization: Bearer $AICOO_API_KEY"
+# OAuth login (aicoo-login.mjs) preferred; falls back to AICOO_API_KEY.
+TOKEN="$("$SCRIPT_DIR/aicoo-auth.sh")" || {
+  echo "[$(date)] ERROR: no Aicoo credentials (run aicoo-login.mjs or set AICOO_API_KEY)"
+  exit 1
+}
+
+AUTH="Authorization: Bearer $TOKEN"
 NOW_UTC=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 if [ ! -f "$STATE_FILE" ]; then

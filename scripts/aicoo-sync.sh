@@ -10,13 +10,15 @@ set -e
 
 PULSE_BASE="https://www.aicoo.io/api/v1"
 PROJECT_DIR="${1:-.}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [ -z "$AICOO_API_KEY" ]; then
-  echo "[$(date)] ERROR: AICOO_API_KEY not set"
+# OAuth login (aicoo-login.mjs) preferred; falls back to AICOO_API_KEY.
+TOKEN="$("$SCRIPT_DIR/aicoo-auth.sh")" || {
+  echo "[$(date)] ERROR: no Aicoo credentials (run aicoo-login.mjs or set AICOO_API_KEY)"
   exit 1
-fi
+}
 
-AUTH="Authorization: Bearer $AICOO_API_KEY"
+AUTH="Authorization: Bearer $TOKEN"
 
 # Check staleness
 STATUS=$(curl -s "$PULSE_BASE/os/status" -H "$AUTH")

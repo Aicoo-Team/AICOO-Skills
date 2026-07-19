@@ -2,6 +2,18 @@
 
 ---
 
+## July 20, 2026
+
+### Changed
+- **OAuth login is now script-based with a first-party client** — `scripts/aicoo-login.mjs` signs users in through the pre-registered `aicoo-skills` public client (PKCE S256, loopback callback on 8976/8977/8978, `--manual` paste mode via https://www.aicoo.io/auth/cli for headless boxes). Requests explicit `os.*` scopes + `agent.message:send`; tokens land in `~/.aicoo/credentials.json` (0600). Replaces the July 6 dynamic-client-registration flow (unauthenticated DCR is disabled server-side); legacy `~/.aicoo/oauth.json` credentials are migrated automatically on first refresh.
+
+### Added
+- `scripts/aicoo-token.mjs` — prints a valid access token, auto-refreshing (with lockfile) 2 minutes before expiry; falls back to `AICOO_API_KEY` / `PULSE_API_KEY`.
+- `scripts/aicoo-auth.sh` — one-line credential resolver for shell scripts; `aicoo-sync.sh`, `daily-brief-cron.sh`, and `inbox-monitor-cron.sh` now use it, so cron jobs work with either OAuth or API keys.
+- `--status` / `--logout` flags on `aicoo-login.mjs`; revocation pointer to Settings → Connected Apps.
+
+---
+
 ## July 6, 2026
 
 ### Changed
