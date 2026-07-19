@@ -73,7 +73,18 @@ The first "aha moment" hits at Step 2 — you talk to a stranger's AI agent and 
 
 ## Quick Start
 
-### 1) Set your API key
+### 1) Install (see step 2), then sign in with Aicoo
+
+```bash
+node ~/.claude/plugins/aicoo-skills/scripts/aicoo-login.mjs
+```
+
+Your browser opens, you sign in and approve — done. Credentials are stored in
+`~/.aicoo/credentials.json` and refresh automatically. On a headless/SSH box,
+add `--manual` and paste the code the browser shows.
+
+<details>
+<summary>Fallback: manual API key (CI, cron, no browser)</summary>
 
 Generate at: https://www.aicoo.io/settings/api-keys
 
@@ -82,6 +93,8 @@ export AICOO_API_KEY="aicoo_sk_live_xxxxxxxx"
 ```
 
 Add to your shell profile (`~/.zshrc`, `~/.bashrc`) or `.env` for persistence.
+
+</details>
 
 ### 2) Install
 

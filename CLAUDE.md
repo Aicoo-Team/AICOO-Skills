@@ -12,17 +12,20 @@ Aicoo lets you share your AI agent securely with anyone. Instead of sending a st
 
 ## Authentication
 
-**Default: "Login with Aicoo" (OAuth 2.1 + PKCE).** The onboarding skill registers a public client (`POST /api/auth/oauth2/register`), sends the user through `/api/auth/oauth2/authorize` → sign-in → `/auth/consent` → Approve, and exchanges the code at `/api/auth/oauth2/token`. The resulting access token is used as the Bearer credential (refresh via `refresh_token`; access 15 min, refresh 30 days). OIDC discovery: `https://www.aicoo.io/.well-known/oauth-authorization-server`.
+**Default: "Sign in with Aicoo" (OAuth 2.1 + PKCE).** Run `node scripts/aicoo-login.mjs` — it opens the browser to `/api/auth/oauth2/authorize` using the first-party `aicoo-skills` public client, the user signs in and approves the requested `os.*` scopes on `/auth/consent`, and tokens land in `~/.aicoo/credentials.json` (chmod 600; access 15 min, refresh 30 days, auto-refreshed). Headless/SSH: `--manual` shows a code at `https://www.aicoo.io/auth/cli` to paste back. OIDC discovery: `https://www.aicoo.io/.well-known/oauth-authorization-server`. Revoke anytime at https://www.aicoo.io/settings/connected-apps.
 
-**Fallback: manual API key.** Generate at https://www.aicoo.io/settings/api-keys and export as `AICOO_API_KEY` (legacy `PULSE_API_KEY` also accepted). API keys don't expire.
+**Fallback: manual API key.** Generate at https://www.aicoo.io/settings/api-keys and export as `AICOO_API_KEY` (legacy `PULSE_API_KEY` also accepted). API keys don't expire and are not scope-limited — right for CI, cron, and environments without a browser.
 
 API docs: https://www.aicoo.io/docs/api
 
-Either way, every request includes:
+Either way, every request includes a Bearer credential. Get the current one (OAuth access token, auto-refreshed, or the API key) with:
 
+```bash
+TOKEN="$(scripts/aicoo-auth.sh)"   # or: node scripts/aicoo-token.mjs
+curl -s "https://www.aicoo.io/api/v1/os/status" -H "Authorization: Bearer $TOKEN"
 ```
-Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}
-```
+
+OAuth tokens carry explicit scopes (`os.notes:*`, `os.todos:*`, `os.share:*`, `agent.message:send`, …). A `403 insufficient_scope` response means re-run the login to grant the missing scope.
 
 ## API Model (Breaking Change: 2026-04-16)
 
