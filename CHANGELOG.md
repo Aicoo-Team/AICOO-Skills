@@ -2,6 +2,20 @@
 
 ---
 
+## July 20, 2026 — Onboarding redesign
+
+### Changed
+- **Onboarding is now a two-track flow (personal / team)** built around *building agent memory* and *sharing a link*, not the old discover-first loop. Phases: CONNECT → BUILD MEMORY → SHARE → (team) INVITE → keep going. The first "aha" (agent recalls your real context) no longer depends on anyone else being on Aicoo.
+- **Sign-in section rewritten to be foolproof for agents.** Fixes the failure where an agent opened a website and told the user to "register / enter a verification code" instead of running the OAuth script. It now: resolves the login script's real path (no `<plugin>` placeholder — works across Claude Code / Codex / others), runs it, and **relays the printed authorize URL as a clickable link**, with explicit "do NOT send the user to register" guardrails and a remote/sandbox `--manual` branch.
+- `aicoo-login.mjs` prints a prominent, clearly-labeled clickable sign-in URL (and states whether the browser auto-opened).
+
+### Added
+- **`build-memory` skill** — turn a chosen source (this repo/folder, another local folder, or Notion/Google Docs via the web importer) into agent memory under `/Memory/Self` (`USER.md`/`COO.md`/`POLICY.md`/`MEMORY.md`) via `accumulate`; verifies with `os/memory/search`.
+- **`invite-team` skill** — bring teammates in two ways: a **copy-paste onboarding prompt** (installs skills + signs them in + connects back, no Team plan needed) and a **team invite link** via the new `POST /api/v1/os/team/invite` (owner/admin, `os.team:write`).
+- Login now requests `os.team:read` / `os.team:write` scopes; root SKILL.md documents the `GET /api/v1/os/team` and `POST /api/v1/os/team/invite` endpoints.
+
+---
+
 ## July 20, 2026
 
 ### Changed
