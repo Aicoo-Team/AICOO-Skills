@@ -1,330 +1,385 @@
 ---
 name: onboarding
-description: "Use this skill when a user wants to set up Aicoo for the first time, register for an API key, initialize their workspace, or go through the getting-started loop. Triggers on: 'set up Aicoo', 'get started with Aicoo', 'init', 'initialize', 'register', 'API key', 'teach my agent about me', 'what should my agent know', 'first time', 'new to aicoo', or any first-time Aicoo usage."
+description: "Use this skill when a user wants to set up Aicoo for the first time, sign in, build their agent's memory, share their agent, or invite their team. Triggers on: 'set up Aicoo', 'get started with Aicoo', 'onboard', 'sign in to Aicoo', 'build my memory', 'teach my agent about me', 'what should my agent know', 'share my agent', 'invite my team', 'first time', 'new to aicoo', or any first-time Aicoo usage."
 user-invokable: true
 metadata:
-  author: systemind
-  version: "3.1.0"
+  author: aicoo
+  version: "4.0.0"
 ---
 
-# Onboarding — The Starting Loop
+# Onboarding — From Zero to a Shareable Agent
 
-Guide new users from zero to their first "aha moment" in one session. The loop is designed to minimize time-to-value — every step produces something visible.
+Guide a new user from nothing to a **living agent memory** and a **shareable
+link** in one session. The design principle: every phase produces something
+visible, and the first "aha" does not depend on anyone else being on Aicoo yet
+(no cold-start dead end).
 
----
-
-## The Starting Loop (4 steps)
+There are **two tracks**. Detect which one fits, then follow it. The tracks
+share Phase 0 (connect) and the shape of Phase 1 (build memory); they diverge
+on what memory gets built and who it gets shared with.
 
 ```
-1. INIT     — Scan local context + initialize Aicoo workspace
-      ↓
-2. DISCOVER — Find 10 interesting people, talk to their agents
-      ↓
-3. SHARE    — Create your own share link so others can reach you
-      ↓
-4. POST     — Use that link to post on Square (become discoverable)
+Phase 0  CONNECT      Sign in with Aicoo + detect track (personal / team)
+   ↓
+Phase 1  BUILD MEMORY Scan local context → synthesize → write agent memory   ← core aha
+   ↓
+Phase 2  SHARE        Personal: share your agent link
+                      Team:     build a knowledge base folder + share it
+   ↓
+Phase 3  INVITE       (team) Invite teammates — copy-paste prompt AND link
+   ↓
+Phase 4  KEEP GOING   check-messages / daily-brief → heartbeat; (personal) discover on Square
 ```
-
-Each step delivers value immediately. Users can stop at any step and still have gained something useful.
 
 ---
 
-## Step 1: INIT — Scan + Initialize Workspace
+## Phase 0: CONNECT — Sign in + detect track
 
-**Goal**: Agent has full context. User's knowledge is in the cloud.
+### 0a. Sign in with Aicoo (OAuth) — DO THIS, don't send the user to a website
 
-### 1a. Connect account — "Sign in with Aicoo" (OAuth, default)
+**This is a one-click OAuth flow. You run a script; the user clicks Approve in
+the browser. Do NOT tell the user to "register", "enter a verification code",
+or "get an API key" — that is the wrong flow and confuses people.**
 
-If `$AICOO_API_KEY` / `$PULSE_API_KEY` is not set and `~/.aicoo/credentials.json`
-doesn't exist, run the bundled login script. The user signs in and clicks
-Approve on the consent screen — no manual key handling, no client registration
-(the first-party `aicoo-skills` public client is pre-registered server-side):
+If `~/.aicoo/credentials.json` already exists, skip to 0b. Otherwise:
+
+**Step 1 — locate the login script.** It ships inside this skill pack, in the
+`scripts/` directory next to the `skills/` directory that contains this file.
+Resolve its absolute path. If you're unsure where the pack is installed, find
+it:
 
 ```bash
-node <plugin>/scripts/aicoo-login.mjs
+LOGIN="$(find ~/.claude/plugins ~/.codex ~/.config/skills ~/.local/share ~ \
+  -maxdepth 8 -name aicoo-login.mjs -path '*aicoo-skills*' 2>/dev/null | head -1)"
+echo "$LOGIN"   # e.g. ~/.claude/plugins/aicoo-skills/scripts/aicoo-login.mjs
 ```
 
-What it does: opens the browser to `/api/auth/oauth2/authorize` (PKCE S256,
-state-checked), listens on a loopback port (8976/8977/8978) for the callback,
-exchanges the code at `/api/auth/oauth2/token`, and stores tokens in
-`~/.aicoo/credentials.json` (chmod 600). It requests the `os.*` scopes the
-skills need (notes, snapshots, todos, memory, network, share, status,
-agent messaging) plus `offline_access` for refresh.
-
-**Headless / SSH** (no local browser): add `--manual`. The browser (on any
-device) shows a code at `https://www.aicoo.io/auth/cli`; the user pastes it
-back into the terminal.
-
-Then make every example in the skill pack work unchanged by exporting the
-resolved token (re-run on 401 — access tokens last 15 minutes and refresh
-automatically):
+**Step 2 — run it** (it auto-opens the browser and blocks until the user
+finishes; just run it and wait):
 
 ```bash
-export AICOO_API_KEY="$(<plugin>/scripts/aicoo-auth.sh)"
+node "$LOGIN"
 ```
 
-Verify with `GET /api/v1/os/status`. Users can inspect or revoke the
-connection anytime at https://www.aicoo.io/settings/connected-apps, and
-`node <plugin>/scripts/aicoo-login.mjs --logout` deletes local credentials.
+**Step 3 — relay the link.** The script prints a `Sign in with Aicoo` URL.
+**Copy that exact URL into your reply to the user as a clickable link**, and say
+something like:
 
-**Fallback — manual API key** (if OAuth is unavailable, the runtime cannot
-open a browser at all, or you need a non-expiring credential for CI/cron):
+> I've opened the Aicoo sign-in page in your browser. If it didn't open,
+> **click here: `<the URL the script printed>`** — sign in if asked, then click
+> **Approve**. That's it; I'll continue automatically once you do.
 
+Then let the script finish — it exchanges the code and stores tokens in
+`~/.aicoo/credentials.json` (chmod 600), granting the `os.*` scopes (notes,
+snapshots, todos, memory, network, share, status, **team**, agent messaging) +
+`offline_access`. When it prints "Signed in", continue to 0b.
+
+**Remote / SSH / cloud sandbox** (no local browser, or a loopback callback
+can't reach this machine — e.g. a hosted Codex/agent runtime): run
+`node "$LOGIN" --manual`. It prints the same URL; the user opens it on their own
+device, and the browser shows a code at `https://www.aicoo.io/auth/cli` that
+they paste back to you. Relay the URL exactly as above.
+
+**Then** resolve the token so every example works (auto-refreshes; re-run on
+401). Use the same pack root you found above:
+
+```bash
+export AICOO_API_KEY="$(bash "$(dirname "$LOGIN")/aicoo-auth.sh")"
 ```
-1. Go to https://www.aicoo.io/settings/api-keys
-2. Generate a key
-3. Run: export AICOO_API_KEY=aicoo_sk_live_xxxxxxxx
 
-(Add to ~/.zshrc for persistence — API keys don't expire like OAuth tokens do)
-```
+Users can revoke anytime at https://www.aicoo.io/settings/connected-apps.
 
-### 1b. Initialize workspace
+**Only if the browser truly can't be used** (pure CI/cron, no human): fall back
+to a manual API key — https://www.aicoo.io/settings/api-keys →
+`export AICOO_API_KEY=aicoo_sk_live_xxxxxxxx`. Do not offer this first; OAuth is
+the default.
+
+### 0b. Initialize workspace
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/init" \
   -H "Authorization: Bearer $AICOO_API_KEY" | jq .
-
 curl -s "https://www.aicoo.io/api/v1/os/status" \
   -H "Authorization: Bearer $AICOO_API_KEY" | jq .
 ```
 
-### 1c. Scan local context
+### 0c. Detect the track
 
-Read available local signals to understand the user:
-- `README.md`, `package.json`, `Cargo.toml` (project tech stack)
-- `docs/`, `notes/`, any markdown (domain knowledge)
-- Git history (what they're working on)
-- Claude memory files (if available)
+Infer from local signals, then confirm in one line. Don't over-ask.
 
-### 1d. Sync to Aicoo
+- **Team / enterprise signals**: a monorepo, multiple git contributors
+  (`git shortlog -sn | head`), a `CODEOWNERS` file, a company-domain sign-in
+  email, org-scoped `package.json` name, team/architecture/runbook docs.
+- **Personal signals**: single-author repo, a personal project or portfolio,
+  research notes, job-search context.
+
+Ask: *"Are you setting Aicoo up mostly for **yourself** (share your agent,
+get discovered) or for your **team** (a shared knowledge base your teammates'
+agents can reach)?"* Then follow that track. Either way, Phase 1 comes next.
+
+---
+
+## Phase 1: BUILD MEMORY — the core aha
+
+**Goal**: the user watches their agent's memory get built from their real
+context, then sees the agent use it. This is the first aha and it needs no one
+else on Aicoo.
+
+Memory in Aicoo *is* notes under the `/Memory` folder — `/Memory/Self/` holds
+the identity files (`USER.md`, `COO.md`, `POLICY.md`, `MEMORY.md`). You build
+memory by writing those files.
+
+### 1a. Ask where to build from, then scan it
+
+Ask first (don't assume the current folder):
+
+> "Where should I build your memory from? I can read **this repo/folder**, a
+> **different local folder** (give me the path), or you can import from
+> **Notion / Google Docs**. Or just tell me about yourself and we skip files."
+
+- Local folder / repo → read it directly (signals below).
+- Notion / Google Docs → point them to
+  **https://www.aicoo.io/import-workspace** (it connects the source, extracts
+  memory, and generates USER.md/COO.md), then continue at 1c to verify.
+- "Just tell me" → ask 3–4 questions and synthesize from the answers.
+
+Read the real signals from the chosen source (adapt to what exists):
+- `README.md`, `package.json`, `Cargo.toml`, `pyproject.toml` — stack + purpose
+- `docs/`, `notes/`, architecture / decision / runbook docs — domain knowledge
+- `git log --oneline -30`, `git shortlog -sn` — what's being worked on, by whom
+- Claude/agent memory files if present (`CLAUDE.md`, `.claude/`, `AGENTS.md`)
+
+**Personal track** → synthesize about the *person*: who they are, their stack,
+what they're building, how they like their agent to behave.
+
+**Team track** → synthesize about the *project/team*: architecture, key
+decisions, who-owns-what, conventions, runbooks. This becomes the knowledge
+base.
+
+### 1b. Write the memory (show it happening)
+
+Narrate it as building memory — write the identity files and the knowledge.
+Use `accumulate` with `Memory/...` paths (the root-space router puts them in
+the right place):
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
-  -H "Authorization: Bearer $AICOO_API_KEY" \
-  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $AICOO_API_KEY" -H "Content-Type: application/json" \
   -d '{
     "files": [
-      {"path": "General/about-me.md", "content": "# [User Name]\n\n## Role\n...\n\n## Current Work\n..."},
-      {"path": "Technical/architecture.md", "content": "..."}
+      {"path": "Memory/Self/USER.md",   "content": "# Who You Are\n\n## Role\n...\n## Current Work\n...\n## Expertise\n..."},
+      {"path": "Memory/Self/COO.md",    "content": "# Your Agent\n\n## Voice & style\n...\n## How to help\n..."},
+      {"path": "Memory/Self/MEMORY.md", "content": "# Long-term Memory\n\n## Key facts\n- ...\n## Projects\n- ...\n## Preferences\n- ..."}
     ]
-  }' | jq .
+  }' | jq '{created, updated, workspace}'
 ```
 
-### 1e. Identity files
+For the **team track**, also write the knowledge base into its own folder so
+it can be shared as a unit (e.g. `Knowledge Base/architecture.md`,
+`Knowledge Base/decisions.md`, `Knowledge Base/ownership.md`):
 
-Create `memory/self/` files:
-- `COO.md` — agent personality and operating style
-- `USER.md` — owner profile (role, skills, goals)
-- `POLICY.md` — boundaries (what to share, what not to)
+```bash
+curl -s -X POST "https://www.aicoo.io/api/v1/accumulate" \
+  -H "Authorization: Bearer $AICOO_API_KEY" -H "Content-Type: application/json" \
+  -d '{"files": [
+    {"path": "Knowledge Base/architecture.md", "content": "..."},
+    {"path": "Knowledge Base/decisions.md",    "content": "..."},
+    {"path": "Knowledge Base/ownership.md",     "content": "# Who owns what\n- ..."}
+  ]}' | jq '{created, updated}'
+```
 
-**Transition**: "Your workspace is set up. Now let's find some interesting people for you to connect with."
+### 1c. The aha — prove the agent remembers
+
+Two ways, pick what fits:
+
+```bash
+# Search the memory you just built
+curl -s -X POST "https://www.aicoo.io/api/v1/os/memory/search" \
+  -H "Authorization: Bearer $AICOO_API_KEY" -H "Content-Type: application/json" \
+  -d '{"query": "what am I working on", "maxResults": 5}' | jq '.result.results'
+```
+
+Or (stronger): after Phase 2 gives you a share link, talk to your *own* agent
+as a guest and watch it answer from what you just wrote — "it actually knows
+me / it actually knows this project."
+
+**Transition (personal)**: "Your agent has a memory now. Let's make it
+reachable — share a link anyone can talk to."
+**Transition (team)**: "Your knowledge base is live. Let's share it with the
+team so their agents can reach it."
 
 ---
 
-## Step 2: DISCOVER — Find 10 People + Interact
+## Phase 2: SHARE
 
-**Goal**: User talks to a stranger's agent within 60 seconds. First "aha moment."
+Both tracks use `POST /api/v1/os/share`; they differ in scope.
 
-Use the `discover` skill (auto mode). Infer search intent from what was just synced in Step 1.
-
-### 2a. Search Square
-
-Fire 2-3 searches based on user's context:
-
-```bash
-# Based on their tech stack
-curl -s "https://www.aicoo.io/api/square?q=<inferred_terms>&limit=10&sort=most_asked" | jq .
-
-# Broaden with subsquare
-curl -s "https://www.aicoo.io/api/square?subsquare=builders&sort=most_asked&limit=10" | jq .
-```
-
-### 2b. Present N=10 results
-
-```
-Found 10 interesting people for you:
-
-1. @iris.johannsen305 (Iris Johannsen) [open]
-   "Building a local-first sync engine in TypeScript"
-   Tags: typescript, local-first, crdt | 5 likes, 3 asks
-   → Talk to their agent or connect instantly
-
-2. @kenji.garcia107 (Kenji Garcia) [open]
-   "Fine-tuning small LLMs for structured extraction"
-   Tags: ml, llm, fine-tuning | 8 likes, 2 asks
-   → Talk to their agent or connect instantly
-
-3. @iris.holm227 (Iris Holm) [closed]
-   "Hot take: most AI startups are building features, not products"
-   Tags: startups, ai, strategy | 12 likes, 0 asks
-   → Send friend request to connect
-
-...
-
-Want to talk to any of their agents? Pick a number or say "talk to @username".
-```
-
-### 2c. Instant interaction (the aha moment)
-
-For open posts — talk to their agent immediately:
-
-```bash
-curl -s -X POST "https://www.aicoo.io/api/chat/guest-v04" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "token": "<agentLinkToken>",
-    "message": "Hey! What are you currently building?",
-    "stream": false
-  }' | jq .
-```
-
-Present the response. User just talked to a stranger's AI agent. That's the aha.
-
-### 2d. Connect
-
-```bash
-# Open posts — instant connect
-curl -s -X POST "https://www.aicoo.io/api/v1/network/connect" \
-  -H "Authorization: Bearer $AICOO_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"shareToken": "<agentLinkToken>"}' | jq .
-
-# Closed posts — send request
-curl -s -X POST "https://www.aicoo.io/api/v1/network/request" \
-  -H "Authorization: Bearer $AICOO_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"to": "<username>"}' | jq .
-```
-
-**Transition**: "Nice! You just talked to someone's agent and connected. Now let's make YOUR agent reachable too."
-
----
-
-## Step 3: SHARE — Create Your Agent Link
-
-**Goal**: User has a shareable link. Others can now reach them.
+### Personal — share your agent
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
-  -H "Authorization: Bearer $AICOO_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "scope": "all",
-    "access": "read",
-    "notesAccess": "read",
-    "label": "My public agent link",
-    "requireSignIn": true
-  }' | jq .
+  -H "Authorization: Bearer $AICOO_API_KEY" -H "Content-Type: application/json" \
+  -d '{"scope":"all","access":"read","notesAccess":"read","label":"My agent","requireSignIn":true}' \
+  | jq '{url: .shareLink.url, token: .shareLink.token}'
 ```
-
-Save the returned `token` — this is the user's agent link token.
 
 Present:
-
 ```
-Your agent is now shareable!
-
-Link: https://www.aicoo.io/a/<token>
-Anyone with this link can talk to your agent (read-only, sign-in required).
-
-Next: let's post on Square so people can find you.
+Your agent is shareable → https://www.aicoo.io/a/<token>
+Send it to anyone. They can ask your agent about you — it answers from the
+memory you just built, even while you're offline.
 ```
 
-**Transition**: "Now let's put you on the map."
+### Team — share the knowledge base
 
----
-
-## Step 4: POST — Join Aicoo Square
-
-**Goal**: User is discoverable. Others can find and reach them.
-
-Use the share link token from Step 3 to create an **open** post:
+Restrict the link to the knowledge-base folder(s) so it exposes the KB, not
+everything:
 
 ```bash
-curl -s -X POST "https://www.aicoo.io/api/square" \
-  -H "Authorization: Bearer $AICOO_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "subsquare": "builders",
-    "title": "<generated from user context>",
-    "content": "<markdown about what they're building>",
-    "tags": ["<relevant>", "<tags>"],
-    "reachability": "open",
-    "agentLinkToken": "<token from step 3>"
-  }' | jq .
+# Find the folder id
+curl -s "https://www.aicoo.io/api/v1/os/folders" \
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq '.folders[] | select(.name=="Knowledge Base") | {id,name}'
+
+# Share scoped to that folder
+curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
+  -H "Authorization: Bearer $AICOO_API_KEY" -H "Content-Type: application/json" \
+  -d '{"scope":"folders","folderIds":[<id>],"access":"read","notesAccess":"read","label":"Team knowledge base","requireSignIn":true}' \
+  | jq '{url: .shareLink.url}'
 ```
 
-Help the user craft their post:
-- Title: what they're building or their expertise (max 200 chars)
-- Content: markdown about their work, what they're looking for, what they can offer
-- Tags: 3-5 relevant keywords
-- Subsquare: `builders` (default), `hiring`, `events`, `projects`, or `feedback`
-
-Present:
-
-```
-You're live on Aicoo Square!
-
-Your post: "Building a privacy-first calendar sync for distributed teams"
-Subsquare: builders | Tags: privacy, agents, distributed-teams
-Reachability: open — anyone can talk to your agent directly
-
-People will find you when they search for topics you care about.
-The discover loop is complete. 🔄
-```
+Present the `/a/<token>` link: teammates (and their agents) can now ask the
+knowledge base questions instead of interrupting a person.
 
 ---
 
-## Completion Summary
+## Phase 3: INVITE THE TEAM (team track)
 
-After all 4 steps, present:
+Two complementary ways — offer **both**, let the user pick per person.
 
-```
-Setup complete! Here's what you have:
+### 3a. Copy-paste onboarding prompt (best for technical teammates)
 
-✓ Workspace synced — your agent has full context
-✓ 10 people discovered — you've seen who's building what
-✓ Agent link live — others can talk to your agent
-✓ Square post published — you're discoverable
+Zero setup on your side. Generate a block the teammate pastes into their own
+Claude Code / Codex / agent runtime; it installs the skills, signs them in,
+onboards them, and connects them back to the inviter. Use the **discover**
+skill's contact helpers or just fill the inviter's username (from
+`GET /api/v1/identity`).
 
-What's next:
-- "check messages" — see if anyone talked to your agent
-- "discover more people" — find more connections
-- "daily brief" — get a morning summary
-- "heartbeat" — let your agent act autonomously
-```
+Generate and present exactly this (substitute `<username>` and, if you created
+one in 3b, `<inviteUrl>`):
+
+~~~
+Copy everything below and paste it to your AI agent (Claude Code, Codex, etc.):
 
 ---
+Set me up on Aicoo and connect me to my teammate.
 
-## Partial Onboarding (resume from any step)
+1. Install the Aicoo skills:
+   npx skills add Aicoo-Team/AICOO-Skills
+   (or: git clone https://github.com/Aicoo-Team/AICOO-Skills.git ~/.claude/plugins/aicoo-skills)
+2. Sign in with Aicoo:
+   node ~/.claude/plugins/aicoo-skills/scripts/aicoo-login.mjs
+3. Run the Aicoo onboarding skill to build my agent memory and share my agent.
+4. Connect me to @<username> on Aicoo (accept/join their team if I was invited).
+---
+~~~
 
-If user already has API key set, skip Step 1a.
-If workspace already initialized, skip to Step 2.
-If they already have contacts, skip to Step 3.
-If they already have a share link, skip to Step 4.
+### 3b. Invite link (best for anyone with an Aicoo account)
 
-Check state:
+Requires the `os.team:write` scope and that the caller owns/admins a Team
+plan. First check team status:
 
 ```bash
-# Has workspace?
+curl -s "https://www.aicoo.io/api/v1/os/team" \
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq '{hasTeam, canInvite, seats: .team.seatsAvailable}'
+```
+
+- `hasTeam:false` → the user isn't on a Team plan. Point them to
+  https://www.aicoo.io/settings/team to start one, then come back. (Don't try
+  to invite.)
+- `canInvite:false` → they're a member, not owner/admin. Only owners/admins
+  invite.
+- `seatsAvailable:0` → all seats used; add seats at `/settings/team` first.
+
+Then create a reusable link invite (omit `email` for a link anyone can use, or
+set it to email that specific person and send them the link too):
+
+```bash
+curl -s -X POST "https://www.aicoo.io/api/v1/os/team/invite" \
+  -H "Authorization: Bearer $AICOO_API_KEY" -H "Content-Type: application/json" \
+  -d '{"role":"member"}' | jq '{inviteUrl, emailDelivered}'
+```
+
+Present the `inviteUrl` (`https://www.aicoo.io/team/invites/<token>`). It's
+reusable until seats fill up; recipients accept by opening it while signed in.
+Pair it with the 3a prompt so the teammate both joins the team **and** gets
+their own agent set up.
+
+---
+
+## Phase 4: KEEP GOING
+
+- `check-messages` — see who talked to your agent and what it answered. This is
+  the retention aha: *your agent worked while you were away.*
+- `daily-brief` — a morning summary of priorities and activity.
+- `heartbeat` — let your agent act autonomously on a schedule.
+- **(personal only)** `discover` / Square — find people building similar
+  things, talk to their agents, and post so others can find you. This is a
+  value-add once your agent has a memory and a link — not the first step.
+
+---
+
+## Completion summary
+
+**Personal**
+```
+✓ Signed in with Aicoo
+✓ Agent memory built from your real context
+✓ Agent link live → https://www.aicoo.io/a/<token>
+Next: "check messages" · "discover people" · "daily brief"
+```
+
+**Team**
+```
+✓ Signed in with Aicoo
+✓ Knowledge base built + shared → https://www.aicoo.io/a/<token>
+✓ Team invited (link + copy-paste onboarding prompt)
+Next: "check messages" · "daily brief" · "heartbeat"
+```
+
+---
+
+## Resume from any step (idempotent)
+
+`$LOGIN` below is the script path you resolved in Phase 0a
+(`.../aicoo-skills/scripts/aicoo-login.mjs`).
+
+```bash
+# Signed in?  → ~/.aicoo/credentials.json exists, or:
+node "$LOGIN" --status
+# Has workspace / memory?
 curl -s "https://www.aicoo.io/api/v1/os/status" -H "Authorization: Bearer $AICOO_API_KEY"
-
-# Has contacts?
-curl -s "https://www.aicoo.io/api/v1/os/network" -H "Authorization: Bearer $AICOO_API_KEY"
-
-# Has share link?
+curl -s -X POST "https://www.aicoo.io/api/v1/os/memory/search" -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" -d '{"query":"identity","maxResults":3}'
+# Has a share link?
 curl -s "https://www.aicoo.io/api/v1/os/share/list" -H "Authorization: Bearer $AICOO_API_KEY"
+# On a team / can invite?
+curl -s "https://www.aicoo.io/api/v1/os/team" -H "Authorization: Bearer $AICOO_API_KEY"
 ```
+
+Skip any phase already done.
 
 ---
 
-## Error Handling
+## Error handling
 
 | Scenario | Action |
 |----------|--------|
-| No API key | Guide to https://www.aicoo.io/settings/api-keys |
-| Invalid key | Ask user to regenerate |
-| Empty workspace | Scan local files harder, ask user about themselves |
-| No search results on discover | Broaden search, show trending posts |
-| Share link creation fails | Check if user has notes to share, create one first |
-| Post creation fails without token | Guide back to Step 3 (create share link first) |
+| Not signed in | Run `node "$LOGIN"` (browser) or `node "$LOGIN" --manual` (remote/SSH), and relay the printed URL as a clickable link. Do NOT send the user to register/enter a code. API-key fallback only if no browser at all: https://www.aicoo.io/settings/api-keys |
+| Agent about to open a website / ask for a verification code | Wrong flow — stop and run the login script instead; it handles sign-in |
+| 401 mid-session | Access token expired — re-export `AICOO_API_KEY="$(bash "$(dirname "$LOGIN")/aicoo-auth.sh")"` (auto-refreshes) |
+| 403 insufficient_scope | The login didn't grant that scope — re-run `aicoo-login.mjs` to re-consent |
+| Empty workspace on memory build | Scan local files harder; ask the user 2–3 questions about themselves / the project |
+| `os/team` → hasTeam:false | User isn't on a Team plan → https://www.aicoo.io/settings/team |
+| team invite → canInvite:false | Only owners/admins can invite — use the copy-paste prompt (3a) instead |
+| team invite → seats full (409) | Add seats at https://www.aicoo.io/settings/team |
+| Share fails (no content) | Build memory first (Phase 1) so the agent has something to say |

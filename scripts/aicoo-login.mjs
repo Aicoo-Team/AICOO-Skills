@@ -43,6 +43,8 @@ const SCOPES = [
   'os.network:read',
   'os.share:read',
   'os.share:write',
+  'os.team:read',
+  'os.team:write',
   'agent.message:send',
 ].join(' ');
 
@@ -214,10 +216,20 @@ async function login() {
     code_challenge_method: 'S256',
   }).toString();
 
-  log('Sign in with Aicoo:');
-  log(`\n  ${authorizeUrl}\n`);
-  if (openBrowser(authorizeUrl.toString())) {
-    log('Your browser should open automatically. If not, open the link above.');
+  const opened = openBrowser(authorizeUrl.toString());
+  log('');
+  log('──────────────────────────────────────────────────────────');
+  log('  Sign in with Aicoo — click this link (or it auto-opened):');
+  log('');
+  log(`  ${authorizeUrl}`);
+  log('');
+  log('  Sign in if asked, then click Approve. Nothing to type here.');
+  log('──────────────────────────────────────────────────────────');
+  log('');
+  if (opened) {
+    log('(Your browser should have opened this automatically.)');
+  } else {
+    log('(No browser detected here — open the link above on any device.)');
   }
 
   let code;
@@ -225,7 +237,7 @@ async function login() {
     log('Waiting for you to finish signing in…');
     code = await waitForCallback(loopback.server, state);
   } else {
-    log('After approving, the browser shows a code to paste back here.');
+    log('After approving, the browser shows a code — paste it back here.');
     code = await promptForCode();
   }
 

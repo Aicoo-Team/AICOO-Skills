@@ -172,6 +172,20 @@ curl -s -X POST "$PULSE_BASE/os/share" \
   -d '{"scope":"all","access":"read","notesAccess":"read","label":"For investors","expiresIn":"7d","requireSignIn":true}' | jq .
 ```
 
+### Team (OS-native)
+
+```bash
+# team status: membership, role, seat usage, members, pending invites
+curl -s "$PULSE_BASE/os/team" \
+  -H "Authorization: Bearer $AICOO_API_KEY" | jq '{hasTeam, canInvite, seats: .team.seatsAvailable}'
+
+# create a team invite link (owner/admin; omit email for a reusable link)
+curl -s -X POST "$PULSE_BASE/os/team/invite" \
+  -H "Authorization: Bearer $AICOO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"role":"member"}' | jq '{inviteUrl, emailDelivered}'
+```
+
 ### Todos (OS-native)
 
 ```bash
