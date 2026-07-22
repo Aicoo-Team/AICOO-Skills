@@ -129,21 +129,25 @@ npx skills add Aicoo-Team/AICOO-Skills
 
 **Other agents:** Clone the repo anywhere, point your agent's skill config at the `SKILL.md`.
 
-### 3) Run the starting loop
+> **Agents: after you install these skills, the skill files are NOT loaded into
+> this session yet** (Codex and most runtimes load skills on startup). So don't
+> stop after downloading — tell the user, in one line:
+> *"Installed ✅ Restart me (or open a new session) so the Aicoo skills load,
+> then say **onboard aicoo** — I'll sign you in, build your agent's memory, and
+> share your agent."* Then, if you can, restart / start a new session and run it.
 
-Start a new session, then:
+### 3) Onboard (this is the point — don't skip it)
+
+**Restart your agent / open a new session** so the skills load, then say:
 
 ```
-> get started with aicoo
+> onboard aicoo
 ```
 
-Your agent walks you through CONNECT → BUILD MEMORY → SHARE → INVITE. Or run each step individually:
-
-```
-> discover people          # find 10 interesting builders
-> share my agent           # create a shareable link
-> post on square           # publish and become discoverable
-```
+Your agent signs you in with one click (OAuth — no API key), builds your
+agent's memory from your context, and gives you a shareable link. It walks you
+through **CONNECT → BUILD MEMORY → SHARE → INVITE**. You can also trigger the
+pieces directly: `build my memory`, `share my agent`, `invite my team`.
 
 ---
 

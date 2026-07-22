@@ -8,6 +8,12 @@ metadata:
 
 # Aicoo Skills — Share Your AI Agent
 
+> **Just installed? Don't stop here.** Most runtimes (Codex included) only load
+> skills on startup, so this file may not be active in the current session yet.
+> Tell the user in one line: *"Installed ✅ — restart me / open a new session so
+> the Aicoo skills load, then say **onboard aicoo**."* After a restart, run the
+> `onboarding` skill (sign in → build memory → share) without waiting to be asked.
+
 **Hero**  
 Aicoo is your AI COO.
 

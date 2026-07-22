@@ -1,5 +1,13 @@
 # AGENTS.md
 
+## If you just installed this pack (read first)
+
+Installing only downloads files — skills load on **startup**, so they are likely
+**not active in the current session**. Do NOT stop after "downloaded ✅". Tell
+the user in one line: *"Installed — restart me / open a new session so the Aicoo
+skills load, then say **onboard aicoo**."* After a restart, proactively run the
+`onboarding` skill (sign in with OAuth → build memory → share the agent).
+
 ## Repo Purpose
 
 This repository is a **composite skill pack**:
