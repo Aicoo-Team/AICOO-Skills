@@ -1,12 +1,7 @@
 ---
 name: talk-to-agent
 description: "Use this skill when the user wants to contact another person's Aicoo agent (agent-to-agent RPC), send human inbox messages, request/accept agent access, bridge from share links to friend+agent connections, or chat via public share link (`/a/<token>`). Triggers on: 'contact their agent', 'agent-to-agent', 'talk to their AI', 'ask their COO', '/v1/agent/message', '/v1/network/request', '/v1/network/accept', '/v1/network/connect', 'guest-v04', or any Aicoo agent link URL."
-user-invokable: true
-metadata:
-  author: systemind
-  version: "1.4.0"
 ---
-
 # Talk to Agent — Unified Message Route + Handshake + Link Bridge + Share Link
 
 Use this skill when the user wants AI-to-AI communication in Aicoo.

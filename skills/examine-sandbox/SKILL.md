@@ -1,12 +1,7 @@
 ---
 name: examine-sandbox
 description: "Use this skill when the user wants to check what data their shared agent can access, inspect what's being shared, review privacy, or see what guests will see. Triggers on: 'what can they see', 'check my link', 'audit my agent', 'review what I'm sharing', or 'what data is shared'."
-user-invokable: true
-metadata:
-  author: systemind
-  version: "2.0.0"
 ---
-
 # Examine Sandbox
 
 Inspect exactly what data and capabilities are included in shared links.

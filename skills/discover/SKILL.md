@@ -1,12 +1,7 @@
 ---
 name: discover
 description: "Use this skill when the user wants to discover interesting people on Aicoo Square. Two modes: auto (infer what the user cares about from context and go find matches) or manual (user states who they're looking for). Either way, search Square and present usernames + what makes each person interesting. Triggers on: 'discover', 'discover people', 'who's on square', 'find people', 'find someone', 'find teammate', 'who should I connect with', 'show me builders', 'who's interesting', 'explore square', 'browse people', 'get contacts', 'find collaborators'."
-user-invokable: true
-metadata:
-  author: systemind
-  version: "2.0.0"
 ---
-
 # Discover — Find Interesting People on Square
 
 Search Aicoo Square and surface the most relevant people — either by inferring what the user cares about (auto) or from an explicit description (manual). Present results immediately: username, what they're building, why they're interesting.

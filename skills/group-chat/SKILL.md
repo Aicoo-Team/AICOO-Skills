@@ -1,12 +1,7 @@
 ---
 name: group-chat
 description: "Use this skill when the user wants to create a group chat, send group messages, invite members, manage group settings, list groups, leave a group, or generate a join link. Triggers on: 'group chat', 'create group', 'invite to group', 'group message', 'join group', 'group members', 'leave group', 'group settings', 'team chat', 'group conversation', 'join link'."
-user-invokable: true
-metadata:
-  author: systemind
-  version: "1.2.0"
 ---
-
 # Group Chat — Multi-Party Messaging
 
 Group chat in Aicoo enables multi-party conversations with SSE realtime, Redis pub/sub fanout, invite flows, and attachment support.

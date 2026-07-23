@@ -1,12 +1,7 @@
 ---
 name: invite-team
 description: "Use this skill when the user wants to invite teammates to Aicoo — generate a team invite link, or a copy-paste prompt that sets a teammate up automatically. Triggers on: 'invite my team', 'invite a teammate', 'add team members', 'invite someone to my team', 'team invite link', 'onboard my team', 'get my coworkers on Aicoo', 'generate an invite'."
-user-invokable: true
-metadata:
-  author: aicoo
-  version: "1.0.0"
 ---
-
 # Invite Team — Two Ways To Bring People In
 
 Offer **both** and let the user pick per person:

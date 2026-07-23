@@ -1,12 +1,7 @@
 ---
 name: onboarding
 description: "Use this skill when a user wants to set up Aicoo for the first time, sign in, build their agent's memory, share their agent, or invite their team. Triggers on: 'set up Aicoo', 'get started with Aicoo', 'onboard', 'sign in to Aicoo', 'build my memory', 'teach my agent about me', 'what should my agent know', 'share my agent', 'invite my team', 'first time', 'new to aicoo', or any first-time Aicoo usage."
-user-invokable: true
-metadata:
-  author: aicoo
-  version: "4.0.0"
 ---
-
 # Onboarding — From Zero to a Shareable Agent
 
 Guide a new user from nothing to a **living agent memory** and a **shareable

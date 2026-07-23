@@ -1,12 +1,7 @@
 ---
 name: share-agent
 description: "Use this skill when the user wants to share their AI agent with someone, generate a shareable link, require sign-in, allow anonymous access, let others talk to their agent, configure write access for guests, or manage existing shared links. Triggers on: 'share link', 'agent link', 'share my agent', 'let them talk to my AI', 'require sign-in', 'anonymous link', 'write access', 'edit access', 'guest permissions', or wanting to create a link for investors, prospects, partners, or anyone else to interact with their AI assistant."
-user-invokable: true
-metadata:
-  author: systemind
-  version: "2.0.0"
 ---
-
 # Share Agent
 
 Create and manage secure, shareable links to a user's agent.

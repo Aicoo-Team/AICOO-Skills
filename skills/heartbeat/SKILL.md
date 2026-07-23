@@ -1,12 +1,7 @@
 ---
 name: heartbeat
 description: "Use this skill when the user wants to run or configure the heartbeat autonomous loop, check past heartbeat runs, set the heartbeat tier/policy, view or edit heartbeat instructions (HEARTBEAT.md), or enable agent proactive behavior. Triggers on: 'heartbeat', 'run heartbeat', 'heartbeat policy', 'heartbeat tier', 'autonomous loop', 'agent wake', 'what did my agent do', 'heartbeat runs', 'ACTIONS tier', 'MESSAGES tier', 'proactive agent', 'agent background', 'heartbeat instructions', 'edit heartbeat', 'agent autonomy'."
-user-invokable: true
-metadata:
-  author: systemind
-  version: "1.0.0"
 ---
-
 # Heartbeat — Autonomous Agent Loop
 
 Heartbeat is Aicoo's proactive engine. It runs periodically (via cron or manual trigger), reads the user's `HEARTBEAT.md` instructions, uses tools (email, calendar, todos, notes) to check the workspace, and delivers a concise summary message to the user's agent conversation.

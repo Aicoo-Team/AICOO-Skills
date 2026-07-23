@@ -1,12 +1,7 @@
 ---
 name: todos
 description: "Use this skill when the user wants to list, search, create, edit, complete, or replan todos in Aicoo. Triggers on: 'todos', 'my tasks', 'task list', 'add todo', 'create todo', 'complete todo', 'mark done', 'replan', 'overdue tasks', 'what do I need to do', 'pending tasks', 'to-do list', 'check my todos'."
-user-invokable: true
-metadata:
-  author: systemind
-  version: "1.0.0"
 ---
-
 # Todos — Task Management
 
 List, create, edit, complete, and replan todos using Aicoo OS endpoints.

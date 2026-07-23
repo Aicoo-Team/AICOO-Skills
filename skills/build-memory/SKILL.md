@@ -1,12 +1,7 @@
 ---
 name: build-memory
 description: "Use this skill when the user wants to build, refresh, or teach their Aicoo agent memory from their real context — files, repo, git history, docs, or Claude/agent memory. Triggers on: 'build my memory', 'build my agent memory', 'teach my agent about me', 'what should my agent know', 'update my memory', 'refresh memory', 'import my context', 'sync my knowledge', 'make my agent know me', 'ingest my repo'."
-user-invokable: true
-metadata:
-  author: aicoo
-  version: "1.0.0"
 ---
-
 # Build Memory — Turn Local Context Into Agent Memory
 
 Your agent's memory *is* notes under `/Memory`. `/Memory/Self/` holds the
