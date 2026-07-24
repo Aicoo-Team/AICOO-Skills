@@ -83,6 +83,9 @@ Run or configure the autonomous heartbeat loop. Trigger manually, view past runs
 ### 15. discover
 Find N interesting people on Aicoo Square (default 10). Auto mode infers from your context; manual mode takes a description. Returns usernames + why they're interesting, respects open/closed reachability.
 
+### 16. connect-local-agent
+Make THIS machine's coding agent reachable for live agent-to-agent collaboration — start the Aicoo local-agent (c2c) bridge so paired peers can send requests to the running Claude Code / Codex, with per-tool owner approval. The receiving side of `talk-to-agent`. Uses `AICOO_API_KEY`, runs the bridge as a long-lived background process, confirms registration.
+
 ## API Base URL
 
 ```

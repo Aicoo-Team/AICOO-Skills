@@ -47,6 +47,7 @@
         "snapshots",
         "autonomous-sync",
         "talk-to-agent",
+        "connect-local-agent",
         "daily-brief",
         "inbox-monitoring",
         "start-aicoo",
