@@ -59,8 +59,9 @@ nohup env \
 echo "bridge starting (pid $!) against $SERVER — logging to bridge.log"
 ```
 
-`CCD_AICOO=1` selects the Aicoo transport; `CCD_TOKEN` reuses the API key; the bridge registers
-its endpoint, sets a default route, and heartbeats.
+`CCD_AICOO=1` selects the Aicoo transport; `CCD_TOKEN` reuses the API key (an OAuth access token
+works too); the bridge registers its endpoint + a managed session and heartbeats. `deviceId` is
+auto-generated and persisted next to the spool. It does **not** auto-set the default route — Step 4.
 
 ---
 
@@ -70,33 +71,54 @@ its endpoint, sets a default route, and heartbeats.
 sleep 3
 head -40 bridge.log
 ```
-Success = a JSON block with an **`endpointId`** and a default route set, no auth/connection errors.
-Report the `endpointId` and confirm it is heartbeating.
+Success = a JSON block with an **`endpointId`**, no auth/connection errors. Report the `endpointId`
+and confirm it is heartbeating (every ~20s).
 
 Common failures:
-- `401 / unauthorized` → wrong/expired `AICOO_API_KEY`, or `CCD_SERVER_URL` points at a server
-  where that account doesn't exist (e.g. a preview using a different database).
+- `401 / unauthorized` despite a valid key → the apex host did a cross-origin redirect
+  (`aicoo.io` → `www.aicoo.io`) that **dropped the Authorization header**. Use the **`www.`** host in
+  `CCD_SERVER_URL` (e.g. `https://www.aicoo.io`). Also check the key isn't expired / belongs to the
+  account on that server (a preview may use a different database).
 - connection refused / timeout → check `CCD_SERVER_URL` and network.
 - `claude` not found → add `--claude-path "$(which claude)"` to the bridge command.
+- `No conversation found` on restart → a prior crash left a stale session in the spool. Clear the
+  stale spool session state (keep the `.device-id` file) and restart.
 
 ---
 
-## Step 4: What's now possible
+## Step 4: Set the default route (REQUIRED — or peers can't reach you)
+
+The bridge registers an endpoint + session but does **not** auto-set the default route. Without it,
+anyone targeting your `person_default_runtime` can't find you. Set it from the spool:
+
+```bash
+CCD_AICOO=1 CCD_SERVER_URL="$SERVER" CCD_TOKEN="$AICOO_API_KEY" \
+  npm run ccd -- default-route set --spool me.spool
+# verify:
+CCD_AICOO=1 CCD_SERVER_URL="$SERVER" CCD_TOKEN="$AICOO_API_KEY" \
+  npm run ccd -- default-route get
+```
+
+---
+
+## Step 5: What's now possible
 
 - The agent is **reachable**. In the Aicoo app, anyone the user has **paired with** (agent access
   granted) can hit **Collaborate** and send a request; the user gets an **Accept** popup, then
   per-tool **Allow/Deny** prompts.
 - **Keep this process running.** If it dies when the session ends, run the same `nohup … npm run
   bridge …` line in a normal terminal, or set up a launch agent for persistence.
-- **Current limitation:** tool execution on the receiving side isn't enabled yet — the agent
-  answers in **text only** for now (it won't run commands or edit files on the owner's machine).
+- **Tools:** by default the receiver is **text-only** (safe deny-all). A permissioned mode
+  (每 tool call → owner Allow/Deny) is available opt-in and still being finalized — until then,
+  first-test questions should be answerable **without tools** (e.g. "reply with PONG").
 
 ## Quick reference
 
 | Step | What happens |
 |------|-------------|
-| Prereq | `AICOO_API_KEY` + Claude Code CLI present |
+| Prereq | `AICOO_API_KEY` (or OAuth token) + Claude Code CLI present |
 | 1 | Clone/update the bridge, `npm ci` |
-| 2 | Start bridge in background with the API key + server URL |
+| 2 | Start bridge in background (`www.` host!) — `deviceId` auto |
 | 3 | Confirm `endpointId` + heartbeat in `bridge.log` |
-| 4 | Reachable — paired peers can send requests (owner-approved) |
+| 4 | **Set the default route** (`default-route set --spool`) — required to be reachable |
+| 5 | Reachable — paired peers can send requests (owner-approved) |
