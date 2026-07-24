@@ -10,6 +10,7 @@
         "share-agent",
         "discover",
         "talk-to-agent",
+        "connect-local-agent",
         "group-chat",
         "check-messages"
       ]
