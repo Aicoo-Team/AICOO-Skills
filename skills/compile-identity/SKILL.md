@@ -1,7 +1,6 @@
 ---
 name: compile-identity
 description: "Use this skill when the user wants to hand a session off to another agent, share their working context, compile a session into something another agent can read, write a POSITIONS file, record which decisions were overruled, prepare a handoff folder, or measure whether a shared folder actually transfers their judgment. Triggers on: 'hand this off', 'share my context', 'compile this session', 'POSITIONS.md', 'what did we decide', 'another agent needs to pick this up', 'agent handoff', 'make this readable by another agent'."
-user-invokable: true
 metadata:
   author: systemind
   version: "1.0.0"
@@ -125,13 +124,14 @@ curl -X POST https://www.aicoo.io/api/v1/accumulate \
   -d @payload.json
 ```
 
-Max 50 files per request, 10 MB each — batch above that. Then create a folder-scoped share
-link and **anchor `noteId` on a real note in the folder** (e.g. `CHATS.md`). Anchoring on
-the profile makes the page render only "About Me" with no folder contents.
+Max 50 files per request, 10 MB each — batch above that. For an interactive handoff,
+create a folder-scoped agent link with `target:"agent"`, `scope:"folders"`, and the
+handoff folder IDs. Do not send `noteId` with folder scope; that combination is rejected.
 
-One token yields two doors: `/shared/<token>` is the document reader, `/a/<token>` is the
-chat. Open `/shared/` yourself before sending it — what you see there is what the other
-side's agent can read.
+Use the canonical URL for the chosen target: `/a/<token>` for the folder-scoped agent.
+If the recipient needs a static folder reader instead, create a separate
+`target:"folder"` link and use its `/shared/<token>` URL. Verify the returned target,
+canonical URL, and effective folder capabilities before sending either link.
 
 ## Step 4 — Verify it transferred
 

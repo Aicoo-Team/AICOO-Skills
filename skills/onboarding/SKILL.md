@@ -207,15 +207,15 @@ team so their agents can reach it."
 
 ## Phase 2: SHARE
 
-Both tracks use `POST /api/v1/os/share`; they differ in scope.
+Both tracks use `POST /api/v1/os/share` with `target:"agent"`; they differ in content scope.
 
 ### Personal — share your agent
 
 ```bash
 curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
   -H "Authorization: Bearer $AICOO_API_KEY" -H "Content-Type: application/json" \
-  -d '{"scope":"all","access":"read","notesAccess":"read","label":"My agent","requireSignIn":true}' \
-  | jq '{url: .shareLink.url, token: .shareLink.token}'
+  -d '{"target":"agent","scope":"all","access":"read","notesAccess":"read","label":"My agent","requireSignIn":true}' \
+  | jq '{url: .shareLink.url, token: .shareLink.token, target: .shareLink.target, capabilities}'
 ```
 
 Present:
@@ -238,12 +238,14 @@ curl -s "https://www.aicoo.io/api/v1/os/folders" \
 # Share scoped to that folder
 curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
   -H "Authorization: Bearer $AICOO_API_KEY" -H "Content-Type: application/json" \
-  -d '{"scope":"folders","folderIds":[<id>],"access":"read","notesAccess":"read","label":"Team knowledge base","requireSignIn":true}' \
-  | jq '{url: .shareLink.url}'
+  -d '{"target":"agent","scope":"folders","folderIds":[<id>],"access":"read","notesAccess":"read","label":"Team knowledge base","requireSignIn":true}' \
+  | jq '{url: .shareLink.url, target: .shareLink.target, capabilities}'
 ```
 
-Present the `/a/<token>` link: teammates (and their agents) can now ask the
-knowledge base questions instead of interrupting a person.
+Verify the response uses `/a/<token>`, returns `target:"agent"`, and preserves
+`capabilities.notes.scope:"specific_folders"` with the requested folder ID.
+Then present the link: teammates and their agents can ask the knowledge base
+questions instead of interrupting a person.
 
 ---
 

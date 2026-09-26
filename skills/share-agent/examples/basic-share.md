@@ -15,12 +15,14 @@ The agent reads files from `./investor-materials/` and uploads them to a "Invest
 ```
 > "Create a share link for investors, read-only, expires in 7 days"
 ```
-The agent calls `POST /share/create` with:
+The agent calls `POST /api/v1/os/share` with:
 ```json
 {
+  "target": "agent",
   "scope": "folders",
-  "folderIds": ["<investor-materials-folder-id>"],
+  "folderIds": [123],
   "access": "read",
+  "notesAccess": "read",
   "label": "For investors - Series A",
   "expiresIn": "7d",
   "requireSignIn": true
@@ -31,7 +33,7 @@ The agent calls `POST /share/create` with:
 The agent returns:
 ```
 Your shareable agent link:
-https://www.aicoo.io/s/a1b2c3d4...
+https://www.aicoo.io/a/a1b2c3d4...
 
 Signed-in recipients with this link can talk to your agent about your investor materials.
 - Scope: Investor Materials folder only
@@ -39,6 +41,10 @@ Signed-in recipients with this link can talk to your agent about your investor m
 - Expires: April 9, 2026
 - Sign-in required for recipients
 ```
+
+Before returning the link, verify `shareLink.target` is `agent`, the URL uses
+`/a/`, and `capabilities.notes.scope` is `specific_folders` with folder ID `123`.
+Treat `isAgentLink` as derived compatibility output.
 
 ### 4. Share it
 Send the link via email, WhatsApp, LinkedIn, or any messaging platform. Recipients open the link, sign in, and then chat with your AI agent. For anonymous public access, explicitly set `requireSignIn:false`.

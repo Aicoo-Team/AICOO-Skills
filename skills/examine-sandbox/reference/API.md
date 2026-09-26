@@ -21,7 +21,7 @@ Use this for a quick risk/audience summary.
 
 ## GET /os/share/list
 
-List all share links (with analytics + capabilities).
+List all share links with canonical `target`, derived `isAgentLink`, analytics, and normalized capabilities. Treat `target` and capabilities as authoritative.
 
 **Query Params:**
 - `status`: `active` | `revoked` | `all`
@@ -37,7 +37,7 @@ Update link scope/capabilities.
 
 **Body examples:**
 ```json
-{ "scope": "folders", "folderIds": [5, 12] }
+{ "target": "agent", "scope": "folders", "folderIds": [5, 12] }
 ```
 
 ```json
@@ -81,7 +81,7 @@ Use term-based scans to detect sensitive content before sharing.
 
 ## Recommended Audit Flow
 
-1. `GET /os/share/list` -> enumerate active links and capabilities
+1. `GET /os/share/list` -> enumerate active links; verify target, canonical URL, and capabilities
 2. `GET /os/network` -> inspect visitor activity and signed-in identity fields
 3. `POST /os/notes/search` -> run sensitive-term scans
 4. `PATCH /os/share/{linkId}` -> downgrade scope/access when needed

@@ -45,7 +45,7 @@ First-time setup: API key, workspace init, identity files, first sync.
 Sync local knowledge into Aicoo, browse/read/search notes, create/edit notes, snapshot before edits.
 
 ### 3. share-agent
-Create/manage/revoke share links and control link-level access. New share links require sign-in by default; use `requireSignIn:false` only for explicitly anonymous public links.
+Create/manage/revoke agent, folder, and note links with explicit `target` and scoped access. `note_only` requires `noteId`; verify canonical URLs and effective capabilities. New share links require sign-in by default; use `requireSignIn:false` only for explicitly anonymous public links.
 
 ### 4. examine-sandbox
 Audit what a given link can access and detect sensitive content exposure.
@@ -123,7 +123,7 @@ https://www.aicoo.io/api/v1
 | `/os/network` | GET | Share links + visitors + contacts; signed-in visitors may include name/email |
 | `/os/network/conversations` | GET | List guest sessions from share/agentic links (`?shareToken=X`) |
 | `/os/network/conversations/{sessionId}` | GET | Full transcript of a guest conversation session |
-| `/os/share` | POST | Create share link (`requireSignIn` defaults true) |
+| `/os/share` | POST | Create agent/folder/note link (`target`; `note_only` requires `noteId`; sign-in defaults true) |
 | `/accumulate` | POST | Bulk file sync |
 | `/os/share/list` | GET | List links with analytics |
 | `/os/share/{linkId}` | PATCH/DELETE | Update/revoke link, including `requireSignIn` |

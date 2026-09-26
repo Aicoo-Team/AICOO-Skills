@@ -31,6 +31,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
   -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{
+    "target":"agent",
     "scope":"all",
     "access":"read",
     "notesAccess":"read",
@@ -39,6 +40,11 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
     "requireSignIn":true
   }' | jq .
 ```
+
+Before reporting success, verify the requested `shareLink.target`, the canonical
+URL (`/a/` for agent targets or `/shared/` for folder/note targets), and effective
+`capabilities`. Treat `isAgentLink` as derived compatibility output, not as an
+independent source of truth.
 
 ### 3) Confirm to user
 
@@ -56,13 +62,19 @@ Default behavior: new links require sign-in (`requireSignIn:true`). Only set `re
 
 | Parameter | Values | Description |
 |-----------|--------|-------------|
-| `scope` | `all` \| `folders` | `folders` requires `folderIds` |
+| `target` | `agent` \| `folder` \| `note` | Renderer; use `agent` for chat links, including folder-scoped agents. |
+| `scope` | `all` \| `folders` \| `note_only` | Content scope; folders require `folderIds`, note-only requires `noteId`. |
 | `folderIds` | number[] | folder scope ids |
+| `noteId` | positive integer | Required for `note_only`; rejected with `all` or `folders`. |
 | `access` | `read` \| `read_calendar` \| `read_calendar_write` | calendar access |
 | `notesAccess` | `read` \| `write` \| `edit` | notes permission |
 | `label` | string | link label |
 | `expiresIn` | `1h` \| `24h` \| `7d` \| `30d` \| `90d` \| `never` | expiration |
 | `requireSignIn` | boolean | Defaults to `true`. If true, `/a/<token>` and `/shared/<token>` require a signed-in Aicoo user. Signed-in guest sessions can track `guestUserId`, `guestName`, `guestUsername`, and `guestEmail`. Set `false` only for anonymous public links. |
+
+Link type and content scope are independent. Omitting `target` uses compatibility
+inference (`all` → agent, `folders` → folder, `note_only` → note). Send `target`
+explicitly whenever the user requests a particular link experience.
 
 ## Notes Access Matrix
 
@@ -114,8 +126,23 @@ curl -s -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" \
 curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
   -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" \
   -H "Content-Type: application/json" \
-  -d '{"scope":"folders","folderIds":[5,12],"access":"read","notesAccess":"write","label":"Team collaborator","requireSignIn":true}' | jq .
+  -d '{"target":"agent","scope":"folders","folderIds":[5,12],"access":"read","notesAccess":"write","label":"Team collaborator","requireSignIn":true}' | jq .
 ```
+
+The response must use `/a/<token>`, return `shareLink.target: "agent"`, and preserve
+`capabilities.notes.scope: "specific_folders"` with folder IDs `5` and `12`.
+
+## Note-Only Share Example
+
+```bash
+curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
+  -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{"target":"note","scope":"note_only","noteId":42,"access":"read","notesAccess":"read","requireSignIn":true}' | jq .
+```
+
+The response must use `/shared/<token>`, return `shareLink.target: "note"`, and
+preserve `capabilities.notes.scope: "note_only"`.
 
 ## Per-Link Policy Editing
 

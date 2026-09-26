@@ -171,8 +171,13 @@ curl -s "$PULSE_BASE/os/network" \
 curl -s -X POST "$PULSE_BASE/os/share" \
   -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" \
   -H "Content-Type: application/json" \
-  -d '{"scope":"all","access":"read","notesAccess":"read","label":"For investors","expiresIn":"7d","requireSignIn":true}' | jq .
+  -d '{"target":"agent","scope":"all","access":"read","notesAccess":"read","label":"For investors","expiresIn":"7d","requireSignIn":true}' | jq .
 ```
+
+For folder-scoped agents, keep `target:"agent"` with `scope:"folders"` and
+`folderIds`. Note links use `target:"note"`, `scope:"note_only"`, and a positive
+`noteId`. Verify the returned target, canonical URL, and effective capabilities
+before reporting success.
 
 ### Team (OS-native)
 
@@ -714,7 +719,7 @@ the known limits.
 | `/os/snapshots/{noteId}/restore` | POST | Restore snapshot |
 | `/os/memory/search` | POST | Search memory |
 | `/os/network` | GET | Links + visitors + contacts; signed-in visitors may include identity fields |
-| `/os/share` | POST | Create share link (`requireSignIn` defaults true) |
+| `/os/share` | POST | Create agent/folder/note link (`target`; `note_only` requires `noteId`; sign-in defaults true) |
 | `/accumulate` | POST | Bulk sync |
 | `/os/share/list` | GET | List links |
 | `/os/share/{linkId}` | PATCH/DELETE | Update/revoke link, including `requireSignIn` |

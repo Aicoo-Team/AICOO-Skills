@@ -60,6 +60,7 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
   -H "Authorization: Bearer ${AICOO_API_KEY:-$PULSE_API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{
+    "target":"agent",
     "scope":"folders",
     "folderIds":[1,3],
     "access":"read",
@@ -70,6 +71,6 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/share" \
   }' | jq .
 ```
 
-Result: `https://www.aicoo.io/a/xK9mPq2RvT`
+Verify `shareLink.target` is `agent`, the URL is `https://www.aicoo.io/a/xK9mPq2RvT`, and `capabilities.notes.scope` is `specific_folders` with folder IDs `1` and `3`.
 
 Share this URL with investors; sign-in is required by default. Use `requireSignIn:false` only for an explicitly anonymous public link.

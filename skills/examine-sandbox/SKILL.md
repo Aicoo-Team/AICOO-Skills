@@ -53,8 +53,8 @@ curl -s -X POST "https://www.aicoo.io/api/v1/os/notes/search" \
 
 Summarize:
 
-1. how many active links and their scopes
-2. notes/calendar permission levels
+1. how many active links, their canonical targets, and their scopes
+2. normalized capabilities, including notes/calendar permission levels
 3. sign-in requirement and visitor activity
 4. sensitive hits inside shared scope
 5. risk actions (downgrade/revoke)
@@ -66,7 +66,7 @@ Summarize:
 curl -s -X PATCH "https://www.aicoo.io/api/v1/os/share/{linkId}" \
   -H "Authorization: Bearer $AICOO_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"scope":"folders","folderIds":[5,12]}' | jq .
+  -d '{"target":"agent","scope":"folders","folderIds":[5,12]}' | jq .
 
 # downgrade notes access
 curl -s -X PATCH "https://www.aicoo.io/api/v1/os/share/{linkId}" \
